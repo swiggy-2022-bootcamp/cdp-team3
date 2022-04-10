@@ -1,0 +1,43 @@
+host: localhost:3009
+info:
+  contact:
+    email: swiggyb3014@datascience.manipal.edu
+    name: Uttej Immadi
+  description: Admin can get their details and create, read, update and delete customers.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: BuyItNow Admin Services
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: When a request is made to the / endpoint, if the service is running,
+        it returns "Okay"
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: Checks whether the service is up & running
+      tags:
+      - Health
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
