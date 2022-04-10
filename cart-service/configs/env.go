@@ -15,20 +15,20 @@ func EnvMonogoURI() string {
 	return os.Getenv("MONGO_URI")
 }
 
-func EnvJWTSecretKey() string {
+func EnvServiceAddress() string {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file.")
 	}
 
-	return os.Getenv("SECRET_KEY")
+	return os.Getenv("CART_SERVICE_ADDRESS")
 }
 
-func EnvPORT() string {
+func EnvServicePort() string {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file.")
 	}
 
-	return os.Getenv("PORT")
+	return os.Getenv("CART_SERVICE_PORT")
 }

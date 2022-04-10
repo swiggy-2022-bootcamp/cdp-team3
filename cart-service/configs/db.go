@@ -36,7 +36,7 @@ func ConnectDB() *mongo.Client {
 
 //create instance of client to be used in the application
 //Singleton design pattern.
-var DB *mongo.Client = ConnectDB()
+// var DB *mongo.Client = ConnectDB()
 
 func GetCollection(client *mongo.Client, collectionName string) *mongo.Collection {
 	collection := client.Database("Tejas").Collection(collectionName)
