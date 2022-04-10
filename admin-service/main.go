@@ -9,5 +9,5 @@ func main() {
 			"message": "pong",
 		})
 	})
-	router.Run(":3000")
+	router.Run(":3009")
 }
