@@ -1,0 +1,191 @@
+definitions:
+  models.Product:
+    properties:
+      can_place_order:
+        type: boolean
+      height:
+        type: number
+      id:
+        type: string
+      image:
+        type: string
+      length:
+        type: number
+      manufacturer_id:
+        type: integer
+      max_quantity:
+        type: integer
+      minimum:
+        type: integer
+      model:
+        type: string
+      points:
+        type: integer
+      price:
+        type: number
+      product_category:
+        items:
+          type: integer
+        type: array
+      product_description_model:
+        $ref: '#/definitions/models.ProductDescriptionModel'
+      product_related:
+        items:
+          type: integer
+        type: array
+      product_seo_url:
+        items:
+          $ref: '#/definitions/models.ProductSeoUrlModel'
+        type: array
+      quantity:
+        type: integer
+      rewards:
+        type: integer
+      sku:
+        type: string
+      weight:
+        type: number
+      width:
+        type: number
+    type: object
+  models.ProductDescriptionModel:
+    properties:
+      description:
+        type: string
+      language_id:
+        type: integer
+      meta_description:
+        type: string
+      meta_keyword:
+        type: string
+      meta_title:
+        type: string
+      name:
+        type: string
+      tag:
+        type: string
+    type: object
+  models.ProductSeoUrlModel:
+    properties:
+      keyword:
+        type: string
+      language_id:
+        type: integer
+      store_id:
+        type: integer
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: swiggyb2030@datascience.manipal.edu
+    name: Sai Kumar Basaveswara
+  description: Admin can add, update, delete and search Products into DB and User
+    can fetch products
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Products Service API
+  version: "1.0"
+paths:
+  /products:
+    get:
+      description: Fetches and displays all the products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Fetches and displays all the products
+      tags:
+      - Product Service
+    post:
+      description: Adds Product to the DB
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Adds Product to the DB
+      tags:
+      - Product Service
+  /products/:productId:
+    delete:
+      description: Fetches and displays all the products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Fetches and displays all the products
+      tags:
+      - Product Service
+    put:
+      description: Updates the Product details in DB
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Updates the Product details in DB
+      tags:
+      - Product Service
+  /products/search/:search:
+    get:
+      description: Searches for Products in DB with given search term and returns
+        list of Products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Searches for Products in DB with given search term and returns list
+        of Products
+      tags:
+      - Product Service
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
