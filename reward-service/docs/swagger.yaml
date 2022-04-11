@@ -1,0 +1,88 @@
+definitions:
+  models.Reward:
+    properties:
+      _id:
+        type: string
+      message:
+        type: string
+      rewards:
+        type: string
+    type: object
+host: localhost:3008
+info:
+  contact:
+    email: swiggyb3014@datascience.manipal.edu
+    name: Uttej Immadi
+  description: Admin can get their details and create, read, update and delete customers.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: BuyItNow Reward Service
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: When a request is made to the / endpoint, if the service is running,
+        it returns "Okay"
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: Checks whether the service is up & running
+      tags:
+      - Health
+  /reward/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Adds Reward Point To The Customer based on the given ID
+      parameters:
+      - description: customer id
+        in: path
+        name: CustomerID
+        required: true
+        type: string
+      - description: reward details
+        in: body
+        name: Details
+        required: true
+        schema:
+          $ref: '#/definitions/models.Reward'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: Adds Reward Point To The Customer
+      tags:
+      - Reward
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
