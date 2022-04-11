@@ -1,0 +1,300 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/cart": {
+            "get": {
+                "description": "Get a list of all the items in the Cart currently.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart Items"
+                ],
+                "summary": "Get all Cart Items",
+                "responses": {
+                    "200": {
+                        "description": "List of Cart Items",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CartItemsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a Item in the Cart using the Cart Item data sent.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart Items"
+                ],
+                "summary": "Update a Cart Item",
+                "parameters": [
+                    {
+                        "description": "Item to be updated in the Cart",
+                        "name": "cartItemDTO",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CartItemRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a Item in the Cart using the Cart Item data sent.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart Items"
+                ],
+                "summary": "Create a Cart Item",
+                "parameters": [
+                    {
+                        "description": "Item to be added to the Cart",
+                        "name": "cartItemDTO",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CartItemRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/cart/empty": {
+            "delete": {
+                "description": "Empty the Cart for an user.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart Overall"
+                ],
+                "summary": "Empty Cart.",
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/cart/{key}": {
+            "delete": {
+                "description": "Deletes an Item in the cart using its key.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart Items"
+                ],
+                "summary": "Deletes a Cart Item.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cart Item Key",
+                        "name": "key",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "errors.HTTPErrorDTO": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 400
+                },
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "Invalid email."
+                    ]
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Status bad request."
+                }
+            }
+        },
+        "models.CartItem": {
+            "type": "object",
+            "required": [
+                "id",
+                "product_id",
+                "quantity"
+            ],
+            "properties": {
+                "id": {
+                    "description": "MongoDB ID of the cart item",
+                    "type": "string"
+                },
+                "product_id": {
+                    "description": "ID of the product",
+                    "type": "string"
+                },
+                "quantity": {
+                    "description": "Quantity of the product in the cart.",
+                    "type": "string"
+                }
+            }
+        },
+        "requests.CartItemRequest": {
+            "type": "object",
+            "required": [
+                "product_id",
+                "quantity"
+            ],
+            "properties": {
+                "product_id": {
+                    "description": "ID of the product",
+                    "type": "string"
+                },
+                "quantity": {
+                    "description": "Quantity of the product in the cart.",
+                    "type": "string"
+                }
+            }
+        },
+        "responses.CartItemsResponse": {
+            "type": "object",
+            "properties": {
+                "cart_items": {
+                    "description": "List of items in the cart.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.CartItem"
+                    }
+                }
+            }
+        }
+    }
+}

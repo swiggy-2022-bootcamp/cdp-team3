@@ -1,0 +1,199 @@
+definitions:
+  errors.HTTPErrorDTO:
+    properties:
+      code:
+        example: 400
+        type: integer
+      details:
+        example:
+        - Invalid email.
+        items:
+          type: string
+        type: array
+      message:
+        example: Status bad request.
+        type: string
+    type: object
+  models.CartItem:
+    properties:
+      id:
+        description: MongoDB ID of the cart item
+        type: string
+      product_id:
+        description: ID of the product
+        type: string
+      quantity:
+        description: Quantity of the product in the cart.
+        type: string
+    required:
+    - id
+    - product_id
+    - quantity
+    type: object
+  requests.CartItemRequest:
+    properties:
+      product_id:
+        description: ID of the product
+        type: string
+      quantity:
+        description: Quantity of the product in the cart.
+        type: string
+    required:
+    - product_id
+    - quantity
+    type: object
+  responses.CartItemsResponse:
+    properties:
+      cart_items:
+        description: List of items in the cart.
+        items:
+          $ref: '#/definitions/models.CartItem'
+        type: array
+    type: object
+info:
+  contact: {}
+paths:
+  /cart:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all the items in the Cart currently.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of Cart Items
+          schema:
+            $ref: '#/definitions/responses.CartItemsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "500":
+          description: Internal Server Error
+      summary: Get all Cart Items
+      tags:
+      - Cart Items
+    post:
+      consumes:
+      - application/json
+      description: Create a Item in the Cart using the Cart Item data sent.
+      parameters:
+      - description: Item to be added to the Cart
+        in: body
+        name: cartItemDTO
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CartItemRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "500":
+          description: Internal Server Error
+      summary: Create a Cart Item
+      tags:
+      - Cart Items
+    put:
+      consumes:
+      - application/json
+      description: Update a Item in the Cart using the Cart Item data sent.
+      parameters:
+      - description: Item to be updated in the Cart
+        in: body
+        name: cartItemDTO
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CartItemRequest'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "500":
+          description: Internal Server Error
+      summary: Update a Cart Item
+      tags:
+      - Cart Items
+  /cart/{key}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes an Item in the cart using its key.
+      parameters:
+      - description: Cart Item Key
+        in: path
+        name: key
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "500":
+          description: Internal Server Error
+      summary: Deletes a Cart Item.
+      tags:
+      - Cart Items
+  /cart/empty:
+    delete:
+      consumes:
+      - application/json
+      description: Empty the Cart for an user.
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "500":
+          description: Internal Server Error
+      summary: Empty Cart.
+      tags:
+      - Cart Overall
+swagger: "2.0"
