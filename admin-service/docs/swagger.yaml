@@ -1,3 +1,35 @@
+definitions:
+  models.Customer:
+    properties:
+      _id:
+        type: string
+      approved:
+        type: string
+      cart:
+        items:
+          type: string
+        type: array
+      confirmpassword:
+        type: string
+      dateAdded:
+        type: string
+      email:
+        type: string
+      firstname:
+        type: string
+      lastname:
+        type: string
+      password:
+        type: string
+      rewards:
+        type: string
+      status:
+        type: string
+      telephone:
+        type: string
+      userGroup:
+        type: string
+    type: object
 host: localhost:3009
 info:
   contact:
@@ -20,8 +52,8 @@ paths:
       produces:
       - application/json
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
             type: String
         "400":
@@ -35,6 +67,174 @@ paths:
       summary: Checks whether the service is up & running
       tags:
       - Health
+  /customers:
+    post:
+      consumes:
+      - application/json
+      description: creates a customer account when the admin is verified
+      parameters:
+      - description: customer details
+        in: body
+        name: Customer
+        required: true
+        schema:
+          $ref: '#/definitions/models.Customer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: creates a customer account
+      tags:
+      - Admin
+  /customers/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: deletes The Customer Details based on the given ID
+      parameters:
+      - description: customer details
+        in: body
+        name: Customer
+        required: true
+        schema:
+          $ref: '#/definitions/models.Customer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: deletes a customer account
+      tags:
+      - Admin
+    get:
+      consumes:
+      - application/json
+      description: fetches the details of a customer based on the given ID
+      parameters:
+      - description: customer id
+        in: path
+        name: CustomerID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: fetches a customer account by ID
+      tags:
+      - Admin
+    put:
+      consumes:
+      - application/json
+      description: Updates The Customer Details
+      parameters:
+      - description: customer id
+        in: path
+        name: CustomerID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: Updates a customer account
+      tags:
+      - Admin
+  /customers/email/{email}:
+    get:
+      consumes:
+      - application/json
+      description: fetches the details of a customer based on the given email
+      parameters:
+      - description: customer email
+        in: path
+        name: CustomerEmail
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: fetches a customer account by email
+      tags:
+      - Admin
+  /user:
+    get:
+      consumes:
+      - application/json
+      description: When a request is made, it returns the admin details
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: Gets the details of the admin that is logged in
+      tags:
+      - Admin
 securityDefinitions:
   ApiKeyAuth:
     in: header

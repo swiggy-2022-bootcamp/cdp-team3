@@ -1,7 +1,19 @@
 package routes
 
-// "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/admin-service/controllers"
+)
 
-// func AdminRoute(router *gin.Engine) {
+func AdminRoute(router *gin.Engine) {
 
-// }
+	// router.Use(controllers.CheckAuthorized("admin"))
+
+	router.GET("/user", controllers.GetSelf)
+	router.POST("/customers", controllers.CreateCustomer)
+	router.GET("/customers/:id", controllers.GetCustomerById)
+	router.GET("/customers/email/:email", controllers.GetCustomerByEmail)
+	router.PUT("/customers/:id", controllers.UpdateCustomer)
+	router.DELETE("/customers/:id", controllers.DeleteCustomer)
+
+}
