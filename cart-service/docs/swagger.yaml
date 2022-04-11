@@ -181,8 +181,6 @@ paths:
       responses:
         "204":
           description: No Content
-          schema:
-            type: integer
         "400":
           description: Bad Request
           schema:

@@ -71,7 +71,7 @@ func DeleteCartItem(c *gin.Context) {
 // @Tags         Cart Overall
 // @Accept       json
 // @Produce      json
-// @Success      204  {object}  int64
+// @Success      204  {object}  nil
 // @Failure      400  {object}  errors.HTTPErrorDTO
 // @Failure      404  {object}  errors.HTTPErrorDTO
 // @Failure      500          {object}  nil

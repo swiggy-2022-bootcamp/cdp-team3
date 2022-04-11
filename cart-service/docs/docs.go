@@ -163,10 +163,7 @@ const docTemplate = `{
                 "summary": "Empty Cart.",
                 "responses": {
                     "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "description": "No Content"
                     },
                     "400": {
                         "description": "Bad Request",

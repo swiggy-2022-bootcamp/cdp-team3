@@ -8,27 +8,28 @@ import (
 	"github.com/swiggy-ipp/cart-service/controllers"
 )
 
-const BaseURL string = "/cart";
+const BaseURL string = "/cart_service";
 
 func GenerateCartRoutes(router *gin.Engine) {
-	cartRouter := router.Group(BaseURL)
+	cartServiceRouter := router.Group(BaseURL)
+	cartServiceCartRouter := cartServiceRouter.Group("/cart")
 
 	// Swagger Routes
 	docs.SwaggerInfo.BasePath = BaseURL
-	cartRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	cartServiceRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	
 	// Add Cart Item
-	cartRouter.POST("/", controllers.CreateCartItem)
+	cartServiceCartRouter.POST("/", controllers.CreateCartItem)
 
 	// Get Cart Items
-	cartRouter.GET("/", controllers.GetCartItems)
+	cartServiceCartRouter.GET("/", controllers.GetCartItems)
 
 	// Update Cart Item
-	cartRouter.PUT("/", controllers.UpdateCartItem)
+	cartServiceCartRouter.PUT("/", controllers.UpdateCartItem)
 
 	// Delete Cart Items
-	cartRouter.DELETE("/:key", controllers.DeleteCartItem)
+	cartServiceCartRouter.DELETE("/:key", controllers.DeleteCartItem)
 
 	// Delete Entire Cart
-	cartRouter.DELETE("/empty", controllers.EmptyCart)
+	cartServiceCartRouter.DELETE("/empty", controllers.EmptyCart)
 }

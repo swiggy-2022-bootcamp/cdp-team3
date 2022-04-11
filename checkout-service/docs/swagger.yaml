@@ -1,0 +1,71 @@
+definitions:
+  errors.HTTPErrorDTO:
+    properties:
+      code:
+        example: 400
+        type: integer
+      details:
+        example:
+        - Invalid email.
+        items:
+          type: string
+        type: array
+      message:
+        example: Status bad request.
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /confirm:
+    post:
+      consumes:
+      - application/json
+      description: Get an overview of the order from the database.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order Overview Data
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "500":
+          description: Internal Server Error
+      summary: Get an overview of the order
+      tags:
+      - Checkout API
+  /confirm/success:
+    put:
+      consumes:
+      - application/json
+      description: Webhook hit when Order is successful to clear Cart and Unset Session
+        Data.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Cart Cleared message DTO.
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "500":
+          description: Internal Server Error
+      summary: Order Successful Webhook
+      tags:
+      - Checkout API
+swagger: "2.0"
