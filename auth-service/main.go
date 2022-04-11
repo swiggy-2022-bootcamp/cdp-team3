@@ -12,7 +12,7 @@ var logger = utils.NewLoggerService("main")
 func main() {
 	router := gin.Default()
 
-	configs.ConnectDB() 
+	configs.ConnectDB()
 	logger.Log("Connected to DB")
 
 	routes.AuthRoutes(router)
