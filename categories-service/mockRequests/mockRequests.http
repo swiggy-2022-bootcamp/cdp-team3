@@ -1,0 +1,4 @@
+GET https://my.api.mockaroo.com/categories-service/api/categories
+Accept: application/json
+
+###
