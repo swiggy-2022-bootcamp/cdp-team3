@@ -5,8 +5,8 @@ Contains the Cart Microservice for the final Swiggy I++ E-Commerce Application p
 ## Relevant APIs
 
 1. (GET) "/cart_service/swagger/index.html": Swagger documentation
-2. (POST) "/cart_service": Add Cart Item
-3. (GET) "/cart_service": Get Cart Items
-4. (PUT) "/cart_service": Update Cart Item
-5. (DELETE) "/cart_service/{key}": Delete Cart Item by ID
-6. (DELETE) "/cart_service/empty": Empty entire Cart
+2. (POST) "/cart_service/cart": Add Cart Item
+3. (GET) "/cart_service/cart": Get Cart Items
+4. (PUT) "/cart_service/cart": Update Cart Item
+5. (DELETE) "/cart_service/cart/{key}": Delete Cart Item by ID
+6. (DELETE) "/cart_service/cart/empty": Empty entire Cart
