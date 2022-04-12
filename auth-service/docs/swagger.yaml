@@ -1,0 +1,187 @@
+definitions:
+  dto.LoginDto:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  utils.HealthCheckResponse:
+    properties:
+      services:
+        items:
+          $ref: '#/definitions/utils.ServiceResponse'
+        type: array
+      status:
+        type: string
+    type: object
+  utils.ServiceResponse:
+    properties:
+      error:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+    type: object
+  utils.SignedDetails:
+    properties:
+      aud:
+        type: string
+      emailId:
+        type: string
+      exp:
+        type: integer
+      iat:
+        type: integer
+      isAdmin:
+        type: boolean
+      iss:
+        type: string
+      jti:
+        type: string
+      name:
+        type: string
+      nbf:
+        type: integer
+      sub:
+        type: string
+      userId:
+        type: string
+    type: object
+host: localhost:3012
+info:
+  contact:
+    email: swiggyb2026@datascience.manipal.edu
+    name: Rishabh Mishra
+  description: Users ( Admin, Customer, etc ) can login and get a token and use it
+    to access other APIs
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Auth Service API
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: This request is used to check the health of the entire service
+        at once
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.HealthCheckResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: HealthCheck
+      tags:
+      - Auth Service
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: This request is used to login a user and get a token in cookies
+      parameters:
+      - description: Login Details
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "401":
+          description: Unauthorized
+          schema:
+            type: number
+        "404":
+          description: Not Found
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: Login
+      tags:
+      - Auth Service
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: This request is used to logout a user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: Logout
+      tags:
+      - Auth Service
+  /auth/verify-token:
+    post:
+      consumes:
+      - application/json
+      description: This request is used to verify a token internally or by frontend
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.SignedDetails'
+        "401":
+          description: Unauthorized
+          schema:
+            type: number
+      summary: VerifyToken
+      tags:
+      - Auth Service
+  /deep:
+    get:
+      consumes:
+      - application/json
+      description: This request is used to check the health of the every single service
+        at once
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.HealthCheckResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: Deep HealthCheck
+      tags:
+      - Auth Service
+securityDefinitions:
+  ApiKeyAuth:
+    in: cookie
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -9,4 +9,5 @@ func AuthRoutes(router *gin.Engine) {
 	public := router.Group("/auth")
 	public.POST("/login", controllers.Login())
 	public.POST("/logout", controllers.Logout())
+	public.POST("/verify-token", controllers.VerifyToken())
 }
