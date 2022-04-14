@@ -10,16 +10,14 @@ import (
 // @Tags         Cart Items
 // @Accept       json
 // @Produce      json
-// @Param        cartItemDTO  body      requests.CartItemRequest  true  "Item to be added to the Cart"
-// @Success      201          {object}  interface{}
+// @Param        cartItemDTO  body      requests.CartItemRequest   true  "Item to be added to the Cart"
+// @Success      201          {object}  responses.MessageResponse  "Message denoting whether successfully created"
 // @Failure      400  {object}  errors.HTTPErrorDTO
 // @Failure      404  {object}  errors.HTTPErrorDTO
 // @Failure      500  {object}  nil
 // @Router       /cart [post]
 func CreateCartItem(c *gin.Context) {
-	c.JSON(201, gin.H{
-		"message": "Created",
-	})
+	c.JSON(201, responses.MessageResponse{Message: "Created"})
 }
 
 // @Summary      Get all Cart Items
@@ -41,14 +39,14 @@ func GetCartItems(c *gin.Context) {
 // @Tags         Cart Items
 // @Accept       json
 // @Produce      json
-// @Param        cartItemDTO  body      requests.CartItemRequest  true  "Item to be updated in the Cart"
-// @Success      204          {object}  interface{}
+// @Param        cartItemDTO  body      requests.CartItemRequest   true  "Item to be updated in the Cart"
+// @Success      204          {object}  responses.MessageResponse  "Message denoting whether successfully updated"
 // @Failure      400          {object}  errors.HTTPErrorDTO
 // @Failure      404          {object}  errors.HTTPErrorDTO
 // @Failure      500  {object}  nil
 // @Router       /cart [put]
 func UpdateCartItem(c *gin.Context) {
-	c.JSON(204, gin.H{"message": "Updated"})
+	c.JSON(204, responses.MessageResponse{Message: "Updated"})
 }
 
 // @Summary      Deletes a Cart Item.
@@ -63,7 +61,7 @@ func UpdateCartItem(c *gin.Context) {
 // @Failure      500          {object}  nil
 // @Router       /cart/{key} [delete]
 func DeleteCartItem(c *gin.Context) {
-	c.JSON(204, gin.H{"message": "Deleted"})
+	c.JSON(204, responses.MessageResponse{Message: "Deleted"})
 }
 
 // @Summary      Empty Cart.
@@ -77,5 +75,19 @@ func DeleteCartItem(c *gin.Context) {
 // @Failure      500          {object}  nil
 // @Router       /cart/empty [delete]
 func EmptyCart(c *gin.Context) {
-	c.JSON(204, gin.H{"message": "Deleted"})
+	c.JSON(204, responses.MessageResponse{Message: "Deleted"})
+}
+
+// @Summary      Health Check Endpoint
+// @Description  Health Check Endpoint
+// @Tags         Health Check
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  responses.MessageResponse  "Health Check Message."
+// @Failure      400  {object}  errors.HTTPErrorDTO
+// @Failure      404  {object}  errors.HTTPErrorDTO
+// @Failure      500  {object}  nil
+// @Router       /health [get]
+func HealthCheck(c *gin.Context) {
+	c.JSON(200, responses.MessageResponse{Message: "up"})
 }

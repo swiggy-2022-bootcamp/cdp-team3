@@ -14,6 +14,9 @@ func GenerateCheckoutRoutes(router *gin.Engine) {
 	checkoutServiceRouter := router.Group(BaseURL)
 	checkoutServiceConfirmRouter := checkoutServiceRouter.Group("/confirm")
 
+	// Health Check
+	checkoutServiceRouter.GET("/health", controllers.HealthCheck)
+
 	// Swagger Routes
 	docs.SwaggerInfo.BasePath = BaseURL
 	checkoutServiceRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

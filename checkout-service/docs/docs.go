@@ -33,7 +33,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Order Overview Data",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/responses.MessageResponse"
                         }
                     },
                     "400": {
@@ -71,7 +71,45 @@ const docTemplate = `{
                     "200": {
                         "description": "Cart Cleared message DTO.",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/responses.MessageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/health": {
+            "get": {
+                "description": "Health Check Endpoint",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Health Check"
+                ],
+                "summary": "Health Check Endpoint",
+                "responses": {
+                    "200": {
+                        "description": "Health Check Message.",
+                        "schema": {
+                            "$ref": "#/definitions/responses.MessageResponse"
                         }
                     },
                     "400": {
@@ -98,10 +136,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "code": {
+                    "description": "Error code",
                     "type": "integer",
                     "example": 400
                 },
                 "details": {
+                    "description": "Detailed Error Messages",
                     "type": "array",
                     "items": {
                         "type": "string"
@@ -111,8 +151,19 @@ const docTemplate = `{
                     ]
                 },
                 "message": {
+                    "description": "Brief Error Message",
                     "type": "string",
                     "example": "Status bad request."
+                }
+            }
+        },
+        "responses.MessageResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "description": "Message being sent through the DTO",
+                    "type": "string",
+                    "example": "Sample Message"
                 }
             }
         }

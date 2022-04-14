@@ -14,6 +14,9 @@ func GenerateCartRoutes(router *gin.Engine) {
 	cartServiceRouter := router.Group(BaseURL)
 	cartServiceCartRouter := cartServiceRouter.Group("/cart")
 
+	// Health Check
+	cartServiceRouter.GET("/health", controllers.HealthCheck)
+
 	// Swagger Routes
 	docs.SwaggerInfo.BasePath = BaseURL
 	cartServiceRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
