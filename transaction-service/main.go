@@ -8,6 +8,9 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/controllers"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/routes"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/utils"
+
+	"go.uber.org/zap"
 )
 
 // @title           Swagger Transaction Service API
@@ -28,6 +31,14 @@ import (
 // @in header
 // @name Authorization
 func main() {
+
+	//Initialize Logger
+	log := utils.InitializeLogger()
+
+  zap.ReplaceGlobals(log)
+  defer log.Sync()
+  log.Info("Transaction Service Started")
+	
 	router := gin.Default()
 
 	router.GET("/", controllers.HealthCheck())

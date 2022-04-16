@@ -1,0 +1,6 @@
+{
+  "level": "info",
+  "ts": "2022-04-16T13:29:17.629+0530",
+  "caller": "transaction-service/main.go:40",
+  "msg": "Transaction Service Started"
+}
