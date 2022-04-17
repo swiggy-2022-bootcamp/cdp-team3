@@ -1,0 +1,81 @@
+ERROR: 2022/04/17 20:55:35 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/17 21:03:32 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/17 21:09:45 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+INFO: 2022/04/17 21:35:42 [Created the table{
+  TableDescription: {
+    AttributeDefinitions: [{
+        AttributeName: "id",
+        AttributeType: "S"
+      }],
+    CreationDateTime: 2022-04-17 16:06:50.205 +0000 UTC,
+    ItemCount: 0,
+    KeySchema: [{
+        AttributeName: "id",
+        KeyType: "HASH"
+      }],
+    ProvisionedThroughput: {
+      NumberOfDecreasesToday: 0,
+      ReadCapacityUnits: 10,
+      WriteCapacityUnits: 10
+    },
+    TableArn: "arn:aws:dynamodb:us-east-1:937145466380:table/ShippingAddress",
+    TableId: "4d60586e-f607-476b-9587-9d916712f777",
+    TableName: "ShippingAddress",
+    TableSizeBytes: 0,
+    TableStatus: "CREATING"
+  }
+}]
+ERROR: 2022/04/17 21:37:00 [0xc00009f608]
+ERROR: 2022/04/17 21:37:29 [0xc000484d20]
+ERROR: 2022/04/17 21:37:47 [0xc0000042b8]
+ERROR: 2022/04/17 21:51:58 [0xc0004847c8]
+INFO: 2022/04/17 21:52:37 [Created the table{
+  TableDescription: {
+    AttributeDefinitions: [{
+        AttributeName: "id",
+        AttributeType: "S"
+      }],
+    CreationDateTime: 2022-04-17 16:23:45.676 +0000 UTC,
+    ItemCount: 0,
+    KeySchema: [{
+        AttributeName: "id",
+        KeyType: "HASH"
+      }],
+    ProvisionedThroughput: {
+      NumberOfDecreasesToday: 0,
+      ReadCapacityUnits: 10,
+      WriteCapacityUnits: 10
+    },
+    TableArn: "arn:aws:dynamodb:us-east-1:937145466380:table/ShippingAddress",
+    TableId: "05733701-a02e-4e41-a0fb-d0af95f85cff",
+    TableName: "ShippingAddress",
+    TableSizeBytes: 0,
+    TableStatus: "CREATING"
+  }
+}]
+ERROR: 2022/04/17 21:55:38 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/17 21:55:44 [Categories for given ID doesn't exists - ]
+ERROR: 2022/04/17 21:55:44 [0xc000004c90]
+ERROR: 2022/04/17 21:57:34 [0xc00049b740]
+ERROR: 2022/04/17 22:01:10 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/17 22:01:19 [0xc000004588]
+ERROR: 2022/04/17 22:04:09 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/17 22:04:15 [Failed to unmarshal document fetched from DB - parsing time "2022-04-17 21:56:48.825351 +0530 IST m=+72.105112801" as "2006-01-02T15:04:05Z07:00": cannot parse " 21:56:48.825351 +0530 IST m=+72.105112801" as "T"]
+ERROR: 2022/04/17 22:04:15 [0xc0004ba0c0]
+ERROR: 2022/04/17 22:18:33 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/17 22:18:51 [Failed to unmarshal document fetched from DB - parsing time "2022-04-17 21:56:48.825351 +0530 IST m=+72.105112801" as "2006-01-02T15:04:05Z07:00": cannot parse " 21:56:48.825351 +0530 IST m=+72.105112801" as "T"]
+ERROR: 2022/04/17 22:18:51 [0xc00042a630]
+ERROR: 2022/04/17 22:20:22 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/17 22:21:04 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/17 22:21:18 [Failed to unmarshal document fetched from DB - parsing time "2022-04-17 22:21:13.9301872 +0530 IST m=+10.690152701" as "2006-01-02T15:04:05Z07:00": cannot parse " 22:21:13.9301872 +0530 IST m=+10.690152701" as "T"]
+ERROR: 2022/04/17 22:21:18 [0xc000005458]
+ERROR: 2022/04/17 22:22:31 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/17 22:22:50 [Categories for given ID doesn't exists - ]
+ERROR: 2022/04/17 22:22:50 [0xc000005188]
+ERROR: 2022/04/17 22:23:49 [Failed to unmarshal document fetched from DB - parsing time "2022-04-17 22:23:17.2463019 +0530 IST m=+46.895195501" as "2006-01-02T15:04:05Z07:00": cannot parse " 22:23:17.2463019 +0530 IST m=+46.895195501" as "T"]
+ERROR: 2022/04/17 22:23:49 [0xc0000052d8]
+ERROR: 2022/04/17 22:24:38 [Failed to unmarshal document fetched from DB - parsing time "2022-04-17 22:24:35.5829491 +0530 IST m=+125.231842701" as "2006-01-02T15:04:05Z07:00": cannot parse " 22:24:35.5829491 +0530 IST m=+125.231842701" as "T"]
+ERROR: 2022/04/17 22:24:38 [0xc0000048b8]
+ERROR: 2022/04/17 22:34:26 [Connection to dynamoDB failed.]
+ERROR: 2022/04/17 22:34:26 [Got error calling CreateTable: %s UnrecognizedClientException: The security token included in the request is invalid.
+	status code: 400, request id: 0K3GLU3LRNKJNNTO0CUI0AIOAVVV4KQNSO5AEMVJF66Q9ASUAAJG]
