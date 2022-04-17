@@ -1,11 +1,8 @@
 package models
 
-import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
-)
-
 type Transaction struct {
-	Id         primitive.ObjectID `json:"id,omitempty"`
-	Amount     string             `json:"amount,omitempty" validate:"required"`
-	Decription string             `json:"description,omitempty"`
+	TransactionId  string  `json:"transaction_id" dynamodbav:"transaction_id" `
+	Amount         float64  `json:"amount" dynamodbav:"amount" validate:"required"`
+	Description     string   `json:"description" dynamodbav:"description"`
+	CustomerID  string `json:"customer_id" dynamodbav:"customer_id" validate:"required"`
 }

@@ -2,11 +2,24 @@ package controllers
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/configs"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/dto"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/models"
+	"go.uber.org/zap"
 )
+
+const transactionCollection = "Transaction"
+var validate = validator.New()
 
 // AddTransactionAmtToCustomer godoc
 // @Summary Adds transaction amount
@@ -24,11 +37,69 @@ import (
 // @Router /transaction/{customerId} [POST]
 func AddTransactionAmtToCustomer() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		customerId := c.Param("customerId")
+		zap.L().Info("Inside AddTransactionAmtToCustomer Controller")
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		var transaction models.Transaction
+		transaction.CustomerID = customerId
 		defer cancel()
 
-		c.JSON(http.StatusCreated, gin.H{
-			"message": "Transaction amount added successfully",
+		//validate the request body
+		if err := c.BindJSON(&transaction); err != nil {
+			zap.L().Error("Error validating the request body"+err.Error())
+			c.JSON(http.StatusBadRequest, dto.ResponseDTO{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			return
+		}
+
+		//use the validator library to validate required fields
+		if validationErr := validate.Struct(&transaction); validationErr != nil {
+				zap.L().Error("Required fields not present"+validationErr.Error())
+				c.JSON(http.StatusBadRequest,  dto.ResponseDTO{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": validationErr.Error()}})
+				return
+		}
+
+		//TODO: Validate if customer is present
+		//TODO: Add amount to customer DB as well
+		newTransaction := models.Transaction{
+			TransactionId: uuid.New().String(),
+			Amount: transaction.Amount,
+			Description: transaction.Description,
+			CustomerID: customerId,
+		}
+		
+		data, err := dynamodbattribute.MarshalMap(newTransaction)
+		if err != nil {
+			zap.L().Error("Marshalling of transaction failed - " + err.Error())
+			c.JSON(http.StatusBadRequest,  dto.ResponseDTO{
+				Status: http.StatusBadRequest, 
+				Message: "Marshalling of transaction failed", 
+				Data: map[string]interface{}{"data": err.Error()},
+			})
+			return
+		}
+
+		query := &dynamodb.PutItemInput{
+			Item:      data,
+			TableName: aws.String(transactionCollection),
+		}
+
+		result, err := configs.DB.PutItem(query)
+		if err != nil {
+			zap.L().Error("Failed to add transaction - " + err.Error())
+			c.JSON(http.StatusBadRequest,  dto.ResponseDTO{
+				Status: http.StatusBadRequest, 
+				Message: "Failed to add transaction", 
+				Data: map[string]interface{}{"data": err.Error()},
+			})
+			return
+		}
+
+		dataInBytes,_ := json.Marshal(result)
+		zap.L().Info("Successfully added transaction"+string(dataInBytes))
+		c.JSON(http.StatusCreated, dto.ResponseDTO{
+			Status: http.StatusCreated, 
+			Message: "success", 
+			Data: map[string]interface{}{"data": result},
 		})
 	}
 }
@@ -63,10 +134,19 @@ func GetTransactionByCustomerId() gin.HandlerFunc {
 // @Produce json
 // @Success      200  {object}  map[string]interface{}
 // @Failure      400  {number} 	http.StatusBadRequest
+// @Failure      500  {number} 	http.StatusInternalServerError
 // @Router / [GET]
 func HealthCheck() gin.HandlerFunc {
-	//Check to be added for database.
+
+	//Ping DB
+	_, err := configs.DB.ListTables(&dynamodb.ListTablesInput{})
+	if err != nil {
+		zap.L().Error("Database connection is down.")
+		return func(c *gin.Context) {
+			c.JSON(http.StatusInternalServerError, dto.HealthCheckResponse{Server: "Server is up", Database: "Database is down"})
+		}
+	}
 	return func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "Transaction Service is running"})
+		c.JSON(http.StatusOK, dto.HealthCheckResponse{Server: "Server is up", Database: "Database is up"})
 	}
 }
