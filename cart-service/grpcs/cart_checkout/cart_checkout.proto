@@ -2,14 +2,17 @@ syntax = "proto3";
 package cart_checkout;
 option go_package = "/grpcs/cart_checkout";
 
+// The Signal having the cart ID to clear.
 message CartEmptySignal {
   string cartID = 1;
 }
 
+// The Signal having the boolean value of whether the cart was cleared.
 message CartEmptyOutput { 
   bool result = 1;
 }
 
-service CheckoutService {
+// The GRPC service to communicate between cart and checkout services.
+service CartCheckoutService {
   rpc EmptyCart(CartEmptySignal) returns (CartEmptyOutput) {}
 }
