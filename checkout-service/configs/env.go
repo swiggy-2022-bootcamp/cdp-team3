@@ -23,3 +23,12 @@ func EnvServicePort() string {
 
 	return os.Getenv("CHECKOUT_SERVICE_PORT")
 }
+
+func EnvServiceGRPCPort() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file.")
+	}
+
+	return os.Getenv("CHECKOUT_SERVICE_GRPC_PORT")
+}

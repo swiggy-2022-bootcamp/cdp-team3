@@ -2,7 +2,10 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"github.com/swiggy-ipp/checkout-service/dto/responses"
+	"github.com/swiggy-ipp/checkout-service/grpcs"
+	"github.com/swiggy-ipp/checkout-service/grpcs/cart_checkout"
 )
 
 // @Summary      Get an overview of the order
@@ -30,7 +33,17 @@ func GetOrderOverview(c *gin.Context) {
 // @Failure      500  {object}  nil
 // @Router       /confirm/success [put]
 func OrderCompleteWebhook(c *gin.Context) {
-	c.JSON(200, responses.MessageResponse{Message: "Order Complete."})
+	// Set up context
+	ctx := c.Request.Context()
+	out, err := grpcs.CartCheckoutGRPCClient.EmptyCart(ctx, &cart_checkout.CartEmptySignal{})
+	if err != nil {
+		log.Error("Error emptying cart: ", err)
+		c.JSON(500, err)
+	} else if !out.Result {
+		c.JSON(401, "Error")
+	} else {
+		c.JSON(200, responses.MessageResponse{Message: "Order Complete."})
+	}
 }
 
 // @Summary      Health Check Endpoint

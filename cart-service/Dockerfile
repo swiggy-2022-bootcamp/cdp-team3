@@ -9,9 +9,6 @@ ENV GO111MODULE=on \
     GOOS=linux \
     GOARCH=amd64
 
-# Setup Arguments to be used throughout the Dockerfile
-ARG SERVER_PORT=3010
-
 # Create a directly called /app and change directory into it
 WORKDIR /app
 
@@ -19,7 +16,8 @@ WORKDIR /app
 COPY ./ ./
 
 # Set up environetment variables
-ENV CART_SERVICE_PORT=${SERVER_PORT}
+ENV CART_SERVICE_PORT=3010
+ENV CART_SERVICE_GRPC_PORT=30100
 
 # Get Dependencies
 RUN go mod download
@@ -31,6 +29,7 @@ RUN go test ./...
 RUN go build -o /main .
 
 # Expose the application as a port and run it
-EXPOSE ${SERVER_PORT}
+EXPOSE ${CART_SERVICE_PORT}
+EXPOSE ${CART_SERVICE_GRPC_PORT}
 
 CMD ["/main"]

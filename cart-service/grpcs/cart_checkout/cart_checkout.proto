@@ -1,0 +1,15 @@
+syntax = "proto3";
+package cart_checkout;
+option go_package = "/grpcs/cart_checkout";
+
+message CartEmptySignal {
+  string cartID = 1;
+}
+
+message CartEmptyOutput { 
+  bool result = 1;
+}
+
+service CheckoutService {
+  rpc EmptyCart(CartEmptySignal) returns (CartEmptyOutput) {}
+}
