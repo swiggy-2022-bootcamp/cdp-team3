@@ -14,5 +14,6 @@ message CartEmptyOutput {
 
 // The GRPC service to communicate between cart and checkout services.
 service CartCheckoutService {
+  // The Remote Procedure Call to clear the cart.
   rpc EmptyCart(CartEmptySignal) returns (CartEmptyOutput) {}
 }
