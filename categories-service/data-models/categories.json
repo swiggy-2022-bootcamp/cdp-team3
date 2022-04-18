@@ -1,0 +1,20 @@
+{"_comments" : "categories"}
+{
+    "title":"Categories",
+    "type":"object",
+    "properties":{
+        "category_id":{
+            "type":"",
+            "description":
+        },
+        "category_description":{
+            "type":"",
+            "elements":{
+                
+            }
+        }
+    }
+   
+}
+
+// Example
