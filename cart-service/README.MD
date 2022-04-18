@@ -4,9 +4,15 @@ Contains the Cart Microservice for the final Swiggy I++ E-Commerce Application p
 
 ## Relevant APIs
 
-1. (GET) "/cart_service/swagger/index.html": Swagger documentation
-2. (POST) "/cart_service/cart": Add Cart Item
-3. (GET) "/cart_service/cart": Get Cart Items
-4. (PUT) "/cart_service/cart": Update Cart Item
-5. (DELETE) "/cart_service/cart/{key}": Delete Cart Item by ID
-6. (DELETE) "/cart_service/cart/empty": Empty entire Cart
+| HTTP Verb | Endpoint Path                    | Description            |
+| --------- | -------------------------------- | ---------------------- |
+| GET       | /cart_service/swagger/index.html | Swagger documentation  |
+| POST      | /cart_service/cart               | Add Cart Item          |
+| GET       | /cart_service/cart               | Get Cart Items         |
+| PUT       | /cart_service/cart               | Update Cart Item       |
+| DELETE    | /cart_service/cart/{key}         | Delete Cart Item by ID |
+| DELETE    | /cart_service/cart/empty         | Empty entire Cart      |
+
+## GRPC Connections
+
+1. Cart Service <- Checkout Service: To receive Checkout confirm signal to clear user's Cart.
