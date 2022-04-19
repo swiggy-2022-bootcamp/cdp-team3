@@ -11,9 +11,9 @@ func AdminRoute(router *gin.Engine) {
 
 	router.GET("/user", controllers.GetSelf)
 	router.POST("/customers", controllers.CreateCustomer)
-	router.GET("/customers/:id", controllers.GetCustomerById)
-	router.GET("/customers/email/:email", controllers.GetCustomerByEmail)
-	router.PUT("/customers/:id", controllers.UpdateCustomer)
-	router.DELETE("/customers/:id", controllers.DeleteCustomer)
+	router.GET("/customers/:customerId", controllers.GetCustomerById)
+	router.GET("/customers/email/:customerEmail", controllers.GetCustomerByEmail)
+	router.PUT("/customers/:customerId", controllers.UpdateCustomer)
+	router.DELETE("/customers/:customerId", controllers.DeleteCustomer)
 
 }

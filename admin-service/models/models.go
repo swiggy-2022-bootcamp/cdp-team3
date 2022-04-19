@@ -2,25 +2,45 @@ package models
 
 import (
 	"time"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+type Address struct {
+	HouseNumber string `json:"house_number"`
+	Street      string `json:"street"`
+	City        string `json:"city"`
+	Country     string `json:"country"`
+	Pincode     string `json:"pincode"`
+	Default     int    `json:"default"`
+}
+
 type Admin struct {
+	UserId      string    `json:"userId"`
+	Firstname   string    `json:"firstname"`
+	Lastname    string    `json:"lastname"`
+	Username    string    `json:"username"`
+	Email       string    `json:"email"`
+	Password    string    `json:"password"`
+	Telephone   string    `json:"telephone"`
+	UserGroupId int       `json:"user_group_id"`
+	UserGroup   string    `json:"user_group"`
+	Status      int       `json:"status"`
+	DateAdded   time.Time `json:"date_added"`
 }
 
 type Customer struct {
-	ID              primitive.ObjectID `json:"_id"				bson:"_id"`
-	UserGroup       string             `json:"userGroup"		bson:"userGroup"		validate:"required"`
-	FirstName       string             `json:"firstname"		bson:"Email"			validate:"required"`
-	LastName        string             `json:"lastname"			bson:"lastname"			validate:"required"`
-	Password        string             `json:"password"			bson:"password"			validate:"required"`
-	ConfirmPassword string             `json:"confirmpassword"	bson:"confirmpassword"	validate:"required"`
-	Email           string             `json:"email"			bson:"email"			validate:"required"`
-	Telephone       string             `json:"telephone"		bson:"telephone"		validate:"required"`
-	Status          string             `json:"status"			bson:"status"`
-	Approved        string             `json:"approved"			bson:"approved"`
-	Cart            []string           `json:"cart"				bson:"cart"`
-	DateAdded       time.Time          `json:"dateAdded"		bson:"dateAdded"`
-	Rewards         string             `json:"rewards"			bson:"rewards"`
+	CustomerId      string    `json:"customerId"		bson:"customerId"`
+	UserGroup       string    `json:"userGroup"		bson:"userGroup"`
+	Firstname       string    `json:"firstname"		bson:"Email""`
+	Lastname        string    `json:"lastname"			bson:"lastname""`
+	Username        string    `json:"username"			bson:"lastname`
+	Password        string    `json:"password"			bson:"password""`
+	ConfirmPassword string    `json:"confirmpassword"	bson:"confirmpassword""`
+	Email           string    `json:"email"			bson:"email""`
+	Telephone       string    `json:"telephone"		bson:"telephone"`
+	Address         []Address `json:"address"			bson:"address"`
+	Status          string    `json:"status"			bson:"status"`
+	Approved        string    `json:"approved"			bson:"approved"`
+	Cart            []string  `json:"cart"				bson:"cart"`
+	DateAdded       time.Time `json:"dateAdded"		bson:"dateAdded"`
+	Rewards         string    `json:"rewards"			bson:"rewards"`
 }
