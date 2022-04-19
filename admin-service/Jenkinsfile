@@ -15,7 +15,7 @@ pipeline {
     stage('Building image') {
       steps{
         sh 'cd admin-service'
-        docker build -t imagename .
+        sh 'docker build -t imagename .'
       }
     }
     stage('Deploy Image') {
