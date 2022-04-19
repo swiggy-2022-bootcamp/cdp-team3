@@ -1,13 +1,10 @@
 node {
      def app
   
-     stage('Clone repository') {
-            checkout scm
-    }
-
-    stage('Build image') {
-         sh 'cd admin-service'
-        app = docker.build("immadiuttej/admin-service")
+     stage('Build') {
+           git branch: 'Admin_Service', url: 'https://github.com/swiggy-2022-bootcamp/cdp-team3.git'
+          sh 'cd admin-service'
+          app = docker.build("immadiuttej/admin-service")
     }
 
     stage('Test image') {
