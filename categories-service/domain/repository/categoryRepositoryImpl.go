@@ -139,145 +139,125 @@ func (p CategoryRepositoryImpl) GetCategoryFromDB(category_id string) (*models.C
 	}
 	return category, nil
 }
-func (p CategoryRepositoryImpl) DeleteCategoryByIDFromDB(category_id string) *apperrors.AppError{
-	params := &dynamodb.DeleteItemInput{
-		TableName: aws.String(categoryCollection),
-		Key: map[string]*dynamodb.AttributeValue{
+func (categoryRepo CategoryRepositoryImpl) DeleteCategoryByIDFromDB(categoryId string) (bool, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	//check if category is associated with products
+	var queryInput = &dynamodb.QueryInput{
+		TableName: aws.String("ProductCategoryRelation"),
+		KeyConditions: map[string]*dynamodb.Condition{
 			"category_id": {
-				S: aws.String(category_id),
+				ComparisonOperator: aws.String("EQ"),
+				AttributeValueList: []*dynamodb.AttributeValue{
+					{
+						S: aws.String(categoryId),
+					},
+				},
 			},
 		},
 	}
-
-	resp, err := p.categoryDB.DeleteItem(params)
+	var resp, err = categoryRepo.categoryDB.Query(queryInput)
 	if err != nil {
-		logger.Error(err.Error())
-		return apperrors.NewUnexpectedError(err.Error())
-	} else {
-		logger.Info("Success")
-		logger.Info(resp)
-		return nil
+		return false, err
 	}
+	if resp != nil {
+		return false, fmt.Errorf("unable to delete - %s", err.Error())
+	}
+	//delete the category
+	input := &dynamodb.DeleteItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {
+				N: aws.String(categoryId),
+			},
+		},
+		TableName: aws.String("Category"),
+	}
+
+	_, err = categoryRepo.categoryDB.DeleteItemWithContext(ctx, input)
+	if err != nil {
+		return false, fmt.Errorf("unable to delete - %s", err.Error())
+	}
+	return true, nil
 }
-// func (p CategoryRepositoryImpl) UpdateCategoryByIDFromDB(category_id string) (*models.Category, *apperrors.AppError) {
-// 	category := &models.Category{}
+func (categoryRepo CategoryRepositoryImpl) DeleteCategoriesFromDB(categoryIds []string) (bool, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	for _, categoryId := range categoryIds {
+		var queryInput = &dynamodb.QueryInput{
+			TableName: aws.String("ProductCategoryRelation"),
+			KeyConditions: map[string]*dynamodb.Condition{
+				"category_id": {
+					ComparisonOperator: aws.String("EQ"),
+					AttributeValueList: []*dynamodb.AttributeValue{
+						{
+							S: aws.String(categoryId),
+						},
+					},
+				},
+			},
+		}
+		var resp, err = categoryRepo.categoryDB.Query(queryInput)
+		if err != nil {
+			return false, err
+		}
+		if resp != nil {
+			return false, fmt.Errorf("unable to delete - %s", err.Error())
+		}
+		//delete the category
+		input := &dynamodb.DeleteItemInput{
+			Key: map[string]*dynamodb.AttributeValue{
+				"id": {
+					N: aws.String(categoryId),
+				},
+			},
+			TableName: aws.String(categoryCollection),
+		}
 
-// 	query := &dynamodb.GetItemInput{
-// 		TableName: aws.String(categoryCollection),
-// 		Key: map[string]*dynamodb.AttributeValue{
-// 			"category_id": {
-// 				S: aws.String(category_id),
-// 			},
-// 		},
-// 	}
+		_, err = categoryRepo.categoryDB.DeleteItemWithContext(ctx, input)
+		if err != nil {
+			return false, fmt.Errorf("unable to delete - %s", err.Error())
+		}
+	}
+	return true, nil
+}
 
-// 	result, err := p.categoryDB.GetItem(query)
-// 	if err != nil {
-// 		logger.Info(result)
-// 		logger.Error("Failed to get item from database - " + err.Error())
-// 		return nil ,  apperrors.NewUnexpectedError(err.Error())
-// 	}
+func (categoryRepo CategoryRepositoryImpl) UpdateCategoryById(category *models.Category) (bool, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	prevCategoryInput := &dynamodb.GetItemInput{
+		TableName: aws.String("Category"),
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(category.CategoryId),
+			},
+		},
+	}
+	prevCategoryResult, err := categoryRepo.categoryDB.GetItemWithContext(ctx, prevCategoryInput)
+	if err != nil {
+		return false, err
+	}
+	oldCategory := *models.Category{}
+	err = dynamodbattribute.UnmarshalMap(prevCategoryResult.Item, &oldCategory)
 
-// 	if result.Item == nil {
-// 		logger.Error("Categories for given ID doesn't exists - ")
-// 		err_ := apperrors.NewNotFoundError("Categories for given ID doesn't exists")
-// 		return nil, err_
-// 	}
+	if err != nil {
+		return false, fmt.Errorf("unmarshal map - %s", err.Error())
+	}
 
-// 	err = dynamodbattribute.UnmarshalMap(result.Item, category)
-// 	if err != nil {
-// 		logger.Error("Failed to unmarshal document fetched from DB - " + err.Error())
-// 		return nil, apperrors.NewUnexpectedError(err.Error())
-// 	}
-// 	return category, nil
-// }
-// func (p  CategoryRepositoryImpl) UpdateCategoryByIDFromDB(category_id string, category *models.Category) ( *models.Category,*apperrors.AppError) {
-// 	toUpd, err := getCategoryUpdExp(category)
-
-// 	if err != nil {
-// 		logger.Error("error while creating expression %s", err)
-// 		return nil, apperrors.NewUnexpectedError(err.Error())
-// 	}
-// 	updItemIn := dynamodb.UpdateItemInput{
-// 		TableName:                aws.String(categoryCollection),
-// 		Key: map[string]*dynamodb.AttributeValue{
-// 			"category_id": {
-// 				S: aws.String(category_id),
-// 			},
-// 		},
-// 		ExpressionAttributeNames:  toUpd.Names(),
-// 		ExpressionAttributeValues: toUpd.Values(),
-// 		UpdateExpression:          toUpd.Update(),
-// 		ReturnValues:              aws.String("ALL_NEW"),
-// 		ConditionExpression:       toUpd.Condition(),
-// 	}
-
-// 	fmt.Printf("update item input : %+v", updItemIn)
-
-// 	resp, err :=p.categoryDB.UpdateItem(&updItemIn)
-
-// 	if err != nil {
-// 		fmt.Printf("error while updating cateogories %s", err.Error())
-// 		return nil,apperrors.NewUnexpectedError(err.Error())
-// 	}
-
-// 	fmt.Printf("category update resp %v", resp)
-
-// 	updatedAttributes := models.Category{}
-// 	if err = dynamodbattribute.UnmarshalMap(resp.Attributes, &updatedAttributes); err != nil {
-// 		fmt.Printf("error while updating cateogories %s", err.Error())
-// 		return nil, apperrors.NewUnexpectedError(err.Error())
-// 	}
-
-// 	return &updatedAttributes, nil
-// }
-
-
-
-// func getCategoryUpdExp(cat *models.Category) (expression.Expression, error) {
-// 	var updateExp expression.UpdateBuilder
-
-// 	desc := cat.CategoryDesciption[0]
-// 	fmt.Println("\n desc",desc)
-// 	// descPrefix := "category_description."
-// 	//category description
-// 	fmt.Println("desc.Name",desc.Name)
-// 	if desc.Name != "" {
-// 		updateExp = updateExp.Set(expression.Name("category_description.name"), expression.Value(desc.Name))
-// 	}
-
-// 	if desc.Description != "" {
-// 		updateExp = updateExp.Set(expression.Name("category_description.description"), expression.Value(desc.Description))
-// 	}
-
-// 	if desc.MetaDescription != "" {
-// 		updateExp = updateExp.Set(expression.Name("category_description.meta_description"), expression.Value(desc.MetaDescription))
-// 	}
-
-// 	if desc.MetaKeyword != "" {
-// 		updateExp = updateExp.Set(expression.Name("category_description.meta_keyword"), expression.Value(desc.MetaKeyword))
-// 	}
-
-// 	if desc.MetaTitle != "" {
-// 		updateExp = updateExp.Set(expression.Name("category_description.meta_title"), expression.Value(desc.MetaTitle))
-// 	}
-
-// 	fmt.Printf("category update expression %+v", updateExp)
-// 	exp, err := expression.
-// 		NewBuilder().
-// 		WithCondition(expression.AttributeExists(expression.Name("category_id"))).
-// 		WithUpdate(updateExp).
-// 		Build()
-
-// 	fmt.Printf("%+v", exp.Names())
-// 	fmt.Println(exp.Values())
-// 	fmt.Println(*exp.Update())
-// 	return exp, err
-// }
-
-func (p  CategoryRepositoryImpl) UpdateCategoryByIDFromDB1(category_id string, category *models.Category) (bool, *apperrors.AppError) {
-	 ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	 defer cancel()
+	if category.CategoryDescription[0].Description == "" {
+		category.CategoryDescription[0].Description = oldCategory.CategoryDescription[0].Description
+	}
+	if category.CategoryDescription[0].Name == "" {
+		category.CategoryDescription[0].Name = oldCategory.CategoryDescription[0].Name
+	}
+	if category.CategoryDescription[0].MetaDescription == "" {
+		category.CategoryDescription[0].MetaDescription = oldCategory.CategoryDescription[0].MetaDescription
+	}
+	if category.CategoryDescription[0].MetaKeyword == "" {
+		category.CategoryDescription[0].MetaKeyword = oldCategory.CategoryDescription[0].MetaKeyword
+	}
+	if category.CategoryDescription[0].MetaTitle == "" {
+		category.CategoryDescription[0].MetaTitle = oldCategory.CategoryDescription[0].MetaTitle
+	}
 	input := &dynamodb.UpdateItemInput{
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
 			":s": {
@@ -289,22 +269,21 @@ func (p  CategoryRepositoryImpl) UpdateCategoryByIDFromDB1(category_id string, c
 			}, ":s3": {
 				S: aws.String(category.CategoryDescription[0].MetaKeyword),
 			}, ":s4": {
-				S: aws.String(category.CategoryDescription[0].MetaTitle ),
+				S: aws.String(category.CategoryDescription[0].MetaTitle),
 			},
 		},
 		Key: map[string]*dynamodb.AttributeValue{
-			"category_id": {
-				S: aws.String(category_id),
+			"id": {
+				S: aws.String(category.CategoryId),
 			},
 		},
 		ReturnValues:     aws.String("UPDATED_NEW"),
-		UpdateExpression: aws.String("set category_description[0].category_name =:s, category_description[0].description = :s1, category_description[0].meta_description= :s2, category_description[0].meta_keyword = :s3, category_description[0].meta_title = :s4"),
-		TableName:        aws.String(categoryCollection),
+		UpdateExpression: aws.String("set category_description.name =:s, category_description.description = :s1, category_description.mata_description = :s2,  category_description.mata_keyword= :s3, category_description.meta_title = :s4"),
+		TableName:        aws.String("Category"),
 	}
-
-	_, err := p.categoryDB.UpdateItemWithContext(ctx, input)
+	_, err = categoryRepo.categoryDB.UpdateItemWithContext(ctx, input)
 	if err != nil {
-		return false, apperrors.NewUnexpectedError(err.Error())
+		return false, err
 	}
-	return true, nil
+	return true, err
 }

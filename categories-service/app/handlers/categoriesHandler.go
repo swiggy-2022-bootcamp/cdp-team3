@@ -25,15 +25,7 @@ func toPersistedDynamodbEntitySA(o models.Category) *models.Category {
 
 		CategoryId :        uuid.New().String(),
 		CategoryDescription: o.CategoryDescription,
-		// FirstName: o.FirstName,
-		// LastName:  o.LastName,
-		// City:      o.City,
-		// Address1:  o.Address1,
-		// Address2:  o.Address2,
-		// CountryID: o.CountryID,
-		// PostCode:  o.PostCode,
-		// CreatedAt: time.Now(),
-		// UpdatedAt: time.Now(),
+		
 	}
 }
 func (th CategoryHandler) AddCategory(c *gin.Context) {
@@ -105,18 +97,7 @@ func (th CategoryHandler) GetAllCategory(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"categories": result})
 }
 
-// GetPaymentMode godoc
-// @Summary To get available payment modes of a user.
-// @Description To get available payment modes of a user.
-// @Tags PaymentMode
-// @Schemes
-// @Accept json
-// @Produce json
-// @Param userId path string true "User id"
-// @Success	200  {object} 	models.UserPaymentMode
-// @Failure 500  string 	Internal server error
-// @Failure 404  string 	User not found
-// @Router /categories/{category_id} [GET]
+
 func (th CategoryHandler) GetCategory(c *gin.Context) {
 	category_id := c.Param("category_id")
 	category, err := th.categoryService.GetCategory(category_id)
@@ -128,6 +109,16 @@ func (th CategoryHandler) GetCategory(c *gin.Context) {
 	c.JSON(http.StatusOK, category)
 }
 
+func (th CategoryHandler) DeleteCategories(c *gin.Context) {
+	
+	 err := th.categoryService.DeleteCategories()
+	if err != nil {
+		c.Error(err.Error())
+		c.JSON(err.Code, gin.H{"message": err.Message})
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{"message": "Categories deleted successfully"})
+}
 func (th CategoryHandler) DeleteCategory(c *gin.Context) {
 	category_id := c.Param("category_id")
 	 err := th.categoryService.DeleteCategoryByID(category_id)
@@ -156,40 +147,3 @@ func (th CategoryHandler) UpdateCategory(c *gin.Context) {
 	c.JSON(http.StatusOK,res)
 }
 
-// func (th TransactionHandler) GetTransactionPointsByUserID(c *gin.Context) {
-// 	userId := c.Param("userId")
-// 	points, err := th.transactionService.GetTransactionPointsByUserId(userId)
-// 	if err != nil {
-// 		c.Error(err.Error())
-// 		c.JSON(err.Code, gin.H{"message": err.Message})
-// 		return
-// 	}
-// 	c.JSON(http.StatusOK, gin.H{"transaction_points": points})
-// }
-
-// func (th TransactionHandler) UseTransactionPoints(c *gin.Context) {
-// 	userId := c.Param("userId")
-// 	var transactionAmount models.TransactionAmount
-
-// 	if err := c.BindJSON(&transactionAmount); err != nil {
-// 		c.Error(err)
-// 		err_ := apperros.NewBadRequestError(err.Error())
-// 		c.JSON(err_.Code, gin.H{"message": err_.Message})
-// 		return
-// 	}
-
-// 	//validate request body
-// 	if validationErr := validate.Struct(&transactionAmount); validationErr != nil {
-// 		c.Error(validationErr)
-// 		c.JSON(http.StatusBadRequest, gin.H{"message": validationErr.Error()})
-// 		return
-// 	}
-// 	transactionAmount.UserId = userId
-// 	_, newTransactionAmount, err := th.transactionService.UseTransactionPoints(&transactionAmount)
-// 	if err != nil {
-// 		c.Error(err.Error())
-// 		c.JSON(err.Code, gin.H{"message": err.Message})
-// 		return
-// 	}
-// 	c.JSON(http.StatusOK, gin.H{"message": newTransactionAmount})
-// }

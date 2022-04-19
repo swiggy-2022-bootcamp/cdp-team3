@@ -21,11 +21,7 @@ func (tr CategoriesRoutes) InitRoutes(newRouter *gin.RouterGroup) {
 	newRouter.POST("/categories", tr.categoriesHandler.AddCategory)
 	newRouter.GET("/categories", tr.categoriesHandler.GetAllCategory)
 	newRouter.GET("/categories/:category_id",  tr.categoriesHandler.GetCategory)
-	newRouter.DELETE("/categories/:category_id",  tr.categoriesHandler.DeleteCategory)
+	newRouter.DELETE("/categories/",  tr.categoriesHandler.DeleteCategories)
 	newRouter.PUT("/categories/:category_id",  tr.categoriesHandler.UpdateCategory)
-	// newRouter.GET("/transaction/:userId", tr.transactionHandler.GetTransactionPointsByUserID)
-	// newRouter.POST("/transaction/use-transaction-points/:userId", tr.transactionHandler.UseTransactionPoints)
-	// newRouter := router.Group("categories-service/api")
-	// newRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	// newRouter.GET("/", handlers.HealthCheck())
+	
 }

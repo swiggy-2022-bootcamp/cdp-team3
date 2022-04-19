@@ -100,6 +100,17 @@ func (p CategoryServiceImpl) GetCategory(category_id string) (*models.Category, 
 	}
 	return category, nil
 }
+func (p CategoryServiceImpl) DeleteCategories(categories []string) (bool,*apperros.AppError) {
+
+	
+	 err := p.categoryRepository.DeleteCategoriesFromDB(categories)
+	if err != nil {
+		fmt.Println(err)
+		logger.Error(err)
+		return  false,err
+	}
+	return true,nil
+}
 func (p CategoryServiceImpl) DeleteCategoryByID(category_id string) (*apperros.AppError) {
 
 	// Fetch payment modes for the given user
