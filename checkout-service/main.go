@@ -6,6 +6,7 @@ import (
 	"github.com/swiggy-ipp/checkout-service/configs"
 	"github.com/swiggy-ipp/checkout-service/grpcs"
 	"github.com/swiggy-ipp/checkout-service/grpcs/cart_checkout"
+	"github.com/swiggy-ipp/checkout-service/grpcs/shipping_checkout"
 	"github.com/swiggy-ipp/checkout-service/routes"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -18,15 +19,24 @@ var (
 ) 
 
 /// Function with logic for GRPC client
-func startGRPCClient(address string) {
+func startGRPCClient(cartAddress string, shippingAddress string) {
 	// Create a listener on TCP port
-	conn, err := grpc.Dial(":" + address, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(cartAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 		errChanGRPC <- err
 	} else {
 		// Start GRPC
 		grpcs.CartCheckoutGRPCClient = cart_checkout.NewCheckoutServiceClient(conn)
+	}
+
+	conn, err = grpc.Dial(shippingAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("Did not connect: %v", err)
+		errChanGRPC <- err
+	} else {
+		// Start GRPC
+		grpcs.ShippingCheckoutGRPCClient = shipping_checkout.NewShippingClient(conn)
 	}
 }
 
@@ -51,7 +61,7 @@ func main() {
 	kafkaTopic := ""
 
 	// Set up GRPC
-	go startGRPCClient(configs.EnvServiceGRPCPort())
+	go startGRPCClient(":" + configs.CartServiceGRPCPort(), ":" + configs.ShippingServiceGRPCPort())
 
 	// Set up Kafka listener
 	go startKafka(kafkaTopic)

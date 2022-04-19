@@ -6,6 +6,7 @@ import (
 	"github.com/swiggy-ipp/checkout-service/dto/responses"
 	"github.com/swiggy-ipp/checkout-service/grpcs"
 	"github.com/swiggy-ipp/checkout-service/grpcs/cart_checkout"
+	"github.com/swiggy-ipp/checkout-service/grpcs/shipping_checkout"
 )
 
 // @Summary      Get an overview of the order
@@ -19,7 +20,16 @@ import (
 // @Failure      500  {object}  nil
 // @Router       /confirm [post]
 func GetOrderOverview(c *gin.Context) {
-	c.JSON(200, responses.MessageResponse{Message: "Here's your order."})
+	// Set up context
+	ctx := c.Request.Context()
+	// Make GRPC Call
+	out, err := grpcs.ShippingCheckoutGRPCClient.GetShippingAddress(ctx, &shipping_checkout.ShippingAddressRequest{})
+	if err != nil {
+		log.Error("Error emptying cart: ", err)
+		c.JSON(500, err)
+	} else {
+		c.JSON(200, out)
+	}
 }
 
 // @Summary      Order Successful Webhook
@@ -35,7 +45,8 @@ func GetOrderOverview(c *gin.Context) {
 func OrderCompleteWebhook(c *gin.Context) {
 	// Set up context
 	ctx := c.Request.Context()
-	out, err := grpcs.CartCheckoutGRPCClient.EmptyCart(ctx, &cart_checkout.CartEmptySignal{})
+	// Make GRPC Call
+	out, err := grpcs.CartCheckoutGRPCClient.EmptyCart(ctx, &cart_checkout.CartEmptySignal{CartID: "hello123"})
 	if err != nil {
 		log.Error("Error emptying cart: ", err)
 		c.JSON(500, err)
