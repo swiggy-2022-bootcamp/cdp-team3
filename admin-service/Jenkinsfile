@@ -1,14 +1,14 @@
 pipeline {
   environment {
     imagename = "immadiuttej/admin-service"
-    registryCredential = 'id'
+    registryCredential = 'git'
     dockerImage = ''
   }
   agent any
   stages {
     stage('Cloning Git') {
       steps {
-        git([url: 'https://github.com/swiggy-2022-bootcamp/cdp-team3.git', branch: 'Admin_Service', credentialsId: 'id'])
+        git([url: 'https://github.com/swiggy-2022-bootcamp/cdp-team3.git', branch: 'Admin_Service', credentialsId: 'git'])
  
       }
     }
