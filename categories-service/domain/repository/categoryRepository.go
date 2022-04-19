@@ -12,7 +12,8 @@ type CategoryRepository interface {
 	// GetCategoryByCategoryIdFromDB(categoryId string) (*models.Category, *apperros.AppError)
 	 DBHealthCheck() bool
 	 GetCategoryFromDB(category_id string)(*models.Category, *apperros.AppError)
-	 DeleteCategoryByIDFromDB(category_id string) *apperros.AppError
-	 UpdateCategoryByIDFromDB1(category_id string,category *models.Category) (bool, *apperros.AppError)
+	 DeleteCategoryByIDFromDB(category_id string)(bool, *apperros.AppError)
+	 DeleteCategoriesFromDB(categoryIds []string) (bool,  *apperros.AppError)
+	 UpdateCategoryByIdFromDB(category_id string,category *models.Category) (bool, *apperros.AppError)
 	// UpdateCategoryByIdFromDB(categoryId string,category *models.Category) *apperros.AppError
 }

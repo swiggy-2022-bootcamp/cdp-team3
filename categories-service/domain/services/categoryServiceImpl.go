@@ -103,7 +103,7 @@ func (p CategoryServiceImpl) GetCategory(category_id string) (*models.Category, 
 func (p CategoryServiceImpl) DeleteCategories(categories []string) (bool,*apperros.AppError) {
 
 	
-	 err := p.categoryRepository.DeleteCategoriesFromDB(categories)
+	 _,err := p.categoryRepository.DeleteCategoriesFromDB(categories)
 	if err != nil {
 		fmt.Println(err)
 		logger.Error(err)
@@ -114,7 +114,7 @@ func (p CategoryServiceImpl) DeleteCategories(categories []string) (bool,*apperr
 func (p CategoryServiceImpl) DeleteCategoryByID(category_id string) (*apperros.AppError) {
 
 	// Fetch payment modes for the given user
-	 err := p.categoryRepository.DeleteCategoryByIDFromDB(category_id)
+	_, err := p.categoryRepository.DeleteCategoryByIDFromDB(category_id)
 	if err != nil {
 		fmt.Println(err)
 		logger.Error(err)
@@ -125,7 +125,7 @@ func (p CategoryServiceImpl) DeleteCategoryByID(category_id string) (*apperros.A
 func (p CategoryServiceImpl) UpdateCategoryByID(category_id string,category *models.Category) (bool,*apperros.AppError) {
 
 	// Fetch payment modes for the given user
-	 _,err := p.categoryRepository.UpdateCategoryByIDFromDB1(category_id,category)
+	 _,err := p.categoryRepository.UpdateCategoryByIdFromDB(category_id,category)
 	if err != nil {
 		fmt.Println(err)
 		logger.Error(err)

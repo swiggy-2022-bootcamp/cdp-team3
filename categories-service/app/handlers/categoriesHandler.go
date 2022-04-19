@@ -109,18 +109,28 @@ func (th CategoryHandler) GetCategory(c *gin.Context) {
 	c.JSON(http.StatusOK, category)
 }
 
-func (th CategoryHandler) DeleteCategories(c *gin.Context) {
-	
-	 err := th.categoryService.DeleteCategories()
+func (th CategoryHandler) DeleteCategories() (gin.HandlerFunc){
+	return func(ctx *gin.Context) {
+	var categoryList []string
+		if err := ctx.BindJSON(&categoryList); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			fmt.Println("Unable to bind json",err)
+		//	logger.WithFields(logrus.Fields{"message": err.Error(), "status": http.StatusBadRequest}).
+			//	Error("unable to bind json")
+			return
+		}
+		fmt.Println("clist",categoryList)
+	_,err := th.categoryService.DeleteCategories(categoryList)
 	if err != nil {
-		c.Error(err.Error())
-		c.JSON(err.Code, gin.H{"message": err.Message})
+		ctx.Error(err.Error())
+		ctx.JSON(err.Code, gin.H{"message": err.Message})
 		return
 	}
-	c.JSON(http.StatusOK,gin.H{"message": "Categories deleted successfully"})
+	ctx.JSON(http.StatusOK,gin.H{"message": "Categories deleted successfully"})}
 }
 func (th CategoryHandler) DeleteCategory(c *gin.Context) {
 	category_id := c.Param("category_id")
+	fmt.Println("Inside category id",category_id)
 	 err := th.categoryService.DeleteCategoryByID(category_id)
 	if err != nil {
 		c.Error(err.Error())
