@@ -8,6 +8,9 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/controllers"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/routes"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/utils"
+
+	"go.uber.org/zap"
 )
 
 // @title           Swagger Orders Service API
@@ -28,6 +31,14 @@ import (
 // @in header
 // @name Authorization
 func main() {
+
+	//Initialize Logger
+	log := utils.InitializeLogger()
+
+  zap.ReplaceGlobals(log)
+  defer log.Sync()
+  log.Info("Orders Service Started")
+
 	router := gin.Default()
 
 	router.GET("/", controllers.HealthCheck())

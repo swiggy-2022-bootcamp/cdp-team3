@@ -1,0 +1,6 @@
+{
+  "level": "info",
+  "ts": "2022-04-19T14:45:41.061+0530",
+  "caller": "orders-service/main.go:40",
+  "msg": "Orders Service Started"
+}
