@@ -14,8 +14,8 @@ pipeline {
     }
     stage('Building image') {
       steps{
+        sh 'cd admin-service'
         script {
-          sh 'cd admin-service'
           dockerImage = docker.build imagename
         }
       }
