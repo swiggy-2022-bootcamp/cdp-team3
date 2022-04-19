@@ -8,6 +8,7 @@ node {
     }
 
     stage('Build image') {
+         sh 'cd admin-service'
         app = docker.build("immadiuttej/admin-service")
     }
 
