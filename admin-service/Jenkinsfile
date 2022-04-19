@@ -4,7 +4,7 @@ node {
      stage('Build') {
            git branch: 'Admin_Service', url: 'https://github.com/swiggy-2022-bootcamp/cdp-team3.git'
           sh 'cd admin-service'
-          sh 'go build main.go
+          sh 'go build'
     }
 
     stage('Test image') {
