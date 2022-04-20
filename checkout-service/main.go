@@ -4,46 +4,25 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"github.com/swiggy-ipp/checkout-service/configs"
+	"github.com/swiggy-ipp/checkout-service/controllers"
 	"github.com/swiggy-ipp/checkout-service/grpcs"
-	"github.com/swiggy-ipp/checkout-service/grpcs/cart_checkout"
-	"github.com/swiggy-ipp/checkout-service/grpcs/shipping_checkout"
 	"github.com/swiggy-ipp/checkout-service/routes"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 var (
-	errChanGRPC chan error = make(chan error)
+	// Error Channels
 	errChanKafka chan error = make(chan error)
 	errChanREST chan error = make(chan error)
 ) 
 
-/// Function with logic for GRPC client
-func startGRPCClient(cartAddress string, shippingAddress string) {
-	// Create a listener on TCP port
-	conn, err := grpc.Dial(cartAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("Did not connect: %v", err)
-		errChanGRPC <- err
-	} else {
-		// Start GRPC
-		grpcs.CartCheckoutGRPCClient = cart_checkout.NewCheckoutServiceClient(conn)
-	}
-
-	conn, err = grpc.Dial(shippingAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("Did not connect: %v", err)
-		errChanGRPC <- err
-	} else {
-		// Start GRPC
-		grpcs.ShippingCheckoutGRPCClient = shipping_checkout.NewShippingClient(conn)
-	}
-}
-
 /// Function with logic for starting REST Routes
 func generateRESTRoutes(port string) {
+	checkoutController := controllers.NewCheckoutController(
+		<-grpcs.CartCheckoutGRPCChannel, 
+		<-grpcs.ShippingCheckoutGRPCChannel,
+	) // Controller
 	checkoutRouter := gin.Default()
-	routes.GenerateCheckoutRoutes(checkoutRouter)
+	routes.GenerateCheckoutRoutes(checkoutRouter, checkoutController)
 
 	// Run REST Microservice
 	errChanREST <- checkoutRouter.Run(":" + port)
@@ -60,8 +39,13 @@ func main() {
 	// Get configs
 	kafkaTopic := ""
 
+	// Make Layered Architecture
+
 	// Set up GRPC
-	go startGRPCClient(":" + configs.CartServiceGRPCPort(), ":" + configs.ShippingServiceGRPCPort())
+	go grpcs.BecomeGRPCClient(
+		configs.CartServiceGRPCAddress(),
+		configs.ShippingServiceGRPCAddress(),
+	)
 
 	// Set up Kafka listener
 	go startKafka(kafkaTopic)
@@ -71,7 +55,7 @@ func main() {
 
 	// Listen to errors.
 	select {
-		case err := <-errChanGRPC:
+		case err := <-grpcs.ErrChanGRPC:
 			log.Fatal("GRPC encountered an error: ", err)
 		case err := <-errChanKafka:
 			log.Fatal("Kafka encountered an error: ", err)

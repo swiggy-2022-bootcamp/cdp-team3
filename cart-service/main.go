@@ -21,7 +21,7 @@ var (
 ) 
 
 /// Function with logic for starting GRPC server
-func startGRPCServer(port string) {
+func startGRPCServer(port string, cartRepository repositories.CartRepository) {
 	// Create a listener on TCP port
 	lis, err := net.Listen("tcp", ":" + port)
 	if err != nil {
@@ -29,7 +29,7 @@ func startGRPCServer(port string) {
 		errChanGRPC <- err
 	} else {
 		// Start GRPC
-		errChanGRPC <- grpcs.StartGRPCServer(lis)
+		errChanGRPC <- grpcs.NewCartCheckoutGRPCServer(lis, cartRepository)
 	}
 }
 
@@ -71,7 +71,7 @@ func main() {
 	})
 
 	// Set up GRPC
-	go startGRPCServer(configs.EnvServiceGRPCPort())
+	go startGRPCServer(configs.EnvServiceGRPCPort(), cartRepository)
 
 	// Set up Kafka listener
 	go startKafka(kafkaTopic)

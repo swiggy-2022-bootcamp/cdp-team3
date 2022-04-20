@@ -62,6 +62,10 @@ func (cr *cartRepositoryImpl) Read(ctx context.Context, id string) (*models.Cart
 			},
 		},
 	})
+	if err != nil {
+		log.Errorf("Failed to read cart: %v", err)
+		return nil, err
+	}
 
 	// Model *dynamodb.GetItemOutput into cart
 	var cart models.Cart
@@ -152,7 +156,7 @@ func (cr *cartRepositoryImpl) EmptyCart(ctx context.Context, id string) error {
 	// Get cart from DB
 	cart, err := cr.Read(ctx, id)
 	if err != nil {
-		log.Errorf("Failed to read cart: %v", err)
+		log.Errorf("Failed to empty cart: %v", err)
 		return err
 	}
 

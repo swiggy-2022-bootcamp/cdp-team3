@@ -24,20 +24,20 @@ func EnvServicePort() string {
 	return os.Getenv("CHECKOUT_SERVICE_PORT")
 }
 
-func CartServiceGRPCPort() string {
+func CartServiceGRPCAddress() string {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file.")
 	}
 
-	return os.Getenv("CART_SERVICE_GRPC_PORT")
+	return os.Getenv("CART_SERVICE_GRPC_ADDRESS")
 }
 
-func ShippingServiceGRPCPort() string {
+func ShippingServiceGRPCAddress() string {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file.")
 	}
 
-	return os.Getenv("SHIPPING_SERVICE_GRPC_PORT")
+	return os.Getenv("SHIPPING_SERVICE_GRPC_ADDRESS")
 }

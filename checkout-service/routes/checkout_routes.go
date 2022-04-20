@@ -10,21 +10,21 @@ import (
 
 const BaseURL string = "/checkout_service";
 
-func GenerateCheckoutRoutes(router *gin.Engine) {
+func GenerateCheckoutRoutes(router *gin.Engine, checkoutController controllers.CheckoutController) {
 	checkoutServiceRouter := router.Group(BaseURL)
 	checkoutServiceConfirmRouter := checkoutServiceRouter.Group("/confirm")
 
 	// Health Check
-	checkoutServiceRouter.GET("/", controllers.HealthCheck)
+	checkoutServiceRouter.GET("/", checkoutController.HealthCheck)
 
 	// Swagger Routes
 	docs.SwaggerInfo.BasePath = BaseURL
 	checkoutServiceRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	
 	// Get an overview of the order
-	checkoutServiceConfirmRouter.GET("/", controllers.GetOrderOverview)
-	checkoutServiceConfirmRouter.POST("/", controllers.GetOrderOverview)
+	checkoutServiceConfirmRouter.GET("/", checkoutController.GetOrderOverview)
+	checkoutServiceConfirmRouter.POST("/", checkoutController.GetOrderOverview)
 
 	// Clear Cart and Unset Session Data
-	checkoutServiceConfirmRouter.POST("/success", controllers.OrderCompleteWebhook)
+	checkoutServiceConfirmRouter.POST("/success", checkoutController.OrderCompleteWebhook)
 }
