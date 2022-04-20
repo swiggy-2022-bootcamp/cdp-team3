@@ -41,10 +41,11 @@ func DeepHealthCheck() HealthCheckResponse {
 
 func DBHealthCheck() ServiceResponse {
 	response := ServiceResponse{}
-	response.Name = "MongoDB"
+	response.Name = "DynamoDB"
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	err := configs.DB.Ping(ctx, nil)
+
+	_, err := configs.DB.ListTablesWithContext(ctx, nil)
 
 	if err != nil {
 		response.Status = "down"

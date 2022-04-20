@@ -7,28 +7,34 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func EnvMonogoURI() string {
+func loadEnv() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file.")
 	}
-	return os.Getenv("MONGO_URI")
+}
+
+func EnvAccessKey() string {
+	loadEnv()
+	return os.Getenv("AWS_ACCESS_KEY_ID")
+}
+
+func EnvAccessSecretKey() string {
+	loadEnv()
+	return os.Getenv("AWS_SECRET_ACCESS_KEY")
+}
+
+func EnvRegion() string {
+	loadEnv()
+	return os.Getenv("REGION")
 }
 
 func EnvJWTSecretKey() string {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file.")
-	}
-
+	loadEnv()
 	return os.Getenv("SECRET_KEY")
 }
 
 func EnvPORT() string {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file.")
-	}
-
+	loadEnv()
 	return os.Getenv("PORT")
 }

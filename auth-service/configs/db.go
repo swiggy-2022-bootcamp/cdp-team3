@@ -1,44 +1,29 @@
 package configs
 
 import (
-	"context"
 	"fmt"
-	"log"
-	"time"
 
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
 )
 
-func ConnectDB() *mongo.Client {
+func ConnectDB() *dynamodb.DynamoDB {
 	//initialize client
-	client, err := mongo.NewClient(options.Client().ApplyURI(EnvMonogoURI()))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	//Connect to database
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-	defer cancel()
-	err = client.Connect(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
+	sess, _ := session.NewSession(&aws.Config{
+		Region:      aws.String(EnvRegion()),
+		Credentials: credentials.NewStaticCredentials(EnvAccessKey(), EnvAccessSecretKey(), ""),
+	})
+	client := dynamodb.New(sess)
 
 	//ping the database
-	err = client.Ping(ctx, nil)
+	_, err := client.ListTables(&dynamodb.ListTablesInput{})
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Connection to dynamoDB failed.", err)
 	}
-	fmt.Println("Connected to MongoDB")
+	fmt.Println("Connected to DynamoDB")
 	return client
 }
 
-//create instance of client to be used in the application
-//Singleton design pattern.
-var DB *mongo.Client = ConnectDB()
-
-func GetCollection(client *mongo.Client, collectionName string) *mongo.Collection {
-	collection := client.Database("ecommerce").Collection(collectionName)
-	return collection
-}
+var DB = ConnectDB()

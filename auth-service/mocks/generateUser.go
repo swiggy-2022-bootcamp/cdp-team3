@@ -5,24 +5,24 @@ import (
 
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/models"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/utils"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func GenerateUser() {
 	user := models.User{
-		Id:       primitive.NewObjectID(),
+		Id:       "1",
 		Name:     "John Doe",
 		Email:    "john@gmail.com",
 		Password: utils.HashPassword("123456"),
 		IsAdmin:  false,
 	}
-	result, err := models.UserCollection.InsertOne(nil, user)
+	dbUser, err := models.CreateUser(user)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
-	fmt.Println(result.InsertedID)
+	fmt.Println(dbUser)
 }
 
 func main() {
+	// models.CreateTable()
 	GenerateUser()
 }

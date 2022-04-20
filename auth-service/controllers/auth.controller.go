@@ -7,15 +7,20 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	_ "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/configs"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/dto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/models"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/utils"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 const requestTimeout = time.Second * 5
+
+var logger = utils.NewLoggerService("auth-controller")
 
 // Login godoc
 // @Summary Login
@@ -43,11 +48,26 @@ func Login() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		err := models.UserCollection.FindOne(ctx, bson.M{"email": user.Email}).Decode(&foundUser)
-		defer cancel()
+
+		input := &dynamodb.GetItemInput{
+			TableName: aws.String(models.UserTableName),
+			Key: map[string]*dynamodb.AttributeValue{
+				"email": {
+					S: aws.String(user.Email),
+				},
+			},
+		}
+
+		result, err := configs.DB.GetItemWithContext(ctx, input)
+		if err != nil {
+			logger.Log(err)
+			c.JSON(http.StatusNotFound, gin.H{"error": "User with this email doesn't exists "})
+			return
+		}
+		err = dynamodbattribute.UnmarshalMap(result.Item, &foundUser)
 
 		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "User with this email doesn't exists "})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
