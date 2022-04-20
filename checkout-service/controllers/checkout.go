@@ -41,7 +41,7 @@ func GetOrderOverview(c *gin.Context) {
 // @Failure      400  {object}  errors.HTTPErrorDTO
 // @Failure      404  {object}  errors.HTTPErrorDTO
 // @Failure      500  {object}  nil
-// @Router       /confirm/success [put]
+// @Router       /confirm/success [post]
 func OrderCompleteWebhook(c *gin.Context) {
 	// Set up context
 	ctx := c.Request.Context()
@@ -66,7 +66,7 @@ func OrderCompleteWebhook(c *gin.Context) {
 // @Failure      400  {object}  errors.HTTPErrorDTO
 // @Failure      404  {object}  errors.HTTPErrorDTO
 // @Failure      500  {object}  nil
-// @Router       /health [get]
+// @Router       / [get]
 func HealthCheck(c *gin.Context) {
 	c.JSON(200, responses.MessageResponse{Message: "up"})
 }

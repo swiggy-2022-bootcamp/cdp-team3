@@ -98,7 +98,7 @@ func (cc *cartControllerImpl) EmptyCart(c *gin.Context) {
 // @Failure      400  {object}  errors.HTTPErrorDTO
 // @Failure      404  {object}  errors.HTTPErrorDTO
 // @Failure      500  {object}  nil
-// @Router       /health [get]
+// @Router       / [get]
 func (cc *cartControllerImpl) HealthCheck(c *gin.Context) {
 	c.JSON(200, responses.MessageResponse{Message: "up"})
 }

@@ -15,7 +15,7 @@ func GenerateCheckoutRoutes(router *gin.Engine) {
 	checkoutServiceConfirmRouter := checkoutServiceRouter.Group("/confirm")
 
 	// Health Check
-	checkoutServiceRouter.GET("/health", controllers.HealthCheck)
+	checkoutServiceRouter.GET("/", controllers.HealthCheck)
 
 	// Swagger Routes
 	docs.SwaggerInfo.BasePath = BaseURL
@@ -26,5 +26,5 @@ func GenerateCheckoutRoutes(router *gin.Engine) {
 	checkoutServiceConfirmRouter.POST("/", controllers.GetOrderOverview)
 
 	// Clear Cart and Unset Session Data
-	checkoutServiceConfirmRouter.PUT("/success", controllers.OrderCompleteWebhook)
+	checkoutServiceConfirmRouter.POST("/success", controllers.OrderCompleteWebhook)
 }

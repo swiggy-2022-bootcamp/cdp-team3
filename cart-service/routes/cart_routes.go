@@ -15,7 +15,7 @@ func GenerateCartRoutes(router *gin.Engine, cartController controllers.CartContr
 	cartServiceCartRouter := cartServiceRouter.Group("/cart")
 
 	// Health Check
-	cartServiceRouter.GET("/health", cartController.HealthCheck)
+	cartServiceRouter.GET("/", cartController.HealthCheck)
 
 	// Swagger Routes
 	docs.SwaggerInfo.BasePath = BaseURL

@@ -27,6 +27,31 @@ definitions:
 info:
   contact: {}
 paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: Health Check Endpoint
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Health Check Message.
+          schema:
+            $ref: '#/definitions/responses.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "500":
+          description: Internal Server Error
+      summary: Health Check Endpoint
+      tags:
+      - Health Check
   /confirm:
     post:
       consumes:
@@ -53,7 +78,7 @@ paths:
       tags:
       - Checkout API
   /confirm/success:
-    put:
+    post:
       consumes:
       - application/json
       description: Webhook hit when Order is successful to clear Cart and Unset Session
@@ -78,29 +103,4 @@ paths:
       summary: Order Successful Webhook
       tags:
       - Checkout API
-  /health:
-    get:
-      consumes:
-      - application/json
-      description: Health Check Endpoint
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Health Check Message.
-          schema:
-            $ref: '#/definitions/responses.MessageResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errors.HTTPErrorDTO'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/errors.HTTPErrorDTO'
-        "500":
-          description: Internal Server Error
-      summary: Health Check Endpoint
-      tags:
-      - Health Check
 swagger: "2.0"

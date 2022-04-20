@@ -59,6 +59,31 @@ definitions:
 info:
   contact: {}
 paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: Health Check Endpoint
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Health Check Message.
+          schema:
+            $ref: '#/definitions/responses.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errors.HTTPErrorDTO'
+        "500":
+          description: Internal Server Error
+      summary: Health Check Endpoint
+      tags:
+      - Health Check
   /cart:
     get:
       consumes:
@@ -200,29 +225,4 @@ paths:
       summary: Empty the Cart.
       tags:
       - Cart Overall
-  /health:
-    get:
-      consumes:
-      - application/json
-      description: Health Check Endpoint
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Health Check Message.
-          schema:
-            $ref: '#/definitions/responses.MessageResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errors.HTTPErrorDTO'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/errors.HTTPErrorDTO'
-        "500":
-          description: Internal Server Error
-      summary: Health Check Endpoint
-      tags:
-      - Health Check
 swagger: "2.0"

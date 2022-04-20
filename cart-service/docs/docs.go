@@ -16,6 +16,44 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/": {
+            "get": {
+                "description": "Health Check Endpoint",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Health Check"
+                ],
+                "summary": "Health Check Endpoint",
+                "responses": {
+                    "200": {
+                        "description": "Health Check Message.",
+                        "schema": {
+                            "$ref": "#/definitions/responses.MessageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/cart": {
             "get": {
                 "description": "Get a list of all the items in the Cart currently.",
@@ -210,44 +248,6 @@ const docTemplate = `{
                         "description": "No Content",
                         "schema": {
                             "type": "integer"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/errors.HTTPErrorDTO"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/errors.HTTPErrorDTO"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/health": {
-            "get": {
-                "description": "Health Check Endpoint",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Health Check"
-                ],
-                "summary": "Health Check Endpoint",
-                "responses": {
-                    "200": {
-                        "description": "Health Check Message.",
-                        "schema": {
-                            "$ref": "#/definitions/responses.MessageResponse"
                         }
                     },
                     "400": {
