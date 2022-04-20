@@ -48,6 +48,8 @@ func startKafka(topic string) {
 func main() {
 	// Get configs
 	kafkaTopic := ""
+	db := configs.GetDynamoDBClient();
+	configs.CreateDynamoDBTable("cart", db)
 
 	// Set up GRPC
 	go startGRPCServer(configs.EnvServiceGRPCPort())
