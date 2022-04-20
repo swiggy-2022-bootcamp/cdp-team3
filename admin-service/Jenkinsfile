@@ -4,6 +4,13 @@ pipeline {
     DOCKERHUB_CREDENTIALS = credentials('git')
   }
   stages {
+    
+    stage('Clone') {
+      steps {
+        dir ('admin-service'){
+                    checkout scm                   
+                      }  
+                   }            
     stage('Build') {
       steps {
         sh 'docker build -t immadiuttej/admin-service:latest .'
