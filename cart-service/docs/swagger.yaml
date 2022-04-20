@@ -49,6 +49,18 @@ definitions:
           $ref: '#/definitions/models.CartItem'
         type: array
     type: object
+  responses.HealthCheckResponse:
+    properties:
+      db_health:
+        description: DB Health
+        type: string
+      kafka_server_health:
+        description: Kafka Server Health
+        type: string
+      service_health:
+        description: Service Health
+        type: string
+    type: object
   responses.MessageResponse:
     properties:
       message:
@@ -68,9 +80,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: Health Check Message.
+          description: Health Check Response.
           schema:
-            $ref: '#/definitions/responses.MessageResponse'
+            $ref: '#/definitions/responses.HealthCheckResponse'
         "400":
           description: Bad Request
           schema:

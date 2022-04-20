@@ -47,11 +47,11 @@ func EnvServicePort() string {
 	return os.Getenv("CART_SERVICE_PORT")
 }
 
-func EnvServiceGRPCPort() string {
+func EnvServiceGRPCAddress() string {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file.")
 	}
 
-	return os.Getenv("CART_SERVICE_GRPC_PORT")
+	return os.Getenv("CART_SERVICE_GRPC_ADDRESS")
 }

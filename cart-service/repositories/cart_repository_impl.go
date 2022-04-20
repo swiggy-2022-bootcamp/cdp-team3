@@ -65,16 +65,19 @@ func (cr *cartRepositoryImpl) Read(ctx context.Context, id string) (*models.Cart
 	if err != nil {
 		log.Errorf("Failed to read cart: %v", err)
 		return nil, err
+	} else if out.Item == nil {
+		log.Infof("Cart with ID %s not found", id)
+		return nil, nil
+	} else {
+		// Model *dynamodb.GetItemOutput into cart
+		var cart models.Cart
+		err = cart.UnMarshal(out.Item)
+		if err != nil {
+			log.Errorf("Failed to deserialize cart: %v", err)
+			return nil, err
+		}
+		return &cart, nil
 	}
-
-	// Model *dynamodb.GetItemOutput into cart
-	var cart models.Cart
-	err = cart.UnMarshal(out.Item)
-	if err != nil {
-		log.Errorf("Failed to read cart: %v", err)
-		return nil, err
-	}
-	return &cart, nil
 }
 
 // ReadByUserID reads a cart by its associated userID
@@ -88,15 +91,22 @@ func (cr *cartRepositoryImpl) ReadByUserID(ctx context.Context, userID string) (
 			},
 		},
 	})
-
-	// Model *dynamodb.GetItemOutput into cart
-	var cart models.Cart
-	err = cart.UnMarshal(out.Item)
 	if err != nil {
-		log.Errorf("Failed to read cart: %v", err)
+		log.Errorf("Failed to read cart by User ID: %v", err)
 		return nil, err
+	} else if out.Item == nil {
+		log.Infof("Cart for user ID %s not found", userID)
+		return nil, nil
+	} else {
+		// Model *dynamodb.GetItemOutput into cart
+		var cart models.Cart
+		err = cart.UnMarshal(out.Item)
+		if err != nil {
+			log.Errorf("Failed to deserialize cart: %v", err)
+			return nil, err
+		}
+		return nil, nil
 	}
-	return nil, nil
 }
 
 // Update updates a cart by its ID

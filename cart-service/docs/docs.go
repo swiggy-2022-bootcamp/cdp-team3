@@ -31,9 +31,9 @@ const docTemplate = `{
                 "summary": "Health Check Endpoint",
                 "responses": {
                     "200": {
-                        "description": "Health Check Message.",
+                        "description": "Health Check Response.",
                         "schema": {
-                            "$ref": "#/definitions/responses.MessageResponse"
+                            "$ref": "#/definitions/responses.HealthCheckResponse"
                         }
                     },
                     "400": {
@@ -338,6 +338,23 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.CartItem"
                     }
+                }
+            }
+        },
+        "responses.HealthCheckResponse": {
+            "type": "object",
+            "properties": {
+                "db_health": {
+                    "description": "DB Health",
+                    "type": "string"
+                },
+                "kafka_server_health": {
+                    "description": "Kafka Server Health",
+                    "type": "string"
+                },
+                "service_health": {
+                    "description": "Service Health",
+                    "type": "string"
                 }
             }
         },

@@ -78,11 +78,15 @@ func (cc *checkoutControllerImpl) OrderCompleteWebhook(c *gin.Context) {
 // @Tags         Health Check
 // @Accept       json
 // @Produce      json
-// @Success      200  {object}  responses.MessageResponse  "Health Check Message."
+// @Success      200  {object}  responses.HealthCheckResponse  "Health Check Response."
 // @Failure      400  {object}  errors.HTTPErrorDTO
 // @Failure      404  {object}  errors.HTTPErrorDTO
 // @Failure      500  {object}  nil
 // @Router       / [get]
 func (cc *checkoutControllerImpl) HealthCheck(c *gin.Context) {
-	c.JSON(200, responses.MessageResponse{Message: "up"})
+	// Generate DTO
+	c.JSON(200, responses.HealthCheckResponse{
+		ServiceHealth: "OK",
+		KafkaServerHealth: "OK",
+	})
 }
