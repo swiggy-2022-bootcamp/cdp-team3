@@ -13,7 +13,11 @@ require (
 	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
 )
 
-require github.com/jmespath/go-jmespath v0.4.0 // indirect
+require (
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
+	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
+	google.golang.org/grpc v1.45.0 // indirect
+)
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect

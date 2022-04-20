@@ -21,8 +21,3 @@ func GenerateUser() {
 	}
 	fmt.Println(dbUser)
 }
-
-func main() {
-	// models.CreateTable()
-	GenerateUser()
-}

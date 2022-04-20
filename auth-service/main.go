@@ -7,6 +7,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/configs"
+	authGrpc "github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/grpc/auth"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/routes"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/utils"
 )
@@ -35,6 +36,8 @@ func main() {
 
 	configs.ConnectDB()
 	logger.Log("Connected to DB")
+
+	go authGrpc.InitialiseAuthServer()
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
