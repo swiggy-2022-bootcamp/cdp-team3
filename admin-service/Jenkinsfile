@@ -1,16 +1,31 @@
-node {
-     def app
-  
-     stage('Build') {
-           git branch: 'Admin_Service', url: 'https://github.com/swiggy-2022-bootcamp/cdp-team3.git'
-          sh 'cd admin-service'
-          sh 'go build'
+pipeline {
+  agent { label 'linux' }
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+  }
+  environment {
+    DOCKERHUB_CREDENTIALS = credentials('git')
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh 'docker build -t immadiuttej/admin-service:latest .'
+      }
     }
-
-    stage('Test image') {
-        app.inside {
-            sh 'go test'
-            sh 'echo "Tests passed"'
-        }
+    stage('Login') {
+      steps {
+        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+      }
     }
+    stage('Push') {
+      steps {
+        sh 'docker push immadiuttej/admin-service:latest'
+      }
+    }
+  }
+  post {
+    always {
+      sh 'docker logout'
+    }
+  }
 }
