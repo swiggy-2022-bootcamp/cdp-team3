@@ -1,7 +1,7 @@
 package models
 
 import (
-	"time"
+	//"time"
 )
 
 type ShippingAddress struct {
@@ -13,6 +13,6 @@ type ShippingAddress struct {
 	Address2  string `json:"address_2"`
 	CountryID int    `json:"country_id"`
 	PostCode  int    `json:"postcode"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	// CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt time.Time `json:"updated_at"`
 }

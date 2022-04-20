@@ -41,14 +41,14 @@ func (s ShippingRepositoryImpl) DBHealthCheck() bool {
 	return true
 }
 func (s ShippingRepositoryImpl) InsertShippingAddressToDB(shippingAddress *models.ShippingAddress) (*apperrors.AppError) {
-//func (sdr ShippingAddressDynamoRepository) InsertShippingAddress(p domain.ShippingAddress) (string, *errs.AppError) {
+
 	fmt.Println("inside repo",shippingAddress)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	//ShippingAddressRecord := toPersistedDynamodbEntitySA(shippingAddress)
+	
 	av, err := dynamodbattribute.MarshalMap(shippingAddress)
 	if err != nil {
-		return  &apperrors.AppError{Message: fmt.Sprintf("unable to marshal - %s", err.Error())}
+		return  apperrors.NewUnexpectedError(err.Error())
 	}
 	fmt.Println(shippingAddress)
     fmt.Println("\n")
@@ -62,7 +62,7 @@ func (s ShippingRepositoryImpl) InsertShippingAddressToDB(shippingAddress *model
 	_, err = s.shippingDB.PutItemWithContext(ctx, input)
 
 	if err != nil {
-		return &apperrors.AppError{Message: fmt.Sprintf("unable to put the item - %s", err.Error())}
+		return apperrors.NewUnexpectedError(err.Error())
 	}
 
 	return nil
@@ -104,7 +104,7 @@ func (s ShippingRepositoryImpl) FindShippingAddressByIdFromDB(ShippingAddressID 
 func (s ShippingRepositoryImpl) UpdateShippingAddressByIdFromDB(id string,shippingAddress *models.ShippingAddress) (bool, *apperrors.AppError) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	t:=time.Now().Format("2006-01-02 15:04:05")
+	//t:=time.Now().Format("2006-01-02 15:04:05")
 	input := &dynamodb.UpdateItemInput{
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
 			":s": {
@@ -122,9 +122,9 @@ func (s ShippingRepositoryImpl) UpdateShippingAddressByIdFromDB(id string,shippi
 			}, ":s6": {
 				N: aws.String(strconv.Itoa(shippingAddress.PostCode)),
 			},
-			 ":s7": {
-				S: aws.String((t)),
-			},
+			//  ":s7": {
+			// 	S: aws.String((t)),
+			// },
 		},
 		Key: map[string]*dynamodb.AttributeValue{
 			"id": {
@@ -132,7 +132,7 @@ func (s ShippingRepositoryImpl) UpdateShippingAddressByIdFromDB(id string,shippi
 			},
 		},
 		ReturnValues:     aws.String("UPDATED_NEW"),
-		UpdateExpression: aws.String("set firstname =:s, lastname = :s1, city = :s2, address_1 = :s3, address_2 = :s4, country_id = :s5, postcode =:s6, updated_at =:s7"),
+		UpdateExpression: aws.String("set firstname =:s, lastname = :s1, city = :s2, address_1 = :s3, address_2 = :s4, country_id = :s5, postcode =:s6"),
 		TableName:        aws.String("ShippingAddress"),
 	}
 fmt.Println("input\n",input)

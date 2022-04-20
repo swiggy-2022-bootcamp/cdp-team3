@@ -5,13 +5,13 @@ import (
 	"fmt"
 	//app_errors "github.com/cdp-team3/shipping-address-service/app-errors"
 	"github.com/cdp-team3/shipping-address-service/domain/repository"
-	"github.com/cdp-team3/shipping-address-service/app/protobuf"
+	"github.com/cdp-team3/shipping-address-service/app/grpcs/shipping_checkout"
 )
 
 var shippingRepository repository.ShippingRepository
 
 type ShippingProtoServer struct {
-	protobuf.UnimplementedShippingServer
+	shipping_checkout.UnimplementedShippingServer
 }
 
 func NewShippingProtoService(sr repository.ShippingRepository) ShippingProtoServer {
@@ -19,14 +19,14 @@ func NewShippingProtoService(sr repository.ShippingRepository) ShippingProtoServ
 	return ShippingProtoServer{}
 }
 
-func (s ShippingProtoServer) GetShippingAddress(ctx context.Context, shippingRequest *protobuf.ShippingAddressRequest) (*protobuf.ShippingAddressResponse, error) {
+func (s ShippingProtoServer) GetShippingAddress(ctx context.Context, shippingRequest *shipping_checkout.ShippingAddressRequest) (*shipping_checkout.ShippingAddressResponse, error) {
 	id := shippingRequest.ShippingAddressID
 	fmt.Println("Id in grpc",id)
 	res, err := shippingRepository.FindShippingAddressByIdFromDB(id)
 	if err != nil {
-		return &protobuf.ShippingAddressResponse{},  err.Error()
+		return &shipping_checkout.ShippingAddressResponse{},  err.Error()
 	}
-	return &protobuf.ShippingAddressResponse{
+	return &shipping_checkout.ShippingAddressResponse{
 		Firstname: res.FirstName,
 		Lastname:  res.LastName,
 		City:      res.City,

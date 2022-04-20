@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	"time"
+//	"time"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"
@@ -31,8 +31,6 @@ func toPersistedDynamodbEntitySA(o *models.ShippingAddress) *models.ShippingAddr
 		Address2:  o.Address2,
 		CountryID: o.CountryID,
 		PostCode:  o.PostCode,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
 	}
 }
 
@@ -44,33 +42,29 @@ func toPersistedDynamodbEntitySA(o *models.ShippingAddress) *models.ShippingAddr
 // @Success      200  {object}  map[string]interface{}
 // @Failure      400  {number} 	http.StatusBadRequest
 // @Router       /shippingaddress    [post]
-func (th ShippingHandler) AddNewShippingAddress(c *gin.Context) {
+func (th ShippingHandler) AddNewShippingAddress() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
 	//userId := c.Param("userId")
 	var shippingAddress *models.ShippingAddress
 
-	if err := c.BindJSON(&shippingAddress); err != nil {
-		c.Error(err)
+	if err := ctx.BindJSON(&shippingAddress); err != nil {
+		ctx.Error(err)
 		err_ := apperros.NewBadRequestError(err.Error())
-		c.JSON(err_.Code, gin.H{"message": err_.Message})
+		ctx.JSON(err_.Code, gin.H{"message": err_.Message})
 		return
 	}
-fmt.Println(shippingAddress)
+    fmt.Println(shippingAddress)
 
 	shippingAddressRecord := toPersistedDynamodbEntitySA(shippingAddress)
-	//fmt.Println(categoryRecord)
-	//validate request body
-	// if validationErr := validate.Struct(&categoryRecord); validationErr != nil {
-	// 	c.Error(validationErr)
-	// 	c.JSON(http.StatusBadRequest, gin.H{"message": validationErr.Error()})
-	// 	return
-	// }
+	
 	err := th.shippingService.InsertShippingAddress(shippingAddressRecord)
 		if err != nil {
-		c.Error(err.Error())
-		c.JSON(err.Code, gin.H{"message": err.Message})
+		ctx.Error(err.Error())
+		ctx.JSON(err.Code, gin.H{"message": err.Message})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Shipping Address added successfully"})
+	ctx.JSON(http.StatusOK, gin.H{"message": "Shipping Address added successfully"})
+}
 }
 
 // Get Shipping Address by Id
@@ -81,56 +75,20 @@ fmt.Println(shippingAddress)
 // @Success      200  {object}  map[string]interface{}
 // @Failure      400  {number} 	http.StatusBadRequest
 // @Router       /shippingaddress/:id    [get]
-func (th ShippingHandler) GetShippingAddress(c *gin.Context) {
-	Id := c.Param("id")
+func (th ShippingHandler) GetShippingAddress() gin.HandlerFunc  {
+	return func(ctx *gin.Context) {
+	Id := ctx.Param("id")
 	fmt.Println("Inside handler",Id)
-	//var shippingAddress models.ShippingAddress
-
-	// if err := c.BindJSON(&shippingAddress); err != nil {
-	// 	c.Error(err)
-	// 	err_ := apperros.NewBadRequestError(err.Error())
-	// 	c.JSON(err_.Code, gin.H{"message": err_.Message})
-	// 	return
-	// }
-
-
-	//shippingAddressRecord := toPersistedDynamodbEntitySA(shippingAddress)
-	//fmt.Println(categoryRecord)
-	//validate request body
-	// if validationErr := validate.Struct(&categoryRecord); validationErr != nil {
-	// 	c.Error(validationErr)
-	// 	c.JSON(http.StatusBadRequest, gin.H{"message": validationErr.Error()})
-	// 	return
-	// }
 	res,err := th.shippingService.FindShippingAddressById(Id)
 		if err != nil {
-		c.Error(err.Error())
-		c.JSON(err.Code, gin.H{"message": err.Message})
+		ctx.Error(err.Error())
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Message})
 		return
 	}
-	c.JSON(http.StatusOK,res)
+	ctx.JSON(http.StatusOK,res)
 }
-type ShippingAddressRecordDTO struct {
-	FirstName string `json:"firstname"`
-	LastName  string `json:"lastname"`
-	City      string `json:"city"`
-	Address1  string `json:"address_1"`
-	Address2  string `json:"address_2"`
-	CountryID int    `json:"country_id"`
-	PostCode  int    `json:"postcode"`
 }
-func convertShippingAddressDTOtoShippingAddressModel(saDto ShippingAddressRecordDTO) *models.ShippingAddress {
 
-	return &models.ShippingAddress{
-		FirstName: saDto.FirstName,
-		LastName:  saDto.LastName,
-		City:      saDto.City,
-		Address1:  saDto.Address1,
-		Address2:  saDto.Address2,
-		PostCode:  saDto.PostCode,
-		CountryID: saDto.CountryID,
-	}
-}
 
 // Update Shipping Address
 // @Summary      Update Shipping Address
@@ -185,15 +143,24 @@ func (sh ShippingHandler) HandleDeleteShippingAddressById() gin.HandlerFunc {
 }
 
 
-// func convertShippingAddressDTOtoShippingAddressModel(saDto ShippingAddressRecordDTO) *models.ShippingAddress {
+type ShippingAddressRecordDTO struct {
+	FirstName string `json:"firstname"`
+	LastName  string `json:"lastname"`
+	City      string `json:"city"`
+	Address1  string `json:"address_1"`
+	Address2  string `json:"address_2"`
+	CountryID int    `json:"country_id"`
+	PostCode  int    `json:"postcode"`
+}
+func convertShippingAddressDTOtoShippingAddressModel(saDto ShippingAddressRecordDTO) *models.ShippingAddress {
 
-// 	return *models.ShippingAddress{
-// 		FirstName: saDto.FirstName,
-// 		LastName:  saDto.LastName,
-// 		City:      saDto.City,
-// 		Address1:  saDto.Address1,
-// 		Address2:  saDto.Address2,
-// 		PostCode:  saDto.PostCode,
-// 		CountryID: saDto.CountryID,
-// 	}
-// }
+	return &models.ShippingAddress{
+		FirstName: saDto.FirstName,
+		LastName:  saDto.LastName,
+		City:      saDto.City,
+		Address1:  saDto.Address1,
+		Address2:  saDto.Address2,
+		PostCode:  saDto.PostCode,
+		CountryID: saDto.CountryID,
+	}
+}

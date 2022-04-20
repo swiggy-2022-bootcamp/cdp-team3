@@ -1,13 +1,13 @@
-basePath: /categories-service/api
-host: localhost:3002
+basePath: /shipping-service/api
+host: localhost:3003
 info:
   contact:
     email: chahatbhatia2014@gmail.com
     name: Chahat Bhatia
-  description: This microservice is for categories service.
+  description: This microservice is for Shipping service.
   license:
     name: Apache 2.0
-  title: CDP TEAM 3 - Categories module
+  title: CDP TEAM 3 -Shipping Address module
   version: "1.0"
 paths:
   /:

@@ -3,6 +3,7 @@ package services
 import (
 	"fmt"
 	//"net/http"
+	
 	"github.com/cdp-team3/shipping-address-service/domain/models"
 	apperros "github.com/cdp-team3/shipping-address-service/app-errors"
 	"github.com/cdp-team3/shipping-address-service/domain/repository"
@@ -39,7 +40,7 @@ fmt.Println("Inside service",id)
 	return result,nil
 }
 func (p ShippingServiceImpl) UpdateShippingAddressById(shippingAddressId string, newShippingAddress *models.ShippingAddress) (bool, *apperros.AppError) {
-	_, err := p.shippingRepository. UpdateShippingAddressByIdFromDB(shippingAddressId, newShippingAddress)
+	_, err := p.shippingRepository.UpdateShippingAddressByIdFromDB(shippingAddressId, newShippingAddress)
 	if err != nil {
 		return false, err
 	}

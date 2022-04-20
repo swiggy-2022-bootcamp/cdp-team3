@@ -14,14 +14,12 @@ type ShippingRoutes struct {
 func NewShippingRoutes(shippingHandler handlers.ShippingHandler, healthCheckhandler handlers.HealthCheckHandler) ShippingRoutes {
 	return ShippingRoutes{shippingHandler: shippingHandler, healthCheckhandler: healthCheckhandler}
 }
-func (tr ShippingRoutes) InitRoutes(newRouter *gin.RouterGroup) {
+func (sr ShippingRoutes) InitRoutes(newRouter *gin.RouterGroup) {
 	newRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	newRouter.GET("/", tr.healthCheckhandler.HealthCheck)
-
-	
-	newRouter.GET("/shippingaddress/:id", tr.shippingHandler.GetShippingAddress)
-	newRouter.POST("/shippingaddress", tr.shippingHandler.AddNewShippingAddress)
-	newRouter.PUT("/shippingaddress/:id",  tr.shippingHandler.HandleUpdateShippingAddressByID())
-    newRouter.DELETE("/shippingaddress/:id",  tr.shippingHandler.HandleDeleteShippingAddressById())
+	newRouter.GET("/", sr.healthCheckhandler.HealthCheck)
+    newRouter.GET("/shippingaddress/:id", sr.shippingHandler.GetShippingAddress())
+	newRouter.POST("/shippingaddress", sr.shippingHandler.AddNewShippingAddress())
+	newRouter.PUT("/shippingaddress/:id",  sr.shippingHandler.HandleUpdateShippingAddressByID())
+    newRouter.DELETE("/shippingaddress/:id",  sr.shippingHandler.HandleDeleteShippingAddressById())
 
 }

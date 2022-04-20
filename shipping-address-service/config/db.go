@@ -57,7 +57,7 @@ fmt.Println("Inside create table")
 	}
 	response, err := DB.CreateTable(input)
 	if err != nil {
-		fmt.Println("err",err)
+		fmt.Println("Got error calling CreateTable:",err)
 		logger.Error("Got error calling CreateTable: %s", err)
 		return err
 	}

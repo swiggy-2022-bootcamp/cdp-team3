@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This microservice is for categories service.",
-        "title": "CDP TEAM 3 - Categories module",
+        "description": "This microservice is for Shipping service.",
+        "title": "CDP TEAM 3 -Shipping Address module",
         "contact": {
             "name": "Chahat Bhatia",
             "email": "chahatbhatia2014@gmail.com"
@@ -12,8 +12,8 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:3002",
-    "basePath": "/categories-service/api",
+    "host": "localhost:3003",
+    "basePath": "/shipping-service/api",
     "paths": {
         "/": {
             "get": {

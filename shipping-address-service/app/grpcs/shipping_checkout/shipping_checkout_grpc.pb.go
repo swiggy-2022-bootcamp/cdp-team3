@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.20.0
-// source: shipping.proto
+// source: grpcs/shipping_checkout/shipping_checkout.proto
 
-package protobuf
+package shipping_checkout
 
 import (
 	context "context"
@@ -35,7 +35,7 @@ func NewShippingClient(cc grpc.ClientConnInterface) ShippingClient {
 
 func (c *shippingClient) GetShippingAddress(ctx context.Context, in *ShippingAddressRequest, opts ...grpc.CallOption) (*ShippingAddressResponse, error) {
 	out := new(ShippingAddressResponse)
-	err := c.cc.Invoke(ctx, "/protobuf.Shipping/GetShippingAddress", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/shipping_checkout.Shipping/GetShippingAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func _Shipping_GetShippingAddress_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protobuf.Shipping/GetShippingAddress",
+		FullMethod: "/shipping_checkout.Shipping/GetShippingAddress",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ShippingServer).GetShippingAddress(ctx, req.(*ShippingAddressRequest))
@@ -92,7 +92,7 @@ func _Shipping_GetShippingAddress_Handler(srv interface{}, ctx context.Context, 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Shipping_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "protobuf.Shipping",
+	ServiceName: "shipping_checkout.Shipping",
 	HandlerType: (*ShippingServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -101,5 +101,5 @@ var Shipping_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "shipping.proto",
+	Metadata: "grpcs/shipping_checkout/shipping_checkout.proto",
 }

@@ -17,7 +17,7 @@ import (
 	"github.com/cdp-team3/shipping-address-service/domain/repository"
 	"github.com/cdp-team3/shipping-address-service/domain/services"
 	"github.com/cdp-team3/shipping-address-service/utils/logger"
-    "github.com/cdp-team3/shipping-address-service/app/protobuf"
+    "github.com/cdp-team3/shipping-address-service/app/grpcs/shipping_checkout"
 	"google.golang.org/grpc"
 	"sync"
 	//"syscall"
@@ -58,7 +58,7 @@ config.CreateTable(shippingDB)
 
 // //Variable initializations to be used as dependency injections
 shippingRepository = repository.NewShippingRepositoryImpl(shippingDB)
-shippingService = services. NewShippingServiceImpl(shippingRepository)
+shippingService = services.NewShippingServiceImpl(shippingRepository)
 shippingHandler = handlers.NewShippingHandler(shippingService)
  healthCheckHandler = handlers.NewHealthCheckHandler(shippingRepository)
  shippingRoutes = routes.NewShippingRoutes(shippingHandler, healthCheckHandler)
@@ -119,7 +119,7 @@ func StartGRPCServer1(lis net.Listener) error {
 	// Create a gRPC server object
 	//s := grpc.NewServer()
 	grpcServer := grpc.NewServer()
-	protobuf.RegisterShippingServer(grpcServer, shippingServiceProto)
+	shipping_checkout.RegisterShippingServer(grpcServer, shippingServiceProto)
 //	cart_checkout.RegisterCheckoutServiceServer(s, &server{})
 	fmt.Printf("Server listening at %v", lis.Addr())
 	// Start serving requests
@@ -137,7 +137,7 @@ func StartRESTServer(){
 
 	server = gin.New()
 	server.Use(logger.UseLogger(logger.DefaultLoggerFormatter), gin.Recovery())
-	router := server.Group("shipping/api")
+	router := server.Group("shipping-service/api")
 	shippingRoutes.InitRoutes(router)
 
 	//Starting server on port 3003
@@ -162,7 +162,7 @@ func StartGRPCServer() {
 	}
 	
 	grpcServer := grpc.NewServer()
-	protobuf.RegisterShippingServer(grpcServer, shippingServiceProto)
+	shipping_checkout.RegisterShippingServer(grpcServer, shippingServiceProto)
 	err = grpcServer.Serve(lis)
 	if err != nil {
 		fmt.Println("Error in starting grpc server",err)

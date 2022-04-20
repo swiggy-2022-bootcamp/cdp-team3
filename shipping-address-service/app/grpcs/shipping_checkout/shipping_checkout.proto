@@ -1,6 +1,6 @@
 syntax = "proto3";
-package protobuf;
-option go_package ="./;protobuf";
+package shipping_checkout;
+option go_package ="/grpcs/shipping_checkout";
 
 message ShippingAddressResponse {
     string firstname = 1;

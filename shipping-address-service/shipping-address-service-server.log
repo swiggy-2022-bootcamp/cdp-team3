@@ -226,3 +226,215 @@ GET - [500] ::1 HTTP/1.1 PostmanRuntime/7.29.0 /shipping/api/shippingaddress/f03
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :3003
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /shipping/api/swagger/*any --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (3 handlers)
+[GIN-debug] GET    /shipping/api/            --> github.com/cdp-team3/shipping-address-service/app/handlers.HealthCheckHandler.HealthCheck-fm (3 handlers)
+[GIN-debug] GET    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.GetShippingAddress-fm (3 handlers)
+[GIN-debug] POST   /shipping/api/shippingaddress --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.AddNewShippingAddress-fm (3 handlers)
+[GIN-debug] PUT    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleUpdateShippingAddressByID.func1 (3 handlers)
+[GIN-debug] DELETE /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleDeleteShippingAddressById.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :3003
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /shipping/api/swagger/*any --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (3 handlers)
+[GIN-debug] GET    /shipping/api/            --> github.com/cdp-team3/shipping-address-service/app/handlers.HealthCheckHandler.HealthCheck-fm (3 handlers)
+[GIN-debug] GET    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.GetShippingAddress-fm (3 handlers)
+[GIN-debug] POST   /shipping/api/shippingaddress --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.AddNewShippingAddress-fm (3 handlers)
+[GIN-debug] PUT    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleUpdateShippingAddressByID.func1 (3 handlers)
+[GIN-debug] DELETE /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleDeleteShippingAddressById.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :3003
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /shipping/api/swagger/*any --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (3 handlers)
+[GIN-debug] GET    /shipping/api/            --> github.com/cdp-team3/shipping-address-service/app/handlers.HealthCheckHandler.HealthCheck-fm (3 handlers)
+[GIN-debug] GET    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.GetShippingAddress-fm (3 handlers)
+[GIN-debug] POST   /shipping/api/shippingaddress --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.AddNewShippingAddress-fm (3 handlers)
+[GIN-debug] PUT    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleUpdateShippingAddressByID.func1 (3 handlers)
+[GIN-debug] DELETE /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleDeleteShippingAddressById.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :3003
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /shipping/api/swagger/*any --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (3 handlers)
+[GIN-debug] GET    /shipping/api/            --> github.com/cdp-team3/shipping-address-service/app/handlers.HealthCheckHandler.HealthCheck-fm (3 handlers)
+[GIN-debug] GET    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.GetShippingAddress-fm (3 handlers)
+[GIN-debug] POST   /shipping/api/shippingaddress --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.AddNewShippingAddress-fm (3 handlers)
+[GIN-debug] PUT    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleUpdateShippingAddressByID.func1 (3 handlers)
+[GIN-debug] DELETE /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleDeleteShippingAddressById.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :3003
+GET - [500] ::1 HTTP/1.1 PostmanRuntime/7.29.0 /shipping/api/ 2022-04-19T22:02:58+05:30 251.6441ms 
+GET - [500] ::1 HTTP/1.1 PostmanRuntime/7.29.0 /shipping/api/ 2022-04-19T22:03:04+05:30 248.5812ms 
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /shipping/api/swagger/*any --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (3 handlers)
+[GIN-debug] GET    /shipping/api/            --> github.com/cdp-team3/shipping-address-service/app/handlers.HealthCheckHandler.HealthCheck-fm (3 handlers)
+[GIN-debug] GET    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.GetShippingAddress-fm (3 handlers)
+[GIN-debug] POST   /shipping/api/shippingaddress --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.AddNewShippingAddress-fm (3 handlers)
+[GIN-debug] PUT    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleUpdateShippingAddressByID.func1 (3 handlers)
+[GIN-debug] DELETE /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleDeleteShippingAddressById.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :3003
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /shipping/api/swagger/*any --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (3 handlers)
+[GIN-debug] GET    /shipping/api/            --> github.com/cdp-team3/shipping-address-service/app/handlers.HealthCheckHandler.HealthCheck-fm (3 handlers)
+[GIN-debug] GET    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.GetShippingAddress-fm (3 handlers)
+[GIN-debug] POST   /shipping/api/shippingaddress --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.AddNewShippingAddress-fm (3 handlers)
+[GIN-debug] PUT    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleUpdateShippingAddressByID.func1 (3 handlers)
+[GIN-debug] DELETE /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleDeleteShippingAddressById.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :3003
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /shipping/api/swagger/*any --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (3 handlers)
+[GIN-debug] GET    /shipping/api/            --> github.com/cdp-team3/shipping-address-service/app/handlers.HealthCheckHandler.HealthCheck-fm (3 handlers)
+[GIN-debug] GET    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.GetShippingAddress-fm (3 handlers)
+[GIN-debug] POST   /shipping/api/shippingaddress --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.AddNewShippingAddress-fm (3 handlers)
+[GIN-debug] PUT    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleUpdateShippingAddressByID.func1 (3 handlers)
+[GIN-debug] DELETE /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleDeleteShippingAddressById.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :3003
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /shipping/api/swagger/*any --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (3 handlers)
+[GIN-debug] GET    /shipping/api/            --> github.com/cdp-team3/shipping-address-service/app/handlers.HealthCheckHandler.HealthCheck-fm (3 handlers)
+[GIN-debug] GET    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.GetShippingAddress-fm (3 handlers)
+[GIN-debug] POST   /shipping/api/shippingaddress --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.AddNewShippingAddress-fm (3 handlers)
+[GIN-debug] PUT    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleUpdateShippingAddressByID.func1 (3 handlers)
+[GIN-debug] DELETE /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleDeleteShippingAddressById.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :3003
+POST - [200] ::1 HTTP/1.1 PostmanRuntime/7.29.0 /shipping/api/shippingaddress 2022-04-19T22:08:20+05:30 261.1052ms 
+GET - [200] ::1 HTTP/1.1 PostmanRuntime/7.29.0 /shipping/api/shippingaddress/dbced2b2-18d0-4fd9-ba10-7619d9d36767 2022-04-19T22:08:40+05:30 245.7472ms 
+GET - [404] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /swagger/index.html 2022-04-19T22:13:44+05:30 0s 
+GET - [404] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /favicon.ico 2022-04-19T22:13:44+05:30 0s 
+GET - [404] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /swagger/index.html 2022-04-19T22:14:03+05:30 0s 
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /shipping/api/swagger/*any --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (3 handlers)
+[GIN-debug] GET    /shipping/api/            --> github.com/cdp-team3/shipping-address-service/app/handlers.HealthCheckHandler.HealthCheck-fm (3 handlers)
+[GIN-debug] GET    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.GetShippingAddress-fm (3 handlers)
+[GIN-debug] POST   /shipping/api/shippingaddress --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.AddNewShippingAddress-fm (3 handlers)
+[GIN-debug] PUT    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleUpdateShippingAddressByID.func1 (3 handlers)
+[GIN-debug] DELETE /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleDeleteShippingAddressById.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :3003
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /shipping/api/swagger/*any --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (3 handlers)
+[GIN-debug] GET    /shipping/api/            --> github.com/cdp-team3/shipping-address-service/app/handlers.HealthCheckHandler.HealthCheck-fm (3 handlers)
+[GIN-debug] GET    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.GetShippingAddress-fm (3 handlers)
+[GIN-debug] POST   /shipping/api/shippingaddress --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.AddNewShippingAddress-fm (3 handlers)
+[GIN-debug] PUT    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleUpdateShippingAddressByID.func1 (3 handlers)
+[GIN-debug] DELETE /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleDeleteShippingAddressById.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :3003
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /shipping/api/swagger/*any --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (3 handlers)
+[GIN-debug] GET    /shipping/api/            --> github.com/cdp-team3/shipping-address-service/app/handlers.HealthCheckHandler.HealthCheck-fm (3 handlers)
+[GIN-debug] GET    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.GetShippingAddress-fm (3 handlers)
+[GIN-debug] POST   /shipping/api/shippingaddress --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.AddNewShippingAddress-fm (3 handlers)
+[GIN-debug] PUT    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleUpdateShippingAddressByID.func1 (3 handlers)
+[GIN-debug] DELETE /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleDeleteShippingAddressById.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :3003
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /shipping/api/swagger/*any --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (3 handlers)
+[GIN-debug] GET    /shipping/api/            --> github.com/cdp-team3/shipping-address-service/app/handlers.HealthCheckHandler.HealthCheck-fm (3 handlers)
+[GIN-debug] GET    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.GetShippingAddress.func1 (3 handlers)
+[GIN-debug] POST   /shipping/api/shippingaddress --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.AddNewShippingAddress.func1 (3 handlers)
+[GIN-debug] PUT    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleUpdateShippingAddressByID.func1 (3 handlers)
+[GIN-debug] DELETE /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleDeleteShippingAddressById.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :3003
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /shipping/api/swagger/*any --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (3 handlers)
+[GIN-debug] GET    /shipping/api/            --> github.com/cdp-team3/shipping-address-service/app/handlers.HealthCheckHandler.HealthCheck-fm (3 handlers)
+[GIN-debug] GET    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.GetShippingAddress.func1 (3 handlers)
+[GIN-debug] POST   /shipping/api/shippingaddress --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.AddNewShippingAddress.func1 (3 handlers)
+[GIN-debug] PUT    /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleUpdateShippingAddressByID.func1 (3 handlers)
+[GIN-debug] DELETE /shipping/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleDeleteShippingAddressById.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :3003
+GET - [404] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /swagger/index.html 2022-04-20T16:55:11+05:30 0s 
+GET - [404] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /swagger/index.html 2022-04-20T16:57:49+05:30 0s 
+GET - [404] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping-service/api/swagger/index.html 2022-04-20T16:58:09+05:30 0s 
+GET - [404] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping-service/api/swagger/index.html 2022-04-20T16:58:11+05:30 0s 
+GET - [404] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping-service/api/swagger/index.html 2022-04-20T16:58:12+05:30 0s 
+GET - [404] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping-service/api/swagger/index.html 2022-04-20T16:58:13+05:30 0s 
+GET - [404] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping-service/api/swagger/index.html 2022-04-20T16:58:13+05:30 0s 
+GET - [404] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping-service/api/swagger/index.html 2022-04-20T16:58:14+05:30 0s 
+GET - [200] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping/api/swagger/index.html 2022-04-20T16:59:37+05:30 29.9157ms 
+GET - [200] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping/api/swagger/swagger-ui.css 2022-04-20T16:59:37+05:30 16.3829ms 
+GET - [200] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping/api/swagger/swagger-ui-standalone-preset.js 2022-04-20T16:59:37+05:30 16.15ms 
+GET - [200] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping/api/swagger/swagger-ui-bundle.js 2022-04-20T16:59:37+05:30 32.1539ms 
+GET - [200] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping/api/swagger/doc.json 2022-04-20T16:59:38+05:30 9.5147ms 
+GET - [200] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping/api/swagger/favicon-32x32.png 2022-04-20T16:59:38+05:30 0s 
+GET - [404] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping-service/api/ 2022-04-20T16:59:46+05:30 0s 
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /shipping-service/api/swagger/*any --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (3 handlers)
+[GIN-debug] GET    /shipping-service/api/    --> github.com/cdp-team3/shipping-address-service/app/handlers.HealthCheckHandler.HealthCheck-fm (3 handlers)
+[GIN-debug] GET    /shipping-service/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.GetShippingAddress.func1 (3 handlers)
+[GIN-debug] POST   /shipping-service/api/shippingaddress --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.AddNewShippingAddress.func1 (3 handlers)
+[GIN-debug] PUT    /shipping-service/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleUpdateShippingAddressByID.func1 (3 handlers)
+[GIN-debug] DELETE /shipping-service/api/shippingaddress/:id --> github.com/cdp-team3/shipping-address-service/app/handlers.ShippingHandler.HandleDeleteShippingAddressById.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :3003
+GET - [404] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping/api/swagger/index.html 2022-04-20T17:01:10+05:30 0s 
+GET - [200] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping-service/api/swagger/index.html 2022-04-20T17:01:17+05:30 1.4481ms 
+GET - [200] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping-service/api/swagger/swagger-ui.css 2022-04-20T17:01:17+05:30 458.3µs 
+GET - [200] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping-service/api/swagger/swagger-ui-bundle.js 2022-04-20T17:01:17+05:30 2.4285ms 
+GET - [200] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping-service/api/swagger/swagger-ui-standalone-preset.js 2022-04-20T17:01:17+05:30 1.3099ms 
+GET - [200] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping-service/api/swagger/doc.json 2022-04-20T17:01:18+05:30 1.0075ms 
+GET - [200] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping-service/api/swagger/favicon-32x32.png 2022-04-20T17:01:18+05:30 0s 
+GET - [500] ::1 HTTP/1.1 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36 /shipping-service/api/ 2022-04-20T17:01:26+05:30 241.8249ms 

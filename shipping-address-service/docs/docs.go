@@ -155,11 +155,11 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:3002",
-	BasePath:         "/categories-service/api",
+	Host:             "localhost:3003",
+	BasePath:         "/shipping-service/api",
 	Schemes:          []string{},
-	Title:            "CDP TEAM 3 - Categories module",
-	Description:      "This microservice is for categories service.",
+	Title:            "CDP TEAM 3 -Shipping Address module",
+	Description:      "This microservice is for Shipping service.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }
