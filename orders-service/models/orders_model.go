@@ -2,29 +2,28 @@ package models
 
 import (
 	"time"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Order struct {
-	OrderId         primitive.ObjectID `json:"orderId,omitempty"`
-	DateTime        time.Time          `json:"dateTime,omitempty" validate:"required"`
-	Status          string             `json:"status,omitempty"`
-	CustomerId      string             `json:"customerId,omitempty"`
-	OrderedProducts []OrderedProduct   `json:"orderedProducts,omitempty"`
+	OrderId         string						 `json:"orderId" dynamodbav:"orderId" validate:"required"`
+	DateTime        time.Time          `json:"dateTime" dynamodbav:"dateTime" validate:"required"`
+	Status          string             `json:"status" dynamodbav:"status" validate:"required"`
+	CustomerId      string             `json:"customerId" dynamodbav:"customerId" validate:"required" `
+	TotalAmount			float64						 `json:"totalAmount" dynamodbav:"totalAmount" validate:"required" `
+	OrderedProducts []OrderedProduct   `json:"orderProducts" dynamodbav:"orderProducts" validate:"required" `
 }
 
 type OrderedProduct struct {
-	ProductId string `json:"productId,omitempty"`
-	Quantity  int64 `json:"quantity,omitempty"`
+	ProductId string `json:"productId" dynamodbav:"productId" validate:"required"`
+	Quantity  int64  `json:"quantity" dynamodbav:"quantity" validate:"required"`
 }
 
 type OrderStatus struct {
-	Status string `json:"status,omitempty"`
+	Status string `json:"status" dynamodbav:"status"`
 }
 
 type OrderInvoice struct {
-	InvoiceId  primitive.ObjectID `json:"invoiceId,omitempty"`
-	OrderId string `json:"orderId,omitempty"`
-	TotalAmount float64 `json:"totalAmount,omitempty"`
+	InvoiceId  string `json:"invoiceId" dynamodbav:"invoiceId" validate:"required"`
+	OrderId string `json:"orderId" dynamodbav:"orderId" validate:"required"`
+	TotalAmount float64  `json:"totalAmount" dynamodbav:"totalAmount" validate:"required"`
 }

@@ -6,10 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/configs"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/controllers"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/routes"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/utils"
-
 	"go.uber.org/zap"
 )
 
@@ -39,6 +39,10 @@ func main() {
   defer log.Sync()
   log.Info("Orders Service Started")
 
+	//Initialize DB
+	ordersDB := configs.ConnectDB()
+	configs.CreateTable(ordersDB)
+	
 	router := gin.Default()
 
 	router.GET("/", controllers.HealthCheck())
