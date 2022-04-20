@@ -70,10 +70,10 @@ func CreateDynamoDBTable(tableName string, db *dynamodb.Client) error {
 					AttributeName: aws.String("id"),
 					KeyType:      types.KeyTypeHash,
 				},
-			},
-			ProvisionedThroughput: &types.ProvisionedThroughput{
-				ReadCapacityUnits:  aws.Int64(1),
-				WriteCapacityUnits: aws.Int64(1),
+				{
+					AttributeName: aws.String("user_id"),
+					KeyType:      types.KeyTypeRange,
+				},
 			},
 			BillingMode: types.BillingModePayPerRequest,
 		},
