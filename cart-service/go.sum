@@ -16,6 +16,8 @@ github.com/aws/aws-sdk-go-v2/config v1.15.3 h1:5AlQD0jhVXlGzwo+VORKiUuogkG7pQcLJ
 github.com/aws/aws-sdk-go-v2/config v1.15.3/go.mod h1:9YL3v07Xc/ohTsxFXzan9ZpFpdTOFl4X65BAKYaz8jg=
 github.com/aws/aws-sdk-go-v2/credentials v1.11.2 h1:RQQ5fzclAKJyY5TvF+fkjJEwzK4hnxQCLOu5JXzDmQo=
 github.com/aws/aws-sdk-go-v2/credentials v1.11.2/go.mod h1:j8YsY9TXTm31k4eFhspiQicfXPLZ0gYXA50i4gxPE8g=
+github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.9.0 h1:OLzgIsMQP3SquFaWtCmRDN2HW8c3Glg8L8CeMNPFwGQ=
+github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.9.0/go.mod h1:N7M3jvFFVC8zayueLESAjrsSiak2yYt/b8p4EPsNbaY=
 github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.12.3 h1:LWPg5zjHV9oz/myQr4wMs0gi4CjnDN/ILmyZUFYXZsU=
 github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.12.3/go.mod h1:uk1vhHHERfSVCUnqSqz8O48LBYDSC+k6brng09jcMOk=
 github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.9 h1:onz/VaaxZ7Z4V+WIN9Txly9XLTmoOh1oJ8XcAC3pako=
@@ -26,6 +28,8 @@ github.com/aws/aws-sdk-go-v2/internal/ini v1.3.10 h1:by9P+oy3P/CwggN4ClnW2D4oL91
 github.com/aws/aws-sdk-go-v2/internal/ini v1.3.10/go.mod h1:8DcYQcz0+ZJaSxANlHIsbbi6S+zMwjwdDqwW3r9AzaE=
 github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.3 h1:b5+OInu1LyoF4uhFT453MOhbXXaM0YmQsqkxMjFl1dc=
 github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.3/go.mod h1:SvbsOiwp0L3NvC+XjgS1CU6NQ3TmArV1bNBlugz2hVc=
+github.com/aws/aws-sdk-go-v2/service/dynamodbstreams v1.13.3 h1:nPT5ysut/wvhIYyTZ5m6phHS50awx3MVwiB5igAWUH8=
+github.com/aws/aws-sdk-go-v2/service/dynamodbstreams v1.13.3/go.mod h1:y0rhvvclfOoHPdnMyADj6KKydr0+YgaWmDZFqBi9uFc=
 github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.1 h1:T4pFel53bkHjL2mMo+4DKE6r6AuoZnM0fg7k1/ratr4=
 github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.1/go.mod h1:GeUru+8VzrTXV/83XyMJ80KpH8xO89VPoUileyNQ+tc=
 github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.3 h1:JUbFrnq5mEeM2anIJ2PUkaHpKPW/D+RYAQVv5HXYQg4=
@@ -154,7 +158,6 @@ github.com/otiai10/curr v0.0.0-20150429015615-9b4961190c95/go.mod h1:9qAhocn7zKJ
 github.com/otiai10/curr v1.0.0/go.mod h1:LskTG5wDwr8Rs+nNQ+1LlxRjAtTZZjtJW4rMXl6j4vs=
 github.com/otiai10/mint v1.3.0/go.mod h1:F5AjcsTsWUqX+Na9fpHb52P8pcRX2CI6A3ctIT91xUo=
 github.com/otiai10/mint v1.3.3/go.mod h1:/yxELlJQ0ufhjUwhshSj+wFjZ78CnZ48/1wtmBH1OTc=
-github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=

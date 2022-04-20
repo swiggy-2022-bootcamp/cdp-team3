@@ -21,6 +21,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.9 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.3 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.10 // indirect
+	github.com/aws/aws-sdk-go-v2/service/dynamodbstreams v1.13.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.3 // indirect
@@ -34,6 +35,7 @@ require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
+	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.9.0
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
@@ -50,7 +52,6 @@ require (
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
 	github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742 // indirect
-	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.8.1
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	golang.org/x/crypto v0.0.0-20201216223049-8b5274cf687f // indirect

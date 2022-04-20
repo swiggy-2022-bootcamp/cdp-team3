@@ -18,86 +18,88 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// CheckoutServiceClient is the client API for CheckoutService service.
+// CartCheckoutServiceClient is the client API for CartCheckoutService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type CheckoutServiceClient interface {
+type CartCheckoutServiceClient interface {
+	// The Remote Procedure Call to clear the cart.
 	EmptyCart(ctx context.Context, in *CartEmptySignal, opts ...grpc.CallOption) (*CartEmptyOutput, error)
 }
 
-type checkoutServiceClient struct {
+type cartCheckoutServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewCheckoutServiceClient(cc grpc.ClientConnInterface) CheckoutServiceClient {
-	return &checkoutServiceClient{cc}
+func NewCartCheckoutServiceClient(cc grpc.ClientConnInterface) CartCheckoutServiceClient {
+	return &cartCheckoutServiceClient{cc}
 }
 
-func (c *checkoutServiceClient) EmptyCart(ctx context.Context, in *CartEmptySignal, opts ...grpc.CallOption) (*CartEmptyOutput, error) {
+func (c *cartCheckoutServiceClient) EmptyCart(ctx context.Context, in *CartEmptySignal, opts ...grpc.CallOption) (*CartEmptyOutput, error) {
 	out := new(CartEmptyOutput)
-	err := c.cc.Invoke(ctx, "/cart_checkout.CheckoutService/EmptyCart", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cart_checkout.CartCheckoutService/EmptyCart", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// CheckoutServiceServer is the server API for CheckoutService service.
-// All implementations must embed UnimplementedCheckoutServiceServer
+// CartCheckoutServiceServer is the server API for CartCheckoutService service.
+// All implementations must embed UnimplementedCartCheckoutServiceServer
 // for forward compatibility
-type CheckoutServiceServer interface {
+type CartCheckoutServiceServer interface {
+	// The Remote Procedure Call to clear the cart.
 	EmptyCart(context.Context, *CartEmptySignal) (*CartEmptyOutput, error)
-	mustEmbedUnimplementedCheckoutServiceServer()
+	mustEmbedUnimplementedCartCheckoutServiceServer()
 }
 
-// UnimplementedCheckoutServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedCheckoutServiceServer struct {
+// UnimplementedCartCheckoutServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedCartCheckoutServiceServer struct {
 }
 
-func (UnimplementedCheckoutServiceServer) EmptyCart(context.Context, *CartEmptySignal) (*CartEmptyOutput, error) {
+func (UnimplementedCartCheckoutServiceServer) EmptyCart(context.Context, *CartEmptySignal) (*CartEmptyOutput, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EmptyCart not implemented")
 }
-func (UnimplementedCheckoutServiceServer) mustEmbedUnimplementedCheckoutServiceServer() {}
+func (UnimplementedCartCheckoutServiceServer) mustEmbedUnimplementedCartCheckoutServiceServer() {}
 
-// UnsafeCheckoutServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to CheckoutServiceServer will
+// UnsafeCartCheckoutServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to CartCheckoutServiceServer will
 // result in compilation errors.
-type UnsafeCheckoutServiceServer interface {
-	mustEmbedUnimplementedCheckoutServiceServer()
+type UnsafeCartCheckoutServiceServer interface {
+	mustEmbedUnimplementedCartCheckoutServiceServer()
 }
 
-func RegisterCheckoutServiceServer(s grpc.ServiceRegistrar, srv CheckoutServiceServer) {
-	s.RegisterService(&CheckoutService_ServiceDesc, srv)
+func RegisterCartCheckoutServiceServer(s grpc.ServiceRegistrar, srv CartCheckoutServiceServer) {
+	s.RegisterService(&CartCheckoutService_ServiceDesc, srv)
 }
 
-func _CheckoutService_EmptyCart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CartCheckoutService_EmptyCart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CartEmptySignal)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CheckoutServiceServer).EmptyCart(ctx, in)
+		return srv.(CartCheckoutServiceServer).EmptyCart(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/cart_checkout.CheckoutService/EmptyCart",
+		FullMethod: "/cart_checkout.CartCheckoutService/EmptyCart",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CheckoutServiceServer).EmptyCart(ctx, req.(*CartEmptySignal))
+		return srv.(CartCheckoutServiceServer).EmptyCart(ctx, req.(*CartEmptySignal))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// CheckoutService_ServiceDesc is the grpc.ServiceDesc for CheckoutService service.
+// CartCheckoutService_ServiceDesc is the grpc.ServiceDesc for CartCheckoutService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var CheckoutService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "cart_checkout.CheckoutService",
-	HandlerType: (*CheckoutServiceServer)(nil),
+var CartCheckoutService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "cart_checkout.CartCheckoutService",
+	HandlerType: (*CartCheckoutServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "EmptyCart",
-			Handler:    _CheckoutService_EmptyCart_Handler,
+			Handler:    _CartCheckoutService_EmptyCart_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

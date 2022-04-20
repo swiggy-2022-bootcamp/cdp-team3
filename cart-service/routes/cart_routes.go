@@ -10,29 +10,29 @@ import (
 
 const BaseURL string = "/cart_service";
 
-func GenerateCartRoutes(router *gin.Engine) {
+func GenerateCartRoutes(router *gin.Engine, cartController controllers.CartController) {
 	cartServiceRouter := router.Group(BaseURL)
 	cartServiceCartRouter := cartServiceRouter.Group("/cart")
 
 	// Health Check
-	cartServiceRouter.GET("/health", controllers.HealthCheck)
+	cartServiceRouter.GET("/health", cartController.HealthCheck)
 
 	// Swagger Routes
 	docs.SwaggerInfo.BasePath = BaseURL
 	cartServiceRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	
 	// Add Cart Item
-	cartServiceCartRouter.POST("/", controllers.CreateCartItem)
+	cartServiceCartRouter.POST("/", cartController.CreateCartItem)
 
 	// Get Cart Items
-	cartServiceCartRouter.GET("/", controllers.GetCartItems)
+	cartServiceCartRouter.GET("/", cartController.GetCartItems)
 
 	// Update Cart Item
-	cartServiceCartRouter.PUT("/", controllers.UpdateCartItem)
+	cartServiceCartRouter.PUT("/", cartController.UpdateCartItem)
 
 	// Delete Cart Items
-	cartServiceCartRouter.DELETE("/:key", controllers.DeleteCartItem)
+	cartServiceCartRouter.DELETE("/:key", cartController.DeleteCartItem)
 
 	// Delete Entire Cart
-	cartServiceCartRouter.DELETE("/empty", controllers.EmptyCart)
+	cartServiceCartRouter.DELETE("/empty", cartController.EmptyCart)
 }

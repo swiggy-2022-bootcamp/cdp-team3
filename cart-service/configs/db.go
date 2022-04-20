@@ -8,7 +8,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -40,10 +39,8 @@ func waitForTable(ctx context.Context, tableName string, db *dynamodb.Client) er
         func(o *dynamodb.TableExistsWaiterOptions) {
             o.MaxDelay = 5 * time.Second
             o.MinDelay = 5 * time.Second
-        })
-    if err != nil {
-        return errors.Wrap(err, "Timed out while waiting for table to become active")
-    }
+        },
+	)
     return err
 }
 

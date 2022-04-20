@@ -1,12 +1,16 @@
 package main
 
 import (
+	"context"
 	"net"
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"github.com/swiggy-ipp/cart-service/configs"
+	"github.com/swiggy-ipp/cart-service/controllers"
 	"github.com/swiggy-ipp/cart-service/grpcs"
+	"github.com/swiggy-ipp/cart-service/models"
+	"github.com/swiggy-ipp/cart-service/repositories"
 	"github.com/swiggy-ipp/cart-service/routes"
 )
 
@@ -30,9 +34,9 @@ func startGRPCServer(port string) {
 }
 
 /// Function with logic for starting REST Routes
-func generateRESTRoutes(port string) {
+func generateRESTRoutes(port string, cartController controllers.CartController) {
 	cartRouter := gin.Default()
-	routes.GenerateCartRoutes(cartRouter)
+	routes.GenerateCartRoutes(cartRouter, cartController)
 
 	// Run REST Microservice
 	errChanREST <- cartRouter.Run(":" + port)
@@ -48,8 +52,23 @@ func startKafka(topic string) {
 func main() {
 	// Get configs
 	kafkaTopic := ""
-	db := configs.GetDynamoDBClient();
-	configs.CreateDynamoDBTable("cart", db)
+
+	// Make layered Architecture
+	db := configs.GetDynamoDBClient(); // Database
+	cartRepository := repositories.NewCartRepository(db, "cart") // Repository
+	cartController := controllers.NewCartController(cartRepository) // Controller
+	
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	cartRepository.Create(ctx, &models.Cart{
+		UserID: "user1",
+		Items: []models.CartItem{
+			{
+				ProductID: "product1",
+				Quantity:  "1",
+			},
+		},
+	})
 
 	// Set up GRPC
 	go startGRPCServer(configs.EnvServiceGRPCPort())
@@ -58,7 +77,7 @@ func main() {
 	go startKafka(kafkaTopic)
 
 	// Set up routes for Cart Microservice
-	go generateRESTRoutes(configs.EnvServicePort())
+	go generateRESTRoutes(configs.EnvServicePort(), cartController)
 
 	// Listen to errors.
 	select {

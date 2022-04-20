@@ -5,28 +5,31 @@ import (
 	"net"
 
 	"github.com/swiggy-ipp/cart-service/grpcs/cart_checkout"
+	"github.com/swiggy-ipp/cart-service/repositories"
 
 	log "github.com/sirupsen/logrus"
-	grpc "google.golang.org/grpc"
+	"google.golang.org/grpc"
 )
 
+// server is used to implement cart_checkout.CartCheckoutServiceServer
 type server struct {
-	cart_checkout.UnimplementedCheckoutServiceServer
+	cart_checkout.UnimplementedCartCheckoutServiceServer
+	cartRepository repositories.CartRepository
 }
 
-func (s *server) EmptyCart(
-	ctx context.Context, 
-	in *cart_checkout.CartEmptySignal,
-) (*cart_checkout.CartEmptyOutput, error) {
-	// TODO: Empty Cart in DB for the given cart ID *in.CartID
+// Procedure Implementation to Empty the Cart after Checkout
+func (s *server) EmptyCart(ctx context.Context, in *cart_checkout.CartEmptySignal) (*cart_checkout.CartEmptyOutput, error) {
+	// Empty Cart in DB for the given cart ID *in.CartID
+	s.cartRepository.EmptyCart(ctx, in.CartID)
 	log.Info("EmptyCart called with cart ID: ", in.CartID)
 	return &cart_checkout.CartEmptyOutput{Result: true}, nil
 }
 
+// Start GRPC Server using a net.Listener TCP Listener
 func StartGRPCServer(lis net.Listener) error {
 	// Create a gRPC server object
 	s := grpc.NewServer()
-	cart_checkout.RegisterCheckoutServiceServer(s, &server{})
+	cart_checkout.RegisterCartCheckoutServiceServer(s, &server{})
 	log.Printf("Server listening at %v", lis.Addr())
 	// Start serving requests
 	if err := s.Serve(lis); err != nil {

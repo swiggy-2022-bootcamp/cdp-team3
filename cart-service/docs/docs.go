@@ -160,7 +160,7 @@ const docTemplate = `{
                 "tags": [
                     "Cart Overall"
                 ],
-                "summary": "Empty Cart.",
+                "summary": "Empty the Cart.",
                 "responses": {
                     "204": {
                         "description": "No Content"
@@ -185,7 +185,7 @@ const docTemplate = `{
         },
         "/cart/{key}": {
             "delete": {
-                "description": "Deletes an Item in the cart using its key.",
+                "description": "Delete an Item in the cart using its key.",
                 "consumes": [
                     "application/json"
                 ],
@@ -195,7 +195,7 @@ const docTemplate = `{
                 "tags": [
                     "Cart Items"
                 ],
-                "summary": "Deletes a Cart Item.",
+                "summary": "Delete a Cart Item.",
                 "parameters": [
                     {
                         "type": "string",
@@ -298,15 +298,10 @@ const docTemplate = `{
         "models.CartItem": {
             "type": "object",
             "required": [
-                "id",
                 "product_id",
                 "quantity"
             ],
             "properties": {
-                "id": {
-                    "description": "MongoDB ID of the cart item",
-                    "type": "string"
-                },
                 "product_id": {
                     "description": "ID of the product",
                     "type": "string"

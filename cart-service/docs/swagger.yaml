@@ -19,9 +19,6 @@ definitions:
     type: object
   models.CartItem:
     properties:
-      id:
-        description: MongoDB ID of the cart item
-        type: string
       product_id:
         description: ID of the product
         type: string
@@ -29,7 +26,6 @@ definitions:
         description: Quantity of the product in the cart.
         type: string
     required:
-    - id
     - product_id
     - quantity
     type: object
@@ -154,7 +150,7 @@ paths:
     delete:
       consumes:
       - application/json
-      description: Deletes an Item in the cart using its key.
+      description: Delete an Item in the cart using its key.
       parameters:
       - description: Cart Item Key
         in: path
@@ -178,7 +174,7 @@ paths:
             $ref: '#/definitions/errors.HTTPErrorDTO'
         "500":
           description: Internal Server Error
-      summary: Deletes a Cart Item.
+      summary: Delete a Cart Item.
       tags:
       - Cart Items
   /cart/empty:
@@ -201,7 +197,7 @@ paths:
             $ref: '#/definitions/errors.HTTPErrorDTO'
         "500":
           description: Internal Server Error
-      summary: Empty Cart.
+      summary: Empty the Cart.
       tags:
       - Cart Overall
   /health:
