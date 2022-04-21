@@ -118,7 +118,7 @@ func (th CategoryHandler) DeleteCategories() (gin.HandlerFunc){
 func (th CategoryHandler) DeleteCategory(c *gin.Context) {
 	category_id := c.Param("category_id")
 	fmt.Println("Inside category id",category_id)
-	 err := th.categoryService.DeleteCategoryByID(category_id)
+	 _,err := th.categoryService.DeleteCategoryByID(category_id)
 	if err != nil {
 		c.Error(err.Error())
 		c.JSON(err.Code, gin.H{"message": err.Message})
