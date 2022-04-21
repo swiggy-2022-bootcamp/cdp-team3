@@ -47,7 +47,7 @@ func GetAllOrders() gin.HandlerFunc {
 			err := dynamodbattribute.UnmarshalListOfMaps(page.Items, &orders)
 			if err != nil {
 				zap.L().Error("\nCould not unmarshal AWS data: err ="+err.Error())
-				c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
+				c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
 					Status: http.StatusInternalServerError, 
 					Message: "UnMarshalling of order failed", 
 					Data: map[string]interface{}{"data": err.Error()},
@@ -60,7 +60,7 @@ func GetAllOrders() gin.HandlerFunc {
 
 		if err != nil {
 			zap.L().Error(err.Error())
-			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
+			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
 				Status: http.StatusInternalServerError, 
 				Message: "Internal Error", 
 				Data: map[string]interface{}{"data": err.Error()},
@@ -209,7 +209,7 @@ func GetOrderById() gin.HandlerFunc {
 			return
 		}
 	
-		err = dynamodbattribute.UnmarshalMap(result.Item, order)
+		err = dynamodbattribute.UnmarshalMap(result.Item, &order)
 		if err != nil {
 			zap.L().Error("Failed to unmarshal document fetched from DB - " + err.Error())
 			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
@@ -250,8 +250,8 @@ func UpdateStatusById() gin.HandlerFunc {
 		defer cancel()
 		orderId := c.Param("orderId")
 
-		var status string
-		if err := c.BindJSON(&status); err != nil {
+		var orderStatus models.OrderStatus
+		if err := c.BindJSON(&orderStatus); err != nil {
 			zap.L().Error("Invalid Request")
 			c.JSON(http.StatusBadRequest,  dto.ResponseDTO{
 				Status: http.StatusBadRequest, 
@@ -262,7 +262,7 @@ func UpdateStatusById() gin.HandlerFunc {
 		}
 
 		//use the validator library to validate required fields
-		if validationErr := validate.Struct(&status); validationErr != nil {
+		if validationErr := validate.Struct(&orderStatus); validationErr != nil {
 			zap.L().Error("Invalid Request")
 			c.JSON(http.StatusBadRequest,  dto.ResponseDTO{
 				Status: http.StatusBadRequest, 
@@ -272,6 +272,7 @@ func UpdateStatusById() gin.HandlerFunc {
 			return
 		}
 
+		status := orderStatus.Status
 		input := &dynamodb.UpdateItemInput{
 			ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
 				"status": {
@@ -280,7 +281,7 @@ func UpdateStatusById() gin.HandlerFunc {
 			},
 			Key: map[string]*dynamodb.AttributeValue{
 				"orderId": {
-					S: aws.String(orderId),
+					N: aws.String(orderId),
 				},
 			},
 			TableName:        aws.String(ordersCollection),
@@ -332,7 +333,7 @@ func DeleteOrderById() gin.HandlerFunc {
 			TableName: aws.String(ordersCollection),
 			Key:      map[string]*dynamodb.AttributeValue{
 				"orderId": {
-					N: aws.String(orderId),
+					S: aws.String(orderId),
 				},
 			},
 		})
@@ -515,7 +516,7 @@ func GetOrderStatusById() gin.HandlerFunc {
 			return
 		}
 	
-		err = dynamodbattribute.UnmarshalMap(result.Item, order)
+		err = dynamodbattribute.UnmarshalMap(result.Item, &order)
 		if err != nil {
 			zap.L().Error("Failed to unmarshal document fetched from DB - " + err.Error())
 			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{

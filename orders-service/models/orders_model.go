@@ -10,7 +10,7 @@ type Order struct {
 	Status          string             `json:"status" dynamodbav:"status" validate:"required"`
 	CustomerId      string             `json:"customerId" dynamodbav:"customerId" validate:"required" `
 	TotalAmount			float64						 `json:"totalAmount" dynamodbav:"totalAmount" validate:"required" `
-	OrderedProducts []OrderedProduct   `json:"orderProducts" dynamodbav:"orderProducts" validate:"required" `
+	OrderedProducts []OrderedProduct   `json:"orderedProducts" dynamodbav:"orderedProducts" validate:"required" `
 }
 
 type OrderedProduct struct {

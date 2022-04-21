@@ -38,14 +38,13 @@ type server struct {
 
 func (s *server) CreateOrder(ctx context.Context, req *order.CreateOrderRequest) (*order.CreateOrderResponse, error) {
 	zap.L().Info("Inside Create Order Protobuf")
-	fmt.Print("Hello")
-	orderFromClient := req.GetOrder()
-
+	orderFromClient := req.Order
 	var orderedProducts []models.OrderedProduct
 
-	for _,v := range orderFromClient.OrderProducts {
+	for _,v := range orderFromClient.OrderedProducts {
 		orderedProducts = append(orderedProducts, models.OrderedProduct{ProductId: v.ProductId, Quantity: v.Quantity})
 	}
+
 	newOrder := models.Order{
 		OrderId: uuid.New().String(),
 		DateTime: time.Now(),
@@ -72,12 +71,10 @@ func (s *server) CreateOrder(ctx context.Context, req *order.CreateOrderRequest)
 			fmt.Sprintf("Marshalling of order failed: %v", err.Error()),
 		)
 	}
-
 	query := &dynamodb.PutItemInput{
 		Item:      data,
 		TableName: aws.String(orderCollection),
 	}
-
 	result, err := configs.DB.PutItem(query)
 	if err != nil {
 		zap.L().Error("Failed to add order - " + err.Error())
@@ -86,13 +83,15 @@ func (s *server) CreateOrder(ctx context.Context, req *order.CreateOrderRequest)
 			fmt.Sprintf("Failed to add order: %v", err.Error()),
 		)
 	}
-
-	zap.L().Error("Successfully created Order - " + err.Error())
-	fmt.Print(result)
+	zap.L().Info("Successfully created Order"+result.GoString())
 	return &order.CreateOrderResponse{
-		//TODO: Send Response
 		Order: &order.ResponseOrder{
-			
+			OrderId: newOrder.OrderId,
+			DateTime: newOrder.DateTime.String(),
+			Status: newOrder.Status,
+			CustomerId: newOrder.CustomerId,
+			TotalAmount: float32(newOrder.TotalAmount),
+			OrderedProducts: orderFromClient.OrderedProducts,
 		},
 	}, nil
 }
