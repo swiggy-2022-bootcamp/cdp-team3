@@ -8,6 +8,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/configs"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/controllers"
+	orderGrpc "github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/grpc/order"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/routes"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/utils"
 	"go.uber.org/zap"
@@ -43,11 +44,16 @@ func main() {
 	ordersDB := configs.ConnectDB()
 	configs.CreateTable(ordersDB)
 	
+	go orderGrpc.InitializeGRPCServer(configs.EnvGrpcPORT())
+	StartRestServer()
+}
+
+func StartRestServer() {
 	router := gin.Default()
 
 	router.GET("/", controllers.HealthCheck())
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	routes.OrdersRoute(router)
-	router.Run(":3004")
+	router.Run(configs.EnvPORT())
 }
