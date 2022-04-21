@@ -65,11 +65,12 @@ func (mr *MockCategoryServiceMockRecorder) DeleteCategories(arg0 interface{}) *g
 }
 
 // DeleteCategoryByID mocks base method.
-func (m *MockCategoryService) DeleteCategoryByID(arg0 string) *app_erros.AppError {
+func (m *MockCategoryService) DeleteCategoryByID(arg0 string) (bool, *app_erros.AppError) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteCategoryByID", arg0)
-	ret0, _ := ret[0].(*app_erros.AppError)
-	return ret0
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(*app_erros.AppError)
+	return ret0, ret1
 }
 
 // DeleteCategoryByID indicates an expected call of DeleteCategoryByID.

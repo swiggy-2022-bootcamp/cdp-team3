@@ -40,13 +40,6 @@ func (th CategoryHandler) AddCategory(c *gin.Context) {
 	}
 
 	
-	//transactionAmount.UserId = userId
-	// err := th.categoryService.AddTransactionPoints(&category)
-	// if err != nil {
-	// 	c.Error(err.Error())
-	// 	c.JSON(err.Code, gin.H{"message": err.Message})
-	// 	return
-	// }
 	
 	categoryRecord := toPersistedDynamodbEntitySA(category)
 	fmt.Println(categoryRecord)
@@ -81,13 +74,7 @@ func (th CategoryHandler) GetAllCategory(c *gin.Context) {
 	// 	c.JSON(http.StatusBadRequest, gin.H{"message": validationErr.Error()})
 	// 	return
 	// }
-	//transactionAmount.UserId = userId
-	// err := th.categoryService.AddTransactionPoints(&category)
-	// if err != nil {
-	// 	c.Error(err.Error())
-	// 	c.JSON(err.Code, gin.H{"message": err.Message})
-	// 	return
-	// }
+	
 	result,err := th.categoryService.GetAllCategory()
 		if err != nil {
 		c.Error(err.Error())

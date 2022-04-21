@@ -158,7 +158,7 @@ func (categoryRepo CategoryRepositoryImpl) DeleteCategoryByIDFromDB(categoryId s
 	}
 	var resp, err = categoryRepo.categoryDB.Query(queryInput)
 	if err != nil {
-		return false, apperrors.NewUnexpectedError(err.Error())
+		return false,apperrors.NewUnexpectedError(err.Error())
 	}
 	if resp != nil {
 		return false, apperrors.NewUnexpectedError(err.Error())
@@ -179,7 +179,7 @@ func (categoryRepo CategoryRepositoryImpl) DeleteCategoryByIDFromDB(categoryId s
 	}
 	return true, nil
 }
-func (categoryRepo CategoryRepositoryImpl) DeleteCategoriesFromDB(categoryIds []string) (bool, *apperrors.AppError) {
+func (categoryRepo CategoryRepositoryImpl) DeleteCategoriesFromDB(categoryIds []string) (bool,*apperrors.AppError) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	for _, categoryId := range categoryIds {
@@ -198,7 +198,7 @@ func (categoryRepo CategoryRepositoryImpl) DeleteCategoriesFromDB(categoryIds []
 		}
 		var resp, err = categoryRepo.categoryDB.Query(queryInput)
 		if err != nil {
-			return false, apperrors.NewUnexpectedError(err.Error())
+			return false,apperrors.NewUnexpectedError(err.Error())
 		}
 		if resp != nil {
 			return false, apperrors.NewUnexpectedError(err.Error())
@@ -221,7 +221,7 @@ func (categoryRepo CategoryRepositoryImpl) DeleteCategoriesFromDB(categoryIds []
 	return true, nil
 }
 
-func (categoryRepo CategoryRepositoryImpl) UpdateCategoryByIdFromDB(category_id string,category *models.Category) (bool,*apperrors.AppError) {
+func (categoryRepo CategoryRepositoryImpl) UpdateCategoryByIdFromDB(categoryId string,category *models.Category) (bool,*apperrors.AppError) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	prevCategoryInput := &dynamodb.GetItemInput{
