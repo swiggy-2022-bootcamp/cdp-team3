@@ -14,10 +14,8 @@ type CartRepository interface {
 	Read(ctx context.Context, id string) (*models.Cart, error)
 	// Read by userID reads a cart by its associated userID
 	ReadByUserID(ctx context.Context, userID string) (*models.Cart, error)
-	// Update updates a cart
-	Update(ctx context.Context, cart *models.Cart) error
+	// UpdateCartItems updates a cart
+	UpdateCartItems(ctx context.Context, cart *models.Cart) error
 	// Delete deletes a cart
 	Delete(ctx context.Context, id string) error
-	// EmptyCart empties a cart
-	EmptyCart(ctx context.Context, id string) error
 }

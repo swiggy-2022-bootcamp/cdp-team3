@@ -1,19 +1,23 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
+	"github.com/swiggy-ipp/cart-service/dto/errors"
+	"github.com/swiggy-ipp/cart-service/dto/requests"
 	"github.com/swiggy-ipp/cart-service/dto/responses"
-	"github.com/swiggy-ipp/cart-service/repositories"
+	"github.com/swiggy-ipp/cart-service/services"
 )
 
 // Implementation of the CartController interface
 type cartControllerImpl struct {
-	cartRepository repositories.CartRepository
+	cartService services.CartService
 }
 
 // Create a new Cart Controller
-func NewCartController(cartRepository repositories.CartRepository) CartController {
-	return &cartControllerImpl{cartRepository: cartRepository}
+func NewCartController(cartService services.CartService) CartController {
+	return &cartControllerImpl{cartService: cartService}
 }
 
 // @Summary      Create a Cart Item
@@ -23,8 +27,8 @@ func NewCartController(cartRepository repositories.CartRepository) CartControlle
 // @Produce      json
 // @Param        cartItemDTO  body      requests.CartItemRequest   true  "Item to be added to the Cart"
 // @Success      201          {object}  responses.MessageResponse  "Message denoting whether successfully created"
-// @Failure      400  {object}  errors.HTTPErrorDTO
-// @Failure      404  {object}  errors.HTTPErrorDTO
+// @Failure      400     {object}  errors.HTTPErrorDTO
+// @Failure      404     {object}  errors.HTTPErrorDTO
 // @Failure      500  {object}  nil
 // @Router       /cart [post]
 func (cc *cartControllerImpl) CreateCartItem(c *gin.Context) {
@@ -32,21 +36,48 @@ func (cc *cartControllerImpl) CreateCartItem(c *gin.Context) {
 }
 
 // @Summary      Get all Cart Items
-// @Description  Get a list of all the items in the Cart currently.
+// @Description  Get a list of all the items in the Cart currently. Only one of Cart ID or User ID must be provided
 // @Tags         Cart Items
 // @Accept       json
 // @Produce      json
-// @Success      200  {object}  responses.CartItemsResponse  "List of Cart Items"
+// @Param        cartID  query     string                       false  "ID of the Cart to get the items for."
+// @Param        userID  query     string                       false  "ID of the User to get the items for."
+// @Success      200     {object}  responses.CartItemsResponse  "List of Cart Items"
 // @Failure      400          {object}  errors.HTTPErrorDTO
 // @Failure      404          {object}  errors.HTTPErrorDTO
-// @Failure      500  {object}  nil
+// @Failure      500     {object}  nil
 // @Router       /cart [get]
 func (cc *cartControllerImpl) GetCartItems(c *gin.Context) {
-	c.JSON(200, responses.CartItemsResponse{})
+	cartID, userID := c.Query("cartID"), c.Query("userID")
+	if cartID == "" && userID == "" {
+		c.JSON(
+			http.StatusBadRequest, 
+			errors.NewHTTPErrorDTO(http.StatusBadRequest, nil, "Either Cart ID or User ID must be provided."),
+		)
+	} else if cartID != "" && userID != "" {
+		c.JSON(
+			http.StatusBadRequest, 
+			errors.NewHTTPErrorDTO(http.StatusBadRequest, nil, "Ambiguous Request. Both Cart ID and User ID are provided."),
+		)
+	} else if (cartID != "" && isAdmin()) || (userID != "" && isMatchedUser(userID, c)) {
+		res, err := cc.cartService.GetCartItems(c.Request.Context(), cartID, userID)
+		if err != nil {
+			c.JSON(
+				http.StatusInternalServerError, 
+				errors.NewHTTPErrorDTO(http.StatusInternalServerError, err, "Error while getting Cart Items."),
+			)
+		}
+		c.JSON(200, res)
+	} else {
+		c.JSON(
+			http.StatusForbidden, 
+			errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "You are not authorized to perform this action."),
+		)
+	}
 }
 
 // @Summary      Update a Cart Item
-// @Description  Update a Item in the Cart using the Cart Item data sent.
+// @Description  Update Quantity of a Item in the Cart using the Cart Item data sent.
 // @Tags         Cart Items
 // @Accept       json
 // @Produce      json
@@ -54,7 +85,7 @@ func (cc *cartControllerImpl) GetCartItems(c *gin.Context) {
 // @Success      204          {object}  responses.MessageResponse  "Message denoting whether successfully updated"
 // @Failure      400          {object}  errors.HTTPErrorDTO
 // @Failure      404          {object}  errors.HTTPErrorDTO
-// @Failure      500  {object}  nil
+// @Failure      500           {object}  nil
 // @Router       /cart [put]
 func (cc *cartControllerImpl) UpdateCartItem(c *gin.Context) {
 	c.JSON(204, responses.MessageResponse{Message: "Updated"})
@@ -67,8 +98,8 @@ func (cc *cartControllerImpl) UpdateCartItem(c *gin.Context) {
 // @Produce      json
 // @Param        key  path      string  true  "Cart Item Key"
 // @Success      204  {object}  int64
-// @Failure      400  {object}  errors.HTTPErrorDTO
-// @Failure      404  {object}  errors.HTTPErrorDTO
+// @Failure      400           {object}  errors.HTTPErrorDTO
+// @Failure      404           {object}  errors.HTTPErrorDTO
 // @Failure      500          {object}  nil
 // @Router       /cart/{key} [delete]
 func (cc *cartControllerImpl) DeleteCartItem(c *gin.Context) {
@@ -80,13 +111,42 @@ func (cc *cartControllerImpl) DeleteCartItem(c *gin.Context) {
 // @Tags         Cart Overall
 // @Accept       json
 // @Produce      json
-// @Success      204  {object}  nil
+// @Param        emptyCartDTO  body      requests.EmptyCartRequest  true  "Empty Cart Request DTO. Must Either provide User ID (user request)  or  Cart  ID  (Admin Request),  but  not  both."
+// @Success      204           {object}  nil
 // @Failure      400  {object}  errors.HTTPErrorDTO
 // @Failure      404  {object}  errors.HTTPErrorDTO
 // @Failure      500          {object}  nil
 // @Router       /cart/empty [delete]
 func (cc *cartControllerImpl) EmptyCart(c *gin.Context) {
-	c.JSON(204, responses.MessageResponse{Message: "Deleted"})
+	// Extract the request
+	var emptyCartRequest requests.EmptyCartRequest
+	if err := c.ShouldBindJSON(&emptyCartRequest); err != nil {
+		c.JSON(http.StatusBadRequest, errors.HTTPErrorDTO{Code: http.StatusBadRequest, Message: err.Error()})
+	} else if emptyCartRequest.CartID == "" && emptyCartRequest.UserID == "" {
+		c.JSON(
+			http.StatusBadRequest, 
+			errors.NewHTTPErrorDTO(http.StatusBadRequest, nil, "Either Cart ID or User ID must be provided."),
+		)
+	} else if emptyCartRequest.CartID != "" && emptyCartRequest.UserID != "" {
+		c.JSON(
+			http.StatusBadRequest, 
+			errors.NewHTTPErrorDTO(http.StatusBadRequest, nil, "Ambiguous Request. Both Cart ID and User ID are provided."),
+		)
+	} else if (emptyCartRequest.CartID != "" && isAdmin()) || (emptyCartRequest.UserID != "" && isMatchedUser(emptyCartRequest.UserID, c)) {
+		err := cc.cartService.EmptyCart(c.Request.Context(), emptyCartRequest)
+		if err != nil {
+			c.JSON(
+				http.StatusInternalServerError,
+				errors.NewHTTPErrorDTO(http.StatusInternalServerError, err, "Error while emptying Cart."),
+			)
+		}
+		c.JSON(204, responses.MessageResponse{Message: "Cart Emptied"})
+	} else {
+		c.JSON(
+			http.StatusForbidden, 
+			errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "You are not authorized to perform this action."),
+		)
+	}
 }
 
 // @Summary      Health Check Endpoint
@@ -101,7 +161,7 @@ func (cc *cartControllerImpl) EmptyCart(c *gin.Context) {
 // @Router       / [get]
 func (cc *cartControllerImpl) HealthCheck(c *gin.Context) {
 	// Check DB health by simple Read
-	_, err := cc.cartRepository.Read(c.Request.Context(), "")
+	err := cc.cartService.DBHealthCheck(c.Request.Context())
 	var dbHealth string = "OK"
 	if err != nil {
 		dbHealth = "FAIL"
@@ -109,8 +169,16 @@ func (cc *cartControllerImpl) HealthCheck(c *gin.Context) {
 
 	// Generate DTO
 	c.JSON(200, responses.HealthCheckResponse{
-		ServiceHealth: "OK",
+		ServiceHealth:     "OK",
 		KafkaServerHealth: "OK",
-		DBHealth: dbHealth,
+		DBHealth:          dbHealth,
 	})
+}
+
+func isMatchedUser(userID string, c *gin.Context) bool {
+	return true
+}
+
+func isAdmin() bool {
+	return true
 }

@@ -6,10 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"github.com/swiggy-ipp/cart-service/configs"
+	"github.com/swiggy-ipp/cart-service/configs/database"
 	"github.com/swiggy-ipp/cart-service/controllers"
 	"github.com/swiggy-ipp/cart-service/grpcs"
 	"github.com/swiggy-ipp/cart-service/repositories"
 	"github.com/swiggy-ipp/cart-service/routes"
+	"github.com/swiggy-ipp/cart-service/services"
 )
 
 var (
@@ -19,7 +21,7 @@ var (
 ) 
 
 /// Function with logic for starting GRPC server
-func startGRPCServer(address string, cartRepository repositories.CartRepository) {
+func startGRPCServer(address string, cartService services.CartService) {
 	// Create a listener on TCP port
 	lis, err := net.Listen("tcp", address)
 	if err != nil {
@@ -27,7 +29,7 @@ func startGRPCServer(address string, cartRepository repositories.CartRepository)
 		errChanGRPC <- err
 	} else {
 		// Start GRPC
-		errChanGRPC <- grpcs.NewCartCheckoutGRPCServer(lis, cartRepository)
+		errChanGRPC <- grpcs.NewCartCheckoutGRPCServer(lis, cartService)
 	}
 }
 
@@ -52,12 +54,13 @@ func main() {
 	kafkaTopic := ""
 
 	// Make layered Architecture
-	db := configs.GetDynamoDBClient(); // Database
+	db := database.GetDynamoDBClient(); // Database
 	cartRepository := repositories.NewCartRepository(db, "cart") // Repository
-	cartController := controllers.NewCartController(cartRepository) // Controller
+	cartService := services.NewCartService(cartRepository) // Service
+	cartController := controllers.NewCartController(cartService) // Controller
 
 	// Set up GRPC
-	go startGRPCServer(configs.EnvServiceGRPCAddress(), cartRepository)
+	go startGRPCServer(configs.EnvServiceGRPCAddress(), cartService)
 
 	// Set up Kafka listener
 	go startKafka(kafkaTopic)

@@ -24,7 +24,7 @@ definitions:
         type: string
       quantity:
         description: Quantity of the product in the cart.
-        type: string
+        type: integer
     required:
     - product_id
     - quantity
@@ -41,9 +41,18 @@ definitions:
     - product_id
     - quantity
     type: object
+  requests.EmptyCartRequest:
+    properties:
+      cart_id:
+        description: ID of the cart
+        type: string
+      user_id:
+        description: ID of the user
+        type: string
+    type: object
   responses.CartItemsResponse:
     properties:
-      cart_items:
+      items:
         description: List of items in the cart.
         items:
           $ref: '#/definitions/models.CartItem'
@@ -100,7 +109,17 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get a list of all the items in the Cart currently.
+      description: Get a list of all the items in the Cart currently. Only one of
+        Cart ID or User ID must be provided
+      parameters:
+      - description: ID of the Cart to get the items for.
+        in: query
+        name: cartID
+        type: string
+      - description: ID of the User to get the items for.
+        in: query
+        name: userID
+        type: string
       produces:
       - application/json
       responses:
@@ -155,7 +174,8 @@ paths:
     put:
       consumes:
       - application/json
-      description: Update a Item in the Cart using the Cart Item data sent.
+      description: Update Quantity of a Item in the Cart using the Cart Item data
+        sent.
       parameters:
       - description: Item to be updated in the Cart
         in: body
@@ -219,6 +239,14 @@ paths:
       consumes:
       - application/json
       description: Empty the Cart for an user.
+      parameters:
+      - description: Empty Cart Request DTO. Must Either provide User ID (user request)  or  Cart  ID  (Admin
+          Request),  but  not  both.
+        in: body
+        name: emptyCartDTO
+        required: true
+        schema:
+          $ref: '#/definitions/requests.EmptyCartRequest'
       produces:
       - application/json
       responses:

@@ -1,4 +1,4 @@
-package configs
+package database
 
 import (
 	"context"
@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	log "github.com/sirupsen/logrus"
+	"github.com/swiggy-ipp/cart-service/configs"
 )
 
 // GetDynamoDBClient returns a DynamoDB client
@@ -18,7 +19,7 @@ func GetDynamoDBClient() *dynamodb.Client {
 	// credentials, and shared configuration files
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),
-		config.WithRegion(EnvRegion()),
+		config.WithRegion(configs.EnvRegion()),
 	)
 	if err != nil {
 		log.Fatalf("unable to load SDK config, %v", err)

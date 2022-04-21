@@ -56,7 +56,7 @@ const docTemplate = `{
         },
         "/cart": {
             "get": {
-                "description": "Get a list of all the items in the Cart currently.",
+                "description": "Get a list of all the items in the Cart currently. Only one of Cart ID or User ID must be provided",
                 "consumes": [
                     "application/json"
                 ],
@@ -67,6 +67,20 @@ const docTemplate = `{
                     "Cart Items"
                 ],
                 "summary": "Get all Cart Items",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the Cart to get the items for.",
+                        "name": "cartID",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID of the User to get the items for.",
+                        "name": "userID",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "List of Cart Items",
@@ -92,7 +106,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Update a Item in the Cart using the Cart Item data sent.",
+                "description": "Update Quantity of a Item in the Cart using the Cart Item data sent.",
                 "consumes": [
                     "application/json"
                 ],
@@ -199,6 +213,17 @@ const docTemplate = `{
                     "Cart Overall"
                 ],
                 "summary": "Empty the Cart.",
+                "parameters": [
+                    {
+                        "description": "Empty Cart Request DTO. Must Either provide User ID (user request)  or  Cart  ID  (Admin Request),  but  not  both.",
+                        "name": "emptyCartDTO",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.EmptyCartRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "204": {
                         "description": "No Content"
@@ -308,7 +333,7 @@ const docTemplate = `{
                 },
                 "quantity": {
                     "description": "Quantity of the product in the cart.",
-                    "type": "string"
+                    "type": "integer"
                 }
             }
         },
@@ -329,10 +354,23 @@ const docTemplate = `{
                 }
             }
         },
+        "requests.EmptyCartRequest": {
+            "type": "object",
+            "properties": {
+                "cart_id": {
+                    "description": "ID of the cart",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "ID of the user",
+                    "type": "string"
+                }
+            }
+        },
         "responses.CartItemsResponse": {
             "type": "object",
             "properties": {
-                "cart_items": {
+                "items": {
                     "description": "List of items in the cart.",
                     "type": "array",
                     "items": {

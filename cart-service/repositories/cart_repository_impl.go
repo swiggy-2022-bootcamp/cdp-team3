@@ -126,7 +126,7 @@ func (cr *cartRepositoryImpl) ReadByUserID(ctx context.Context, userID string) (
 }
 
 // Update updates a cart by its ID
-func (cr *cartRepositoryImpl) Update(ctx context.Context, cart *models.Cart) error {
+func (cr *cartRepositoryImpl) UpdateCartItems(ctx context.Context, cart *models.Cart) error {
 	// Serialize item
 	data, err := cart.Marshal()
 	if err != nil {
@@ -187,25 +187,6 @@ func (cr *cartRepositoryImpl) Delete(ctx context.Context, id string) error {
 	})
 	if err != nil {
 		log.Errorf("Failed to delete cart: %v", err)
-		return err
-	}
-	return nil
-}
-
-// EmptyCart fetches the cart identified by Cart ID and empties it
-func (cr *cartRepositoryImpl) EmptyCart(ctx context.Context, id string) error {
-	// Get cart from DB
-	cart, err := cr.Read(ctx, id)
-	if err != nil {
-		log.Errorf("Failed to empty cart: %v", err)
-		return err
-	}
-
-	// Empty Cart fetched from DB
-	cart.Items = []models.CartItem{}
-	err = cr.Update(ctx, cart)
-	if err != nil {
-		log.Errorf("Failed to empty cart: %v", err)
 		return err
 	}
 	return nil
