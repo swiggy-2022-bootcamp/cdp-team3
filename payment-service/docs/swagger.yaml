@@ -1,0 +1,110 @@
+definitions:
+  utils.HealthCheckResponse:
+    properties:
+      services:
+        items:
+          $ref: '#/definitions/utils.ServiceResponse'
+        type: array
+      status:
+        type: string
+    type: object
+  utils.ServiceResponse:
+    properties:
+      error:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+    type: object
+host: localhost:3012
+info:
+  contact:
+    email: swiggyb2026@datascience.manipal.edu
+    name: Rishabh Mishra
+  description: Users ( Admin, Customer, etc ) can login and get a token and use it
+    to access other APIs
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Auth Service API
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: This request is used to check the health of the entire service
+        at once
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.HealthCheckResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: HealthCheck
+      tags:
+      - Auth Service
+  /deep:
+    get:
+      consumes:
+      - application/json
+      description: This request is used to check the health of the every single service
+        at once
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.HealthCheckResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: Deep HealthCheck
+      tags:
+      - Auth Service
+  /pay:
+    post:
+      consumes:
+      - application/json
+      description: This request is used for Payment
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "401":
+          description: Unauthorized
+          schema:
+            type: number
+        "404":
+          description: Not Found
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: Payment
+      tags:
+      - Payment Service
+securityDefinitions:
+  ApiKeyAuth:
+    in: cookie
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
