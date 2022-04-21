@@ -5,6 +5,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/cdp-team3/shipping-address-service/app/handlers"
+	"github.com/cdp-team3/shipping-address-service/middlewares"
 	_ "github.com/cdp-team3/shipping-address-service/docs"
 )
 type ShippingRoutes struct {
@@ -17,6 +18,7 @@ func NewShippingRoutes(shippingHandler handlers.ShippingHandler, healthCheckhand
 func (sr ShippingRoutes) InitRoutes(newRouter *gin.RouterGroup) {
 	newRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	newRouter.GET("/", sr.healthCheckhandler.HealthCheck)
+	newRouter.Use(middlewares.AuthenticateJWT())
     newRouter.GET("/shippingaddress/:id", sr.shippingHandler.GetShippingAddress())
 	newRouter.POST("/shippingaddress", sr.shippingHandler.AddNewShippingAddress())
 	newRouter.PUT("/shippingaddress/:id",  sr.shippingHandler.HandleUpdateShippingAddressByID())
