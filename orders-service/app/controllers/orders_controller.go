@@ -5,20 +5,24 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
-	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/configs"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/domain/services"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/dto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/models"
 	"go.uber.org/zap"
 )
 
+type OrderController struct {
+	orderService services.OrderService
+}
+
+func NewOrderController(orderService services.OrderService) OrderController {
+	return OrderController{orderService: orderService}
+}
+
 const ordersCollection = "Orders"
-var validate = validator.New()
 // GetAllOrders godoc
 // @Summary Fetch all the orders
 // @Description This request will fetch all the orders
@@ -31,32 +35,13 @@ var validate = validator.New()
 // @Failure	500  {number} 	http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /orders [GET]
-func GetAllOrders() gin.HandlerFunc {
+func (oc OrderController) GetAllOrders() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		zap.L().Info("Inside GetAllOrders Controller")
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
-		var ordersList []models.Order;
-		params := &dynamodb.ScanInput{
-			TableName: aws.String(ordersCollection),
-		}
-
-		err := configs.DB.ScanPages(params, func(page *dynamodb.ScanOutput, lastPage bool) bool {
-			var orders []models.Order
-			err := dynamodbattribute.UnmarshalListOfMaps(page.Items, &orders)
-			if err != nil {
-				zap.L().Error("\nCould not unmarshal AWS data: err ="+err.Error())
-				c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
-					Status: http.StatusInternalServerError, 
-					Message: "UnMarshalling of order failed", 
-					Data: map[string]interface{}{"data": err.Error()},
-				})
-				return true
-			}
-			ordersList = append(ordersList,orders...)
-			return true
-		})
+		ordersList,err := oc.orderService.GetAllOrders()
 
 		if err != nil {
 			zap.L().Error(err.Error())
@@ -88,62 +73,20 @@ func GetAllOrders() gin.HandlerFunc {
 // @Failure	500  {number} http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /orders/status/{status} [GET]
-func GetOrdersByStatus() gin.HandlerFunc {
+func (oc OrderController) GetOrdersByStatus() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		zap.L().Info("Inside GetOrdersByStatus Controller")
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 		status := c.Param("status")
 
-		filt := expression.Name("status").Equal(expression.Value(status))
-
-		expr, err := expression.NewBuilder().WithFilter(filt).Build()
-		if err != nil {
-			zap.L().Error("Error constructing Expression")
-			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
-				Status: http.StatusInternalServerError, 
-				Message: "Error Fetching data from DB", 
-				Data: map[string]interface{}{"data": err.Error()},
-			})
-			return
-		}
-
-		input := &dynamodb.ScanInput{
-			TableName:                 aws.String(ordersCollection),
-			ExpressionAttributeNames:  expr.Names(),
-			ExpressionAttributeValues: expr.Values(),
-			FilterExpression:          expr.Filter(),
-		}
-
-		res, err := configs.DB.Scan(input)
+		ordersList,err := oc.orderService.GetOrdersByStatus(status)
 
 		if err != nil {
-			zap.L().Error("Error Fetching data from DB")
-			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
+			zap.L().Error(err.Error())
+			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
 				Status: http.StatusInternalServerError, 
-				Message: "Error Fetching data from DB", 
-				Data: map[string]interface{}{"data": err.Error()},
-			})
-			return
-		}
-
-		var orders []models.Order
-
-		if len(res.Items) == 0 {
-			zap.L().Info("No orders found with status "+status)
-			c.JSON(http.StatusNotFound,  dto.ResponseDTO{
-				Status: http.StatusNotFound, 
-				Message: "No Orders Found", 
-				Data: map[string]interface{}{"data": nil},
-			})
-			return
-		}
-
-		if err = dynamodbattribute.UnmarshalListOfMaps(res.Items, &orders); err != nil {
-			zap.L().Error("Error unMarshalling Order"+err.Error())
-			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
-				Status: http.StatusInternalServerError, 
-				Message: "Error unMarshalling Order", 
+				Message: "Internal Error", 
 				Data: map[string]interface{}{"data": err.Error()},
 			})
 			return
@@ -153,7 +96,7 @@ func GetOrdersByStatus() gin.HandlerFunc {
 		c.JSON(http.StatusOK, dto.ResponseDTO{
 			Status: http.StatusOK, 
 			Message: "success", 
-			Data: map[string]interface{}{"orders": orders},
+			Data: map[string]interface{}{"orders": ordersList},
 		})
 	}
 }
@@ -169,52 +112,20 @@ func GetOrdersByStatus() gin.HandlerFunc {
 // @Failure	500  {number} http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /orders/{orderId} [GET]
-func GetOrderById() gin.HandlerFunc {
+func (oc OrderController) GetOrderById() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		zap.L().Info("Inside GetOrderById Controller")
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
 		orderId := c.Param("orderId")
-		var order models.Order;
-
-		query := &dynamodb.GetItemInput{
-			TableName: aws.String(ordersCollection),
-			Key: map[string]*dynamodb.AttributeValue{
-				"orderId": {
-					S: aws.String(orderId),
-				},
-			},
-		}
-
-		result, err := configs.DB.GetItem(query)
+		order, err := oc.orderService.GetOrderById(orderId)
 
 		if err != nil {
-			zap.L().Error("Failed to get item from database - " + err.Error())
-			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
+			zap.L().Error(err.Error())
+			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
 				Status: http.StatusInternalServerError, 
 				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Error()},
-			})
-			return
-		}
-	
-		if result.Item == nil {
-			zap.L().Error("Order for given ID doesn't exists - ")
-			c.JSON(http.StatusNotFound,  dto.ResponseDTO{
-				Status: http.StatusNotFound, 
-				Message: "Order for given ID doesn't exists", 
-				Data: map[string]interface{}{"data": nil},
-			})
-			return
-		}
-	
-		err = dynamodbattribute.UnmarshalMap(result.Item, &order)
-		if err != nil {
-			zap.L().Error("Failed to unmarshal document fetched from DB - " + err.Error())
-			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
-				Status: http.StatusInternalServerError, 
-				Message: "Failed to unmarshal document fetched from DB", 
 				Data: map[string]interface{}{"data": err.Error()},
 			})
 			return
@@ -243,7 +154,7 @@ func GetOrderById() gin.HandlerFunc {
 // @Failure	500  {number} 	http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /orders/{orderId} [PUT]
-func UpdateStatusById() gin.HandlerFunc {
+func  (oc OrderController) UpdateStatusById() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		zap.L().Info("Inside UpdateStatusById Controller")
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -261,40 +172,12 @@ func UpdateStatusById() gin.HandlerFunc {
 			return
 		}
 
-		//use the validator library to validate required fields
-		if validationErr := validate.Struct(&orderStatus); validationErr != nil {
-			zap.L().Error("Invalid Request")
-			c.JSON(http.StatusBadRequest,  dto.ResponseDTO{
-				Status: http.StatusBadRequest, 
-				Message: "Invalid Request", 
-				Data: map[string]interface{}{"data": validationErr.Error()},
-			})
-			return
-		}
-
-		status := orderStatus.Status
-		input := &dynamodb.UpdateItemInput{
-			ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
-				"status": {
-					N: aws.String(status),
-				},
-			},
-			Key: map[string]*dynamodb.AttributeValue{
-				"orderId": {
-					N: aws.String(orderId),
-				},
-			},
-			TableName:        aws.String(ordersCollection),
-			UpdateExpression: aws.String("set status = :status"),
-			ReturnValues:     aws.String("UPDATED_NEW"),
-		}
-
-		response, err := configs.DB.UpdateItem(input)
+		updatedOrder, err := oc.orderService.UpdateStatusById(orderId, orderStatus)
 		if err != nil {
-			zap.L().Error("Error while Updating data in dynamoDB"+err.Error())
-			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
+			zap.L().Error(err.Error())
+			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
 				Status: http.StatusInternalServerError, 
-				Message: "Error while Updating data in dynamoDB", 
+				Message: "Internal Error", 
 				Data: map[string]interface{}{"data": err.Error()},
 			})
 			return
@@ -304,7 +187,7 @@ func UpdateStatusById() gin.HandlerFunc {
 		c.JSON(http.StatusOK, dto.ResponseDTO{
 			Status: http.StatusOK, 
 			Message: "success", 
-			Data: map[string]interface{}{"order": response},
+			Data: map[string]interface{}{"order": updatedOrder},
 		})
 	}
 }
@@ -321,7 +204,7 @@ func UpdateStatusById() gin.HandlerFunc {
 // @Failure	500  {number} 	http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /orders/{orderId} [DELETE]
-func DeleteOrderById() gin.HandlerFunc {
+func  (oc OrderController) DeleteOrderById() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		zap.L().Info("Inside DeleteOrderById Controller")
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -329,30 +212,23 @@ func DeleteOrderById() gin.HandlerFunc {
 
 		orderId := c.Param("orderId")
 	
-		response, err := configs.DB.DeleteItem(&dynamodb.DeleteItemInput{
-			TableName: aws.String(ordersCollection),
-			Key:      map[string]*dynamodb.AttributeValue{
-				"orderId": {
-					S: aws.String(orderId),
-				},
-			},
-		})
-		
+		deletedOrder, err := oc.orderService.DeleteOrderById(orderId)
 		if err != nil {
-			zap.L().Error("Error Deleting Order"+err.Error())
-			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
+			zap.L().Error(err.Error())
+			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
 				Status: http.StatusInternalServerError, 
-				Message: "Error Deleting Order", 
+				Message: "Internal Error", 
 				Data: map[string]interface{}{"data": err.Error()},
 			})
 			return
 		}
 
+
 		zap.L().Info("Order "+orderId+" Successfully Deleted")
 		c.JSON(http.StatusOK, dto.ResponseDTO{
 			Status: http.StatusOK, 
 			Message: "success", 
-			Data: map[string]interface{}{"order": response},
+			Data: map[string]interface{}{"order": deletedOrder},
 		})
 	}
 }
@@ -368,62 +244,20 @@ func DeleteOrderById() gin.HandlerFunc {
 // @Failure	500  {number} http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /orders/user/{userId} [GET]
-func GetOrdersByCustomerId() gin.HandlerFunc {
+func  (oc OrderController) GetOrdersByCustomerId() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		zap.L().Info("Inside GetOrdersByStatus Controller")
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 		userId := c.Param("userId")
 
-		filt := expression.Name("customerId").Equal(expression.Value(userId))
-
-		expr, err := expression.NewBuilder().WithFilter(filt).Build()
-		if err != nil {
-			zap.L().Error("Error constructing Expression")
-			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
-				Status: http.StatusInternalServerError, 
-				Message: "Error Fetching data from DB", 
-				Data: map[string]interface{}{"data": err.Error()},
-			})
-			return
-		}
-
-		input := &dynamodb.ScanInput{
-			TableName:                 aws.String(ordersCollection),
-			ExpressionAttributeNames:  expr.Names(),
-			ExpressionAttributeValues: expr.Values(),
-			FilterExpression:          expr.Filter(),
-		}
-
-		res, err := configs.DB.Scan(input)
+		ordersList,err := oc.orderService.GetOrdersByCustomerId(userId)
 
 		if err != nil {
-			zap.L().Error("Error Fetching data from DB")
-			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
+			zap.L().Error(err.Error())
+			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
 				Status: http.StatusInternalServerError, 
-				Message: "Error Fetching data from DB", 
-				Data: map[string]interface{}{"data": err.Error()},
-			})
-			return
-		}
-
-		var orders []models.Order
-
-		if len(res.Items) == 0 {
-			zap.L().Info("No orders found for customer "+userId)
-			c.JSON(http.StatusNotFound,  dto.ResponseDTO{
-				Status: http.StatusNotFound, 
-				Message: "No Orders Found", 
-				Data: map[string]interface{}{"data": nil},
-			})
-			return
-		}
-
-		if err = dynamodbattribute.UnmarshalListOfMaps(res.Items, &orders); err != nil {
-			zap.L().Error("Error unMarshalling Order"+err.Error())
-			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
-				Status: http.StatusInternalServerError, 
-				Message: "Error unMarshalling Order", 
+				Message: "Internal Error", 
 				Data: map[string]interface{}{"data": err.Error()},
 			})
 			return
@@ -433,7 +267,7 @@ func GetOrdersByCustomerId() gin.HandlerFunc {
 		c.JSON(http.StatusOK, dto.ResponseDTO{
 			Status: http.StatusOK, 
 			Message: "success", 
-			Data: map[string]interface{}{"orders": orders},
+			Data: map[string]interface{}{"orders": ordersList},
 		})
 	}
 }
@@ -452,7 +286,7 @@ func GetOrdersByCustomerId() gin.HandlerFunc {
 // @Failure	500  {number} 	http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /orders/invoice/{orderId} [POST]
-func GenerateInvoiceById() gin.HandlerFunc {
+func (oc OrderController) GenerateInvoiceById() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
@@ -476,52 +310,20 @@ func GenerateInvoiceById() gin.HandlerFunc {
 // @Failure	500  {number} 	http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /orders/{orderId}/order_status [GET]
-func GetOrderStatusById() gin.HandlerFunc {
+func (oc OrderController) GetOrderStatusById() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		zap.L().Info("Inside GetOrderStatusById Controller")
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
 		orderId := c.Param("orderId")
-		var order models.Order;
-
-		query := &dynamodb.GetItemInput{
-			TableName: aws.String(ordersCollection),
-			Key: map[string]*dynamodb.AttributeValue{
-				"orderId": {
-					S: aws.String(orderId),
-				},
-			},
-		}
-
-		result, err := configs.DB.GetItem(query)
+		order, err := oc.orderService.GetOrderById(orderId)
 
 		if err != nil {
-			zap.L().Error("Failed to get item from database - " + err.Error())
-			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
+			zap.L().Error(err.Error())
+			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
 				Status: http.StatusInternalServerError, 
 				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Error()},
-			})
-			return
-		}
-	
-		if result.Item == nil {
-			zap.L().Error("Order for given ID doesn't exists - ")
-			c.JSON(http.StatusNotFound,  dto.ResponseDTO{
-				Status: http.StatusNotFound, 
-				Message: "Order for given ID doesn't exists", 
-				Data: map[string]interface{}{"data": nil},
-			})
-			return
-		}
-	
-		err = dynamodbattribute.UnmarshalMap(result.Item, &order)
-		if err != nil {
-			zap.L().Error("Failed to unmarshal document fetched from DB - " + err.Error())
-			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
-				Status: http.StatusInternalServerError, 
-				Message: "Failed to unmarshal document fetched from DB", 
 				Data: map[string]interface{}{"data": err.Error()},
 			})
 			return
