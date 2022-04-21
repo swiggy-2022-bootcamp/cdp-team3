@@ -16,3 +16,7 @@ Contains the Cart Microservice for the final Swiggy I++ E-Commerce Application p
 ## GRPC Connections
 
 1. Cart Service <- Checkout Service: To receive Checkout confirm signal to clear user's Cart.
+
+## Database Configuration
+
+Amazon DynamoDB is used as the database for the Cart Service. Region is set to 'us-east-1' and the table name is 'cart'.

@@ -33,5 +33,5 @@ func (c *Cart) UnMarshal(data map[string]types.AttributeValue) error {
 // Cart Item Data Model
 type CartItem struct {
 	ProductID string `json:"product_id" validate:"required"` // ID of the product
-	Quantity  string `json:"quantity" validate:"required"`   // Quantity of the product in the cart.
+	Quantity  int64 `json:"quantity" validate:"required"`   // Quantity of the product in the cart.
 }

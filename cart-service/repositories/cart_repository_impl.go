@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"errors"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
@@ -54,10 +55,14 @@ func (cr *cartRepositoryImpl) Create(ctx context.Context, cart *models.Cart) err
 // Read reads a cart by its ID
 func (cr *cartRepositoryImpl) Read(ctx context.Context, id string) (*models.Cart, error) {
 	// Get item from DB
-	out, err := cr.cartDB.GetItem(ctx, &dynamodb.GetItemInput{
+	out, err := cr.cartDB.Query(ctx, &dynamodb.QueryInput{
 		TableName: aws.String(cr.tableName),
-		Key: map[string]types.AttributeValue{
-			"id": &types.AttributeValueMemberS{
+		KeyConditionExpression: aws.String("#id = :id"),
+		ExpressionAttributeNames: map[string]string{
+			"#id": "id",
+		},
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":id": &types.AttributeValueMemberS{
 				Value: id,
 			},
 		},
@@ -65,15 +70,18 @@ func (cr *cartRepositoryImpl) Read(ctx context.Context, id string) (*models.Cart
 	if err != nil {
 		log.Errorf("Failed to read cart: %v", err)
 		return nil, err
-	} else if out.Item == nil {
+	} else if out.Items == nil || len(out.Items) == 0 {
 		log.Infof("Cart with ID %s not found", id)
-		return nil, nil
+		return nil, errors.New("Cart not found")
+	} else if len(out.Items) > 1 {
+		log.Infof("Multiple carts with ID %s found", id)
+		return nil, errors.New("Multiple carts with same ID found")
 	} else {
 		// Model *dynamodb.GetItemOutput into cart
 		var cart models.Cart
-		err = cart.UnMarshal(out.Item)
+		err = cart.UnMarshal(out.Items[0])
 		if err != nil {
-			log.Errorf("Failed to deserialize cart: %v", err)
+			log.Errorf("Failed to deserialize: %v", err)
 			return nil, err
 		}
 		return &cart, nil
@@ -83,29 +91,37 @@ func (cr *cartRepositoryImpl) Read(ctx context.Context, id string) (*models.Cart
 // ReadByUserID reads a cart by its associated userID
 func (cr *cartRepositoryImpl) ReadByUserID(ctx context.Context, userID string) (*models.Cart, error) {
 	// Get item from DB
-	out, err := cr.cartDB.GetItem(ctx, &dynamodb.GetItemInput{
+	out, err := cr.cartDB.Scan(ctx, &dynamodb.ScanInput{
 		TableName: aws.String(cr.tableName),
-		Key: map[string]types.AttributeValue{
-			"user_id": &types.AttributeValueMemberS{
+		FilterExpression: aws.String("#user_id = :user_id"),
+		ExpressionAttributeNames: map[string]string{
+			"#user_id": "user_id",
+		},
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":user_id": &types.AttributeValueMemberS{
 				Value: userID,
 			},
 		},
 	})
+
 	if err != nil {
 		log.Errorf("Failed to read cart by User ID: %v", err)
 		return nil, err
-	} else if out.Item == nil {
-		log.Infof("Cart for user ID %s not found", userID)
-		return nil, nil
+	} else if out.Items == nil || len(out.Items) == 0 {
+		log.Infof("Cart with User ID %s not found", userID)
+		return nil, errors.New("Cart not found")
+	} else if len(out.Items) > 1 {
+		log.Infof("Multiple carts with User ID %s found", userID)
+		return nil, errors.New("Multiple carts with same ID found")
 	} else {
 		// Model *dynamodb.GetItemOutput into cart
 		var cart models.Cart
-		err = cart.UnMarshal(out.Item)
+		err = cart.UnMarshal(out.Items[0])
 		if err != nil {
 			log.Errorf("Failed to deserialize cart: %v", err)
 			return nil, err
 		}
-		return nil, nil
+		return &cart, nil
 	}
 }
 
@@ -118,23 +134,29 @@ func (cr *cartRepositoryImpl) Update(ctx context.Context, cart *models.Cart) err
 		return err
 	}
 
+	// Get current item from DB
+	out, err := cr.Read(ctx, cart.Id)
+	if err != nil {
+		log.Error("Failed to read cart: ", err)
+		return err
+	}
+
 	// Put item into DB
 	_, err = cr.cartDB.UpdateItem(ctx, &dynamodb.UpdateItemInput{
 		TableName: aws.String(cr.tableName),
 		Key: map[string]types.AttributeValue{
 			"id": &types.AttributeValueMemberS{
-				Value: cart.Id,
+				Value: out.Id,
+			},
+			"user_id": &types.AttributeValueMemberS{
+				Value: out.UserID,
 			},
 		},
-		UpdateExpression: aws.String("SET #cart = :cart"),
+		UpdateExpression: aws.String("SET #items = :items"),
 		ExpressionAttributeNames: map[string]string{
-			"#cart": "cart",
+			"#items": "items",
 		},
-		ExpressionAttributeValues: map[string]types.AttributeValue{
-			":cart": &types.AttributeValueMemberM{
-				Value: data,
-			},
-		},
+		ExpressionAttributeValues: data,
 	})
 	if err != nil {
 		log.Errorf("Failed to update cart: %v", err)
@@ -145,12 +167,21 @@ func (cr *cartRepositoryImpl) Update(ctx context.Context, cart *models.Cart) err
 
 // Delete deletes a cart by its ID
 func (cr *cartRepositoryImpl) Delete(ctx context.Context, id string) error {
+	// Get current item from DB
+	out, err := cr.Read(ctx, id)
+	if err != nil {
+		return err
+	}
+	
 	// Delete item from DB
-	_, err := cr.cartDB.DeleteItem(ctx, &dynamodb.DeleteItemInput{
+	_, err = cr.cartDB.DeleteItem(ctx, &dynamodb.DeleteItemInput{
 		TableName: aws.String(cr.tableName),
 		Key: map[string]types.AttributeValue{
 			"id": &types.AttributeValueMemberS{
-				Value: id,
+				Value: out.Id,
+			},
+			"user_id": &types.AttributeValueMemberS{
+				Value: out.UserID,
 			},
 		},
 	})

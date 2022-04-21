@@ -45,7 +45,7 @@ func waitForTable(ctx context.Context, tableName string, db *dynamodb.Client) er
 }
 
 // CreateDynamoDBTable creates a DynamoDB table
-func CreateDynamoDBTable(tableName string, db *dynamodb.Client) error {
+func CreateDynamoDBTable(db *dynamodb.Client, tableName string) error {
 	ctx := context.TODO()
 	// Create a table
 	_, err := db.CreateTable(
@@ -84,7 +84,7 @@ func CreateDynamoDBTable(tableName string, db *dynamodb.Client) error {
 }
 
 // DeleteDynamoDBTable deletes a DynamoDB table
-func DeleteDynamoDBTable(tableName string, db *dynamodb.Client) error {
+func DeleteDynamoDBTable(db *dynamodb.Client, tableName string) error {
 	ctx := context.TODO()
 	// Delete the table
 	_, err := db.DeleteTable(

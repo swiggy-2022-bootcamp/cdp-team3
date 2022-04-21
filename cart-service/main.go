@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"net"
 
 	"github.com/gin-gonic/gin"
@@ -9,7 +8,6 @@ import (
 	"github.com/swiggy-ipp/cart-service/configs"
 	"github.com/swiggy-ipp/cart-service/controllers"
 	"github.com/swiggy-ipp/cart-service/grpcs"
-	"github.com/swiggy-ipp/cart-service/models"
 	"github.com/swiggy-ipp/cart-service/repositories"
 	"github.com/swiggy-ipp/cart-service/routes"
 )
@@ -57,18 +55,6 @@ func main() {
 	db := configs.GetDynamoDBClient(); // Database
 	cartRepository := repositories.NewCartRepository(db, "cart") // Repository
 	cartController := controllers.NewCartController(cartRepository) // Controller
-	
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-	cartRepository.Create(ctx, &models.Cart{
-		UserID: "user1",
-		Items: []models.CartItem{
-			{
-				ProductID: "product1",
-				Quantity:  "1",
-			},
-		},
-	})
 
 	// Set up GRPC
 	go startGRPCServer(configs.EnvServiceGRPCAddress(), cartRepository)
