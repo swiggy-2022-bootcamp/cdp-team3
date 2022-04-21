@@ -7,8 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/products-service/configs"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/products-service/controllers"
 	_ "github.com/swiggy-2022-bootcamp/cdp-team3/products-service/docs"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/products-service/routes"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/products-service/utils"
+	"go.uber.org/zap"
 )
 
 var port int
@@ -32,14 +36,28 @@ var port int
 // @name Authorization
 func main() {
 	port = 3000
+
+	// Initialize Logger
+	log := utils.InitializeLogger()
+	zap.ReplaceGlobals(log)
+	defer log.Sync()
+	log.Info("Products Service Started")
+
+	//Initialize DB
+	productsDB := configs.ConnectDB()
+	configs.CreateTable(productsDB)
+
 	router := gin.Default()
 
-	router.GET("/ping", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	url := ginSwagger.URL("http://localhost:3000/swagger/doc.json")
+	// router.GET("/ping", func(ctx *gin.Context) {
+	// 	ctx.JSON(200, gin.H{
+	// 		"message": "pong",
+	// 	})
+	// })
+
+	router.GET("/", controllers.HealthCheck())
+
+	url := ginSwagger.URL(fmt.Sprintf("http://localhost:%v/swagger/doc.json", port))
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 
 	routes.ProductAdminRoutes(router)
