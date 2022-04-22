@@ -22,7 +22,6 @@ func NewOrderController(orderService services.OrderService) OrderController {
 	return OrderController{orderService: orderService}
 }
 
-const ordersCollection = "Orders"
 // GetAllOrders godoc
 // @Summary Fetch all the orders
 // @Description This request will fetch all the orders
@@ -44,11 +43,11 @@ func (oc OrderController) GetAllOrders() gin.HandlerFunc {
 		ordersList,err := oc.orderService.GetAllOrders()
 
 		if err != nil {
-			zap.L().Error(err.Error())
+			zap.L().Error(err.Message)
 			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
 				Status: http.StatusInternalServerError, 
 				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Error()},
+				Data: map[string]interface{}{"data": err.Message},
 			})
 			return
 		}
@@ -83,11 +82,11 @@ func (oc OrderController) GetOrdersByStatus() gin.HandlerFunc {
 		ordersList,err := oc.orderService.GetOrdersByStatus(status)
 
 		if err != nil {
-			zap.L().Error(err.Error())
+			zap.L().Error(err.Message)
 			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
 				Status: http.StatusInternalServerError, 
 				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Error()},
+				Data: map[string]interface{}{"data": err.Message},
 			})
 			return
 		}
@@ -122,11 +121,11 @@ func (oc OrderController) GetOrderById() gin.HandlerFunc {
 		order, err := oc.orderService.GetOrderById(orderId)
 
 		if err != nil {
-			zap.L().Error(err.Error())
+			zap.L().Error(err.Message)
 			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
 				Status: http.StatusInternalServerError, 
 				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Error()},
+				Data: map[string]interface{}{"data": err.Message},
 			})
 			return
 		}
@@ -174,11 +173,11 @@ func  (oc OrderController) UpdateStatusById() gin.HandlerFunc {
 
 		updatedOrder, err := oc.orderService.UpdateStatusById(orderId, orderStatus)
 		if err != nil {
-			zap.L().Error(err.Error())
+			zap.L().Error(err.Message)
 			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
 				Status: http.StatusInternalServerError, 
 				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Error()},
+				Data: map[string]interface{}{"data": err.Message},
 			})
 			return
 		}
@@ -214,11 +213,11 @@ func  (oc OrderController) DeleteOrderById() gin.HandlerFunc {
 	
 		deletedOrder, err := oc.orderService.DeleteOrderById(orderId)
 		if err != nil {
-			zap.L().Error(err.Error())
+			zap.L().Error(err.Message)
 			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
 				Status: http.StatusInternalServerError, 
 				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Error()},
+				Data: map[string]interface{}{"data": err.Message},
 			})
 			return
 		}
@@ -254,11 +253,11 @@ func  (oc OrderController) GetOrdersByCustomerId() gin.HandlerFunc {
 		ordersList,err := oc.orderService.GetOrdersByCustomerId(userId)
 
 		if err != nil {
-			zap.L().Error(err.Error())
+			zap.L().Error(err.Message)
 			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
 				Status: http.StatusInternalServerError, 
 				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Error()},
+				Data: map[string]interface{}{"data": err.Message},
 			})
 			return
 		}
@@ -320,11 +319,11 @@ func (oc OrderController) GetOrderStatusById() gin.HandlerFunc {
 		order, err := oc.orderService.GetOrderById(orderId)
 
 		if err != nil {
-			zap.L().Error(err.Error())
+			zap.L().Error(err.Message)
 			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
 				Status: http.StatusInternalServerError, 
 				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Error()},
+				Data: map[string]interface{}{"data": err.Message},
 			})
 			return
 		}
