@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	errors "github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/errors"
 	models "github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/models"
 )
 
@@ -35,11 +36,11 @@ func (m *MockOrderService) EXPECT() *MockOrderServiceMockRecorder {
 }
 
 // DeleteOrderById mocks base method.
-func (m *MockOrderService) DeleteOrderById(arg0 string) (*models.Order, error) {
+func (m *MockOrderService) DeleteOrderById(arg0 string) (*models.Order, *errors.AppError) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteOrderById", arg0)
 	ret0, _ := ret[0].(*models.Order)
-	ret1, _ := ret[1].(error)
+	ret1, _ := ret[1].(*errors.AppError)
 	return ret0, ret1
 }
 
@@ -50,11 +51,11 @@ func (mr *MockOrderServiceMockRecorder) DeleteOrderById(arg0 interface{}) *gomoc
 }
 
 // GetAllOrders mocks base method.
-func (m *MockOrderService) GetAllOrders() ([]models.Order, error) {
+func (m *MockOrderService) GetAllOrders() ([]models.Order, *errors.AppError) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAllOrders")
 	ret0, _ := ret[0].([]models.Order)
-	ret1, _ := ret[1].(error)
+	ret1, _ := ret[1].(*errors.AppError)
 	return ret0, ret1
 }
 
@@ -65,11 +66,11 @@ func (mr *MockOrderServiceMockRecorder) GetAllOrders() *gomock.Call {
 }
 
 // GetOrderById mocks base method.
-func (m *MockOrderService) GetOrderById(arg0 string) (*models.Order, error) {
+func (m *MockOrderService) GetOrderById(arg0 string) (*models.Order, *errors.AppError) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrderById", arg0)
 	ret0, _ := ret[0].(*models.Order)
-	ret1, _ := ret[1].(error)
+	ret1, _ := ret[1].(*errors.AppError)
 	return ret0, ret1
 }
 
@@ -80,11 +81,11 @@ func (mr *MockOrderServiceMockRecorder) GetOrderById(arg0 interface{}) *gomock.C
 }
 
 // GetOrdersByCustomerId mocks base method.
-func (m *MockOrderService) GetOrdersByCustomerId(arg0 string) ([]models.Order, error) {
+func (m *MockOrderService) GetOrdersByCustomerId(arg0 string) ([]models.Order, *errors.AppError) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrdersByCustomerId", arg0)
 	ret0, _ := ret[0].([]models.Order)
-	ret1, _ := ret[1].(error)
+	ret1, _ := ret[1].(*errors.AppError)
 	return ret0, ret1
 }
 
@@ -95,11 +96,11 @@ func (mr *MockOrderServiceMockRecorder) GetOrdersByCustomerId(arg0 interface{}) 
 }
 
 // GetOrdersByStatus mocks base method.
-func (m *MockOrderService) GetOrdersByStatus(arg0 string) ([]models.Order, error) {
+func (m *MockOrderService) GetOrdersByStatus(arg0 string) ([]models.Order, *errors.AppError) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrdersByStatus", arg0)
 	ret0, _ := ret[0].([]models.Order)
-	ret1, _ := ret[1].(error)
+	ret1, _ := ret[1].(*errors.AppError)
 	return ret0, ret1
 }
 
@@ -110,11 +111,11 @@ func (mr *MockOrderServiceMockRecorder) GetOrdersByStatus(arg0 interface{}) *gom
 }
 
 // UpdateStatusById mocks base method.
-func (m *MockOrderService) UpdateStatusById(arg0 string, arg1 models.OrderStatus) (*models.Order, error) {
+func (m *MockOrderService) UpdateStatusById(arg0 string, arg1 models.OrderStatus) (*models.Order, *errors.AppError) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateStatusById", arg0, arg1)
 	ret0, _ := ret[0].(*models.Order)
-	ret1, _ := ret[1].(error)
+	ret1, _ := ret[1].(*errors.AppError)
 	return ret0, ret1
 }
 
