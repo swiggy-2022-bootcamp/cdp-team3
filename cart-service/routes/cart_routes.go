@@ -6,12 +6,14 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
 	"github.com/swiggy-ipp/cart-service/controllers"
 	"github.com/swiggy-ipp/cart-service/docs"
+	"github.com/swiggy-ipp/cart-service/middlewares"
 )
 
 const BaseURL string = "/cart_service"
 
 func GenerateCartRoutes(router *gin.Engine, cartController controllers.CartController) {
 	cartServiceRouter := router.Group(BaseURL)
+	cartServiceRouter.Use(middlewares.AuthenticateJWT())
 	cartServiceCartRouter := cartServiceRouter.Group("/cart")
 
 	// Health Check

@@ -35,3 +35,15 @@ type CartItem struct {
 	ProductID string `json:"product_id" validate:"required"` // ID of the product
 	Quantity  int64  `json:"quantity" validate:"required"`   // Quantity of the product in the cart.
 }
+
+// Serialize any interface for DynamoDB and return a map[string]types.AttributeValue
+// Returns an error if the serialization fails.
+func MarshalGeneralMap(d interface{}) (map[string]types.AttributeValue, error) {
+	return attributevalue.MarshalMapWithOptions(d, encoderJSON)
+}
+
+// Serialize any list for DynamoDB and return a map[string]types.AttributeValue
+// Returns an error if the serialization fails.
+func MarshalGeneralList(d interface{}) ([]types.AttributeValue, error) {
+	return attributevalue.MarshalListWithOptions(d, encoderJSON)
+}

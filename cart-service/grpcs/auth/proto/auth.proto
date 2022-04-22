@@ -1,0 +1,18 @@
+syntax = "proto3";
+package auth;
+option go_package ="/grpcs/auth/proto";
+
+message VerifyTokenRequest {
+    string token = 1;
+}
+
+message VerifyTokenResponse {
+    string userId = 1;
+    string name = 2;
+    string email = 3;
+    bool isAdmin = 4;
+}
+
+service AuthService {
+    rpc VerifyToken(VerifyTokenRequest) returns (VerifyTokenResponse) {}
+}

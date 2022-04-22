@@ -128,7 +128,7 @@ func (cr *cartRepositoryImpl) ReadByUserID(ctx context.Context, userID string) (
 // Update updates a cart by its ID
 func (cr *cartRepositoryImpl) UpdateCartItems(ctx context.Context, cart *models.Cart) error {
 	// Serialize item
-	data, err := cart.Marshal()
+	data, err := models.MarshalGeneralList(cart.Items)
 	if err != nil {
 		log.Error("Failed to serialize: ", err)
 		return err
@@ -156,7 +156,11 @@ func (cr *cartRepositoryImpl) UpdateCartItems(ctx context.Context, cart *models.
 		ExpressionAttributeNames: map[string]string{
 			"#items": "items",
 		},
-		ExpressionAttributeValues: data,
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":items": &types.AttributeValueMemberL{
+				Value: data,
+			},
+		},
 	})
 	if err != nil {
 		log.Errorf("Failed to update cart: %v", err)

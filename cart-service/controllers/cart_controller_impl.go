@@ -7,6 +7,7 @@ import (
 	"github.com/swiggy-ipp/cart-service/dto/errors"
 	"github.com/swiggy-ipp/cart-service/dto/requests"
 	"github.com/swiggy-ipp/cart-service/dto/responses"
+	"github.com/swiggy-ipp/cart-service/grpcs/auth/proto"
 	"github.com/swiggy-ipp/cart-service/services"
 )
 
@@ -32,7 +33,23 @@ func NewCartController(cartService services.CartService) CartController {
 // @Failure      500  {object}  nil
 // @Router       /cart [post]
 func (cc *cartControllerImpl) CreateCartItem(c *gin.Context) {
-	c.JSON(201, responses.MessageResponse{Message: "Created"})
+	// Get User Claims
+	claims := c.MustGet("claims").(*proto.VerifyTokenResponse)
+	// Get Cart Item Request DTO Object
+	cartItemDTO := requests.CartItemRequest{}
+	if err := c.ShouldBindJSON(&cartItemDTO); err != nil {
+		c.JSON(http.StatusBadRequest, errors.NewHTTPErrorDTO(http.StatusBadRequest, err))
+	} else if claims.GetUserId() == "" {
+		c.JSON(http.StatusForbidden, errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "You are not authorized to perform this action."))
+	} else {
+		// Create Cart Item
+		err := cc.cartService.CreateCartItem(c.Request.Context(), &cartItemDTO, claims.GetUserId())
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, errors.NewHTTPErrorDTO(http.StatusInternalServerError, err))
+		} else {
+			c.JSON(201, responses.MessageResponse{Message: "Created"})
+		}
+	}
 }
 
 // @Summary      Get all Cart Items
@@ -59,20 +76,24 @@ func (cc *cartControllerImpl) GetCartItems(c *gin.Context) {
 			http.StatusBadRequest,
 			errors.NewHTTPErrorDTO(http.StatusBadRequest, nil, "Ambiguous Request. Both Cart ID and User ID are provided."),
 		)
-	} else if (cartID != "" && isAdmin()) || (userID != "" && isMatchedUser(userID, c)) {
-		res, err := cc.cartService.GetCartItems(c.Request.Context(), cartID, userID)
-		if err != nil {
+	} else {
+		// Get User Claims
+		claims := c.MustGet("claims").(*proto.VerifyTokenResponse)
+		if (cartID != "" && claims.GetIsAdmin()) || (userID != "" && userID == claims.GetUserId()) {
+			res, err := cc.cartService.GetCartItems(c.Request.Context(), cartID, userID)
+			if err != nil {
+				c.JSON(
+					http.StatusInternalServerError,
+					errors.NewHTTPErrorDTO(http.StatusInternalServerError, err, "Error while getting Cart Items."),
+				)
+			}
+			c.JSON(200, res)
+		} else {
 			c.JSON(
-				http.StatusInternalServerError,
-				errors.NewHTTPErrorDTO(http.StatusInternalServerError, err, "Error while getting Cart Items."),
+				http.StatusForbidden,
+				errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "You are not authorized to perform this action."),
 			)
 		}
-		c.JSON(200, res)
-	} else {
-		c.JSON(
-			http.StatusForbidden,
-			errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "You are not authorized to perform this action."),
-		)
 	}
 }
 
@@ -132,20 +153,24 @@ func (cc *cartControllerImpl) EmptyCart(c *gin.Context) {
 			http.StatusBadRequest,
 			errors.NewHTTPErrorDTO(http.StatusBadRequest, nil, "Ambiguous Request. Both Cart ID and User ID are provided."),
 		)
-	} else if (emptyCartRequest.CartID != "" && isAdmin()) || (emptyCartRequest.UserID != "" && isMatchedUser(emptyCartRequest.UserID, c)) {
-		err := cc.cartService.EmptyCart(c.Request.Context(), emptyCartRequest)
-		if err != nil {
+	} else {
+		// Get User Claims
+		claims := c.MustGet("claims").(*proto.VerifyTokenResponse)
+		if (emptyCartRequest.CartID != "" && claims.GetIsAdmin()) || (emptyCartRequest.UserID != "" && emptyCartRequest.UserID == claims.GetUserId()) {
+			err := cc.cartService.EmptyCart(c.Request.Context(), emptyCartRequest)
+			if err != nil {
+				c.JSON(
+					http.StatusInternalServerError,
+					errors.NewHTTPErrorDTO(http.StatusInternalServerError, err, "Error while emptying Cart."),
+				)
+			}
+			c.JSON(204, responses.MessageResponse{Message: "Cart Emptied"})
+		} else {
 			c.JSON(
-				http.StatusInternalServerError,
-				errors.NewHTTPErrorDTO(http.StatusInternalServerError, err, "Error while emptying Cart."),
+				http.StatusForbidden,
+				errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "You are not authorized to perform this action."),
 			)
 		}
-		c.JSON(204, responses.MessageResponse{Message: "Cart Emptied"})
-	} else {
-		c.JSON(
-			http.StatusForbidden,
-			errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "You are not authorized to perform this action."),
-		)
 	}
 }
 
@@ -173,10 +198,6 @@ func (cc *cartControllerImpl) HealthCheck(c *gin.Context) {
 		KafkaServerHealth: "OK",
 		DBHealth:          dbHealth,
 	})
-}
-
-func isMatchedUser(userID string, c *gin.Context) bool {
-	return true
 }
 
 func isAdmin() bool {

@@ -20,8 +20,8 @@ func main() {
 	// Make layered Architecture
 	db := database.GetDynamoDBClient()                           // Database
 	cartRepository := repositories.NewCartRepository(db, "cart") // Repository
-	// configs.DeleteDynamoDBTable(db, "cart")                      // Delete Table
-	// configs.CreateDynamoDBTable(db, "cart")                      // Create Table
+	// database.DeleteDynamoDBTable(db, "cart")                      // Delete Table
+	// database.CreateDynamoDBTable(db, "cart")                      // Create Table
 
 	// Mock CRUD
 	// Create
