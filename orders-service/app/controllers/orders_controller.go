@@ -10,15 +10,15 @@ import (
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/configs"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/domain/services"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/dto"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/kafka"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/errors"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/models"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/utils"
 	"go.uber.org/zap"
 )
 
-func init() {
-	go kafka.UpdateOrderStatusConsumer()
-}
+// func init() {
+// 	go kafka.UpdateOrderStatusConsumer()
+// }
 type OrderController struct {
 	orderService services.OrderService
 }
@@ -45,12 +45,12 @@ func (oc OrderController) GetAllOrders() gin.HandlerFunc {
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
-		ordersList,err := oc.orderService.GetAllOrders()
+		ordersList, err := oc.orderService.GetAllOrders()
 
 		if err != nil {
 			zap.L().Error(err.Message)
-			c.AbortWithStatusJSON(err.Code,  dto.ResponseDTO{
-				Status: err.Code, 
+			c.AbortWithStatusJSON(err.Code, dto.ResponseDTO{
+				Status:  err.Code,
 				Message: err.Message,
 			})
 			return
@@ -58,9 +58,9 @@ func (oc OrderController) GetAllOrders() gin.HandlerFunc {
 
 		zap.L().Info("Fetched all orders successfully")
 		c.JSON(http.StatusOK, dto.ResponseDTO{
-			Status: http.StatusOK, 
-			Message: "success", 
-			Data: map[string]interface{}{"orders": ordersList},
+			Status:  http.StatusOK,
+			Message: "success",
+			Data:    map[string]interface{}{"orders": ordersList},
 		})
 	}
 }
@@ -83,22 +83,22 @@ func (oc OrderController) GetOrdersByStatus() gin.HandlerFunc {
 		defer cancel()
 		status := c.Param("status")
 
-		ordersList,err := oc.orderService.GetOrdersByStatus(status)
+		ordersList, err := oc.orderService.GetOrdersByStatus(status)
 
 		if err != nil {
 			zap.L().Error(err.Message)
-			c.AbortWithStatusJSON(err.Code,  dto.ResponseDTO{
-				Status: err.Code, 
+			c.AbortWithStatusJSON(err.Code, dto.ResponseDTO{
+				Status:  err.Code,
 				Message: err.Message,
 			})
 			return
 		}
 
-		zap.L().Info("Fetched all orders with status"+status+"successfully")
+		zap.L().Info("Fetched all orders with status" + status + "successfully")
 		c.JSON(http.StatusOK, dto.ResponseDTO{
-			Status: http.StatusOK, 
-			Message: "success", 
-			Data: map[string]interface{}{"orders": ordersList},
+			Status:  http.StatusOK,
+			Message: "success",
+			Data:    map[string]interface{}{"orders": ordersList},
 		})
 	}
 }
@@ -125,26 +125,26 @@ func (oc OrderController) GetOrderById() gin.HandlerFunc {
 
 		if err != nil {
 			zap.L().Error(err.Message)
-			c.AbortWithStatusJSON(err.Code,  dto.ResponseDTO{
-				Status: err.Code, 
-				Message: err.Message, 
+			c.AbortWithStatusJSON(err.Code, dto.ResponseDTO{
+				Status:  err.Code,
+				Message: err.Message,
 			})
 			return
 		}
 
 		if !utils.IsAdmin(c) && !utils.CheckLoggedInUserWithOrderCustomerId(c, order.CustomerId) {
-				zap.L().Error("Order ID requested is not placed by you")
-				c.JSON(http.StatusUnauthorized, dto.ResponseDTO{
-					Status: http.StatusUnauthorized, 
-					Message: "Order ID requested is not placed by you", 
-				})
+			zap.L().Error(errors.MsgOrderNotCreatedByYou)
+			c.JSON(http.StatusUnauthorized, dto.ResponseDTO{
+				Status:  http.StatusUnauthorized,
+				Message: errors.MsgOrderNotCreatedByYou,
+			})
 		}
 
 		zap.L().Info("Fetched order successfully")
 		c.JSON(http.StatusOK, dto.ResponseDTO{
-			Status: http.StatusOK, 
-			Message: "success", 
-			Data: map[string]interface{}{"order": order},
+			Status:  http.StatusOK,
+			Message: "success",
+			Data:    map[string]interface{}{"order": order},
 		})
 	}
 }
@@ -163,7 +163,7 @@ func (oc OrderController) GetOrderById() gin.HandlerFunc {
 // @Failure	500  {number} 	http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /orders/{orderId} [PUT]
-func  (oc OrderController) UpdateStatusById() gin.HandlerFunc {
+func (oc OrderController) UpdateStatusById() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		zap.L().Info("Inside UpdateStatusById Controller")
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -173,10 +173,10 @@ func  (oc OrderController) UpdateStatusById() gin.HandlerFunc {
 		var orderStatus models.OrderStatus
 		if err := c.BindJSON(&orderStatus); err != nil {
 			zap.L().Error("Invalid Request")
-			c.JSON(http.StatusBadRequest,  dto.ResponseDTO{
-				Status: http.StatusBadRequest, 
-				Message: "Invalid Request", 
-				Data: map[string]interface{}{"data": err.Error()},
+			c.JSON(http.StatusBadRequest, dto.ResponseDTO{
+				Status:  http.StatusBadRequest,
+				Message: "Invalid Request",
+				Data:    map[string]interface{}{"data": err.Error()},
 			})
 			return
 		}
@@ -184,8 +184,8 @@ func  (oc OrderController) UpdateStatusById() gin.HandlerFunc {
 		updatedOrder, err := oc.orderService.UpdateStatusById(orderId, orderStatus)
 		if err != nil {
 			zap.L().Error(err.Message)
-			c.AbortWithStatusJSON(err.Code,  dto.ResponseDTO{
-				Status: err.Code, 
+			c.AbortWithStatusJSON(err.Code, dto.ResponseDTO{
+				Status:  err.Code,
 				Message: err.Message,
 			})
 			return
@@ -193,9 +193,9 @@ func  (oc OrderController) UpdateStatusById() gin.HandlerFunc {
 
 		zap.L().Info("Updated order status successfully")
 		c.JSON(http.StatusOK, dto.ResponseDTO{
-			Status: http.StatusOK, 
-			Message: "success", 
-			Data: map[string]interface{}{"order": updatedOrder},
+			Status:  http.StatusOK,
+			Message: "success",
+			Data:    map[string]interface{}{"order": updatedOrder},
 		})
 	}
 }
@@ -212,30 +212,29 @@ func  (oc OrderController) UpdateStatusById() gin.HandlerFunc {
 // @Failure	500  {number} 	http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /orders/{orderId} [DELETE]
-func  (oc OrderController) DeleteOrderById() gin.HandlerFunc {
+func (oc OrderController) DeleteOrderById() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		zap.L().Info("Inside DeleteOrderById Controller")
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
 		orderId := c.Param("orderId")
-	
+
 		deletedOrder, err := oc.orderService.DeleteOrderById(orderId)
 		if err != nil {
 			zap.L().Error(err.Message)
-			c.AbortWithStatusJSON(err.Code,  dto.ResponseDTO{
-				Status: err.Code, 
+			c.AbortWithStatusJSON(err.Code, dto.ResponseDTO{
+				Status:  err.Code,
 				Message: err.Message,
 			})
 			return
 		}
 
-
-		zap.L().Info("Order "+orderId+" Successfully Deleted")
+		zap.L().Info("Order " + orderId + " Successfully Deleted")
 		c.JSON(http.StatusOK, dto.ResponseDTO{
-			Status: http.StatusOK, 
-			Message: "success", 
-			Data: map[string]interface{}{"order": deletedOrder},
+			Status:  http.StatusOK,
+			Message: "success",
+			Data:    map[string]interface{}{"order": deletedOrder},
 		})
 	}
 }
@@ -251,34 +250,32 @@ func  (oc OrderController) DeleteOrderById() gin.HandlerFunc {
 // @Failure	500  {number} http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /orders/user/{userId} [GET]
-func  (oc OrderController) GetOrdersByCustomerId() gin.HandlerFunc {
+func (oc OrderController) GetOrdersByCustomerId() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		zap.L().Info("Inside GetOrdersByStatus Controller")
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 		userId := c.Param("userId")
 
-		ordersList,err := oc.orderService.GetOrdersByCustomerId(userId)
+		ordersList, err := oc.orderService.GetOrdersByCustomerId(userId)
 
 		if err != nil {
 			zap.L().Error(err.Message)
-			c.AbortWithStatusJSON(err.Code,  dto.ResponseDTO{
-				Status: err.Code, 
+			c.AbortWithStatusJSON(err.Code, dto.ResponseDTO{
+				Status:  err.Code,
 				Message: err.Message,
 			})
 			return
 		}
 
-		zap.L().Info("Fetched all orders for customer "+userId+"successfully")
+		zap.L().Info("Fetched all orders for customer " + userId + "successfully")
 		c.JSON(http.StatusOK, dto.ResponseDTO{
-			Status: http.StatusOK, 
-			Message: "success", 
-			Data: map[string]interface{}{"orders": ordersList},
+			Status:  http.StatusOK,
+			Message: "success",
+			Data:    map[string]interface{}{"orders": ordersList},
 		})
 	}
 }
-
-
 
 // GenerateInvoiceById godoc
 // @Summary Generate invoice for a particular Order by Order ID
@@ -302,8 +299,8 @@ func (oc OrderController) GenerateInvoiceById() gin.HandlerFunc {
 		updatedInvoiceOrder, err := oc.orderService.GenerateInvoiceById(orderId)
 		if err != nil {
 			zap.L().Error(err.Message)
-			c.AbortWithStatusJSON(err.Code,  dto.ResponseDTO{
-				Status: err.Code, 
+			c.AbortWithStatusJSON(err.Code, dto.ResponseDTO{
+				Status:  err.Code,
 				Message: err.Message,
 			})
 			return
@@ -311,17 +308,16 @@ func (oc OrderController) GenerateInvoiceById() gin.HandlerFunc {
 
 		zap.L().Info("Generated Invoice successfully")
 		c.JSON(http.StatusOK, dto.ResponseDTO{
-			Status: http.StatusOK, 
-			Message: "success", 
-			Data: map[string]interface{}{"order": updatedInvoiceOrder},
+			Status:  http.StatusOK,
+			Message: "success",
+			Data:    map[string]interface{}{"order": updatedInvoiceOrder},
 		})
 	}
 }
 
-
 // GetOrderStatusById-Front Store godoc
 // @Summary Get Order Status by Order ID
-// @Description This request will fetch details of order status 
+// @Description This request will fetch details of order status
 // @Tags Orders Service
 // @Schemes
 // @Produce json
@@ -342,8 +338,8 @@ func (oc OrderController) GetOrderStatusById() gin.HandlerFunc {
 
 		if err != nil {
 			zap.L().Error(err.Message)
-			c.AbortWithStatusJSON(err.Code,  dto.ResponseDTO{
-				Status: err.Code, 
+			c.AbortWithStatusJSON(err.Code, dto.ResponseDTO{
+				Status:  err.Code,
 				Message: err.Message,
 			})
 			return
@@ -352,22 +348,21 @@ func (oc OrderController) GetOrderStatusById() gin.HandlerFunc {
 		isValidCustomer := utils.CheckLoggedInUserWithOrderCustomerId(c, orderId)
 
 		if !isValidCustomer {
-			zap.L().Error("Order ID requested is not placed by you")
+			zap.L().Error(errors.MsgOrderNotCreatedByYou)
 			c.JSON(http.StatusUnauthorized, dto.ResponseDTO{
-				Status: http.StatusUnauthorized, 
-				Message: "Order ID requested is not placed by you", 
+				Status:  http.StatusUnauthorized,
+				Message: errors.MsgOrderNotCreatedByYou,
 			})
 		}
 
 		zap.L().Info("Fetched order status successfully")
 		c.JSON(http.StatusOK, dto.ResponseDTO{
-			Status: http.StatusOK, 
-			Message: "success", 
-			Data: map[string]interface{}{"status": order.Status},
+			Status:  http.StatusOK,
+			Message: "success",
+			Data:    map[string]interface{}{"status": order.Status},
 		})
 	}
 }
-
 
 // HealthCheck godoc
 // @Summary To check if the service is running or not.
@@ -380,7 +375,7 @@ func (oc OrderController) GetOrderStatusById() gin.HandlerFunc {
 // @Failure      400  {number} 	http.StatusBadRequest
 // @Router / [GET]
 func HealthCheck() gin.HandlerFunc {
-	
+
 	//Ping DB
 	_, err := configs.DB.ListTables(&dynamodb.ListTablesInput{})
 	if err != nil {

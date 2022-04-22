@@ -1,0 +1,6 @@
+projectKey=OrdersService
+serverUrl=http://localhost:9000
+serverVersion=9.4.0.54424
+dashboardUrl=http://localhost:9000/dashboard?id=OrdersService
+ceTaskId=AYBTnmCk0CQ_upJPjDqC
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYBTnmCk0CQ_upJPjDqC

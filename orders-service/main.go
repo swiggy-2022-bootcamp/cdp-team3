@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/app"
 	_ "github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/docs"
 )
@@ -23,5 +25,6 @@ import (
 // @in header
 // @name Authorization
 func main() {
+	fmt.Print("Starting the orders service")
 	app.Start()
 }
