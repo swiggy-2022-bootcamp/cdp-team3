@@ -11,6 +11,7 @@ import (
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/domain/services"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/dto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/models"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/utils"
 	"go.uber.org/zap"
 )
 
@@ -44,10 +45,9 @@ func (oc OrderController) GetAllOrders() gin.HandlerFunc {
 
 		if err != nil {
 			zap.L().Error(err.Message)
-			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
-				Status: http.StatusInternalServerError, 
-				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Message},
+			c.AbortWithStatusJSON(err.Code,  dto.ResponseDTO{
+				Status: err.Code, 
+				Message: err.Message,
 			})
 			return
 		}
@@ -83,10 +83,9 @@ func (oc OrderController) GetOrdersByStatus() gin.HandlerFunc {
 
 		if err != nil {
 			zap.L().Error(err.Message)
-			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
-				Status: http.StatusInternalServerError, 
-				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Message},
+			c.AbortWithStatusJSON(err.Code,  dto.ResponseDTO{
+				Status: err.Code, 
+				Message: err.Message,
 			})
 			return
 		}
@@ -122,12 +121,19 @@ func (oc OrderController) GetOrderById() gin.HandlerFunc {
 
 		if err != nil {
 			zap.L().Error(err.Message)
-			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
-				Status: http.StatusInternalServerError, 
-				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Message},
+			c.AbortWithStatusJSON(err.Code,  dto.ResponseDTO{
+				Status: err.Code, 
+				Message: err.Message, 
 			})
 			return
+		}
+
+		if !utils.IsAdmin(c) && !utils.CheckLoggedInUserWithOrderCustomerId(c, order.CustomerId) {
+				zap.L().Error("Order ID requested is not placed by you")
+				c.JSON(http.StatusUnauthorized, dto.ResponseDTO{
+					Status: http.StatusUnauthorized, 
+					Message: "Order ID requested is not placed by you", 
+				})
 		}
 
 		zap.L().Info("Fetched order successfully")
@@ -174,10 +180,9 @@ func  (oc OrderController) UpdateStatusById() gin.HandlerFunc {
 		updatedOrder, err := oc.orderService.UpdateStatusById(orderId, orderStatus)
 		if err != nil {
 			zap.L().Error(err.Message)
-			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
-				Status: http.StatusInternalServerError, 
-				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Message},
+			c.AbortWithStatusJSON(err.Code,  dto.ResponseDTO{
+				Status: err.Code, 
+				Message: err.Message,
 			})
 			return
 		}
@@ -214,10 +219,9 @@ func  (oc OrderController) DeleteOrderById() gin.HandlerFunc {
 		deletedOrder, err := oc.orderService.DeleteOrderById(orderId)
 		if err != nil {
 			zap.L().Error(err.Message)
-			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
-				Status: http.StatusInternalServerError, 
-				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Message},
+			c.AbortWithStatusJSON(err.Code,  dto.ResponseDTO{
+				Status: err.Code, 
+				Message: err.Message,
 			})
 			return
 		}
@@ -254,10 +258,9 @@ func  (oc OrderController) GetOrdersByCustomerId() gin.HandlerFunc {
 
 		if err != nil {
 			zap.L().Error(err.Message)
-			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
-				Status: http.StatusInternalServerError, 
-				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Message},
+			c.AbortWithStatusJSON(err.Code,  dto.ResponseDTO{
+				Status: err.Code, 
+				Message: err.Message,
 			})
 			return
 		}
@@ -295,10 +298,9 @@ func (oc OrderController) GenerateInvoiceById() gin.HandlerFunc {
 		updatedInvoiceOrder, err := oc.orderService.GenerateInvoiceById(orderId)
 		if err != nil {
 			zap.L().Error(err.Message)
-			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
-				Status: http.StatusInternalServerError, 
-				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Message},
+			c.AbortWithStatusJSON(err.Code,  dto.ResponseDTO{
+				Status: err.Code, 
+				Message: err.Message,
 			})
 			return
 		}
@@ -336,12 +338,21 @@ func (oc OrderController) GetOrderStatusById() gin.HandlerFunc {
 
 		if err != nil {
 			zap.L().Error(err.Message)
-			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
-				Status: http.StatusInternalServerError, 
-				Message: "Internal Error", 
-				Data: map[string]interface{}{"data": err.Message},
+			c.AbortWithStatusJSON(err.Code,  dto.ResponseDTO{
+				Status: err.Code, 
+				Message: err.Message,
 			})
 			return
+		}
+
+		isValidCustomer := utils.CheckLoggedInUserWithOrderCustomerId(c, orderId)
+
+		if !isValidCustomer {
+			zap.L().Error("Order ID requested is not placed by you")
+			c.JSON(http.StatusUnauthorized, dto.ResponseDTO{
+				Status: http.StatusUnauthorized, 
+				Message: "Order ID requested is not placed by you", 
+			})
 		}
 
 		zap.L().Info("Fetched order status successfully")

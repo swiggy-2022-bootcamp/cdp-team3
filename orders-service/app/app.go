@@ -43,7 +43,7 @@ func Start() {
 	orderController = controllers.NewOrderController(orderService)
 	orderRoutes = routes.NewOrderRoutes(orderController)
 
-	go orderGrpc.InitializeGRPCServer(configs.EnvGrpcPORT())
+	go orderGrpc.InitializeGRPCServer(configs.EnvGrpcOrderServerPORT())
 	router := StartRestServer()
 	router.Run(":"+configs.EnvPORT())
 }

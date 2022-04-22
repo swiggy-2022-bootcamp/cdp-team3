@@ -12,9 +12,14 @@ func EnvAccessKey() string {
 	return os.Getenv("AWS_ACCESS_KEY_ID")
 }
 
-func EnvGrpcPORT() string {
+func EnvGrpcOrderServerPORT() string {
 	loadEnvFile()
-	return os.Getenv("GRPC_SERVER_PORT")
+	return os.Getenv("GRPC_ORDER_SERVER_PORT")
+}
+
+func EnvGrpcAuthClientPORT() string {
+	loadEnvFile()
+	return os.Getenv("GRPC_AUTH_CLIENT_PORT")
 }
 
 func EnvSecretKey() string {
