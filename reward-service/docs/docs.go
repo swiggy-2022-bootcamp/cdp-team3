@@ -26,7 +26,7 @@ const docTemplate = `{
     "paths": {
         "/": {
             "get": {
-                "description": "When a request is made to the / endpoint, if the service is running, it returns \"Okay\"",
+                "description": "This request will return 200 OK if server is up..",
                 "consumes": [
                     "application/json"
                 ],
@@ -36,7 +36,89 @@ const docTemplate = `{
                 "tags": [
                     "Health"
                 ],
-                "summary": "Checks whether the service is up \u0026 running",
+                "summary": "To check if the service is running or not.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }
+        },
+        "/rewards": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer Token": []
+                    }
+                ],
+                "description": "This request will fetch all the rewards",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rewards Service"
+                ],
+                "summary": "Fetch all the rewards",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Reward"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Adds Reward Point To The Customer based on the given ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rewards Service"
+                ],
+                "summary": "Adds Reward Point To The Customer",
+                "parameters": [
+                    {
+                        "description": "reward details",
+                        "name": "Details",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SwaggerReward"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -59,48 +141,78 @@ const docTemplate = `{
                 }
             }
         },
-        "/reward/{id}": {
-            "post": {
-                "description": "Adds Reward Point To The Customer based on the given ID",
-                "consumes": [
-                    "application/json"
+        "/rewards/user/{userId}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer Token": []
+                    }
                 ],
+                "description": "Get rewards details of a customer based on Customer ID.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Reward"
+                    "Rewards Service"
                 ],
-                "summary": "Adds Reward Point To The Customer",
+                "summary": "Get rewards of a customer based on customer ID.",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "customer id",
-                        "name": "CustomerID",
+                        "description": "User Id",
+                        "name": "userId",
                         "in": "path",
                         "required": true
-                    },
-                    {
-                        "description": "reward details",
-                        "name": "Details",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Reward"
-                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "String"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Reward"
+                            }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "number"
+                        }
+                    }
+                }
+            }
+        },
+        "/rewards/{rewardId}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer Token": []
+                    }
+                ],
+                "description": "Get reward details based on Reward ID.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rewards Service"
+                ],
+                "summary": "Get reward based on reward ID.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Reward Id",
+                        "name": "rewardId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Reward"
                         }
                     },
                     "500": {
@@ -116,15 +228,35 @@ const docTemplate = `{
     "definitions": {
         "models.Reward": {
             "type": "object",
+            "required": [
+                "customerId",
+                "rewardId",
+                "rewards"
+            ],
             "properties": {
-                "_id": {
+                "customerId": {
                     "type": "string"
                 },
-                "message": {
+                "rewardId": {
                     "type": "string"
                 },
                 "rewards": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.SwaggerReward": {
+            "type": "object",
+            "required": [
+                "customerId",
+                "rewards"
+            ],
+            "properties": {
+                "customerId": {
                     "type": "string"
+                },
+                "rewards": {
+                    "type": "integer"
                 }
             }
         }
@@ -144,8 +276,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:3008",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "BuyItNow Reward Service",
-	Description:      "Admin can get their details and create, read, update and delete customers.",
+	Title:            "BuyItNow Rewards Service",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }
