@@ -56,7 +56,7 @@ func (cs *cartServiceImpl) CreateCartItem(
 		return err
 	}
 	return nil
-}
+}	
 
 // GetCartItems fetches the cart items from DB
 func (cs *cartServiceImpl) GetCartItems(
@@ -79,6 +79,60 @@ func (cs *cartServiceImpl) GetCartItems(
 	}
 	// Return the Cart Items
 	return &responses.CartItemsResponse{CartItems: cart.Items}, nil
+}
+
+// UpdateCartItem updates a Cart Item
+func (cs *cartServiceImpl) UpdateCartItem(
+	ctx context.Context,
+	cartItemRequest *requests.CartItemRequest,
+	userID string,
+) error {
+	// Attempt to fetch the Cart from DB
+	cart, err := cs.cartRepository.ReadByUserID(ctx, userID)
+	if err != nil {
+		return err
+	}
+
+	// Check if the item already exists in the cart
+	for i, item := range cart.Items {
+		if item.ProductID == cartItemRequest.ProductID {
+			cart.Items[i].Quantity = cartItemRequest.Quantity
+			err = cs.cartRepository.UpdateCartItems(ctx, cart)
+			if err != nil {
+				return err
+			}
+			return nil
+		}
+	}
+
+	// Create Cart Item instead as it doesn't exist
+	err = cs.CreateCartItem(ctx, cartItemRequest, userID)
+	return err
+}
+
+// DeleteCartItem deletes a Cart Item
+func (cs *cartServiceImpl) DeleteCartItem(
+	ctx context.Context,
+	productID string,
+	userID string,
+) error {
+	// Attempt to fetch the Cart from DB
+	cart, err := cs.cartRepository.ReadByUserID(ctx, userID)
+	if err != nil {
+		return err
+	}
+
+	// Delete the Cart Item if present
+	for i, item := range cart.Items {
+		if item.ProductID == productID {
+			cart.Items = append(cart.Items[:i], cart.Items[i+1:]...)
+			err = cs.cartRepository.UpdateCartItems(ctx, cart)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
 
 // EmptyCart fetches the cart identified by Cart ID or User ID and empties it

@@ -47,7 +47,7 @@ func (cc *cartControllerImpl) CreateCartItem(c *gin.Context) {
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, errors.NewHTTPErrorDTO(http.StatusInternalServerError, err))
 		} else {
-			c.JSON(201, responses.MessageResponse{Message: "Created"})
+			c.JSON(http.StatusCreated, responses.MessageResponse{Message: "Created"})
 		}
 	}
 }
@@ -87,7 +87,7 @@ func (cc *cartControllerImpl) GetCartItems(c *gin.Context) {
 					errors.NewHTTPErrorDTO(http.StatusInternalServerError, err, "Error while getting Cart Items."),
 				)
 			}
-			c.JSON(200, res)
+			c.JSON(http.StatusOK, res)
 		} else {
 			c.JSON(
 				http.StatusForbidden,
@@ -109,7 +109,23 @@ func (cc *cartControllerImpl) GetCartItems(c *gin.Context) {
 // @Failure      500           {object}  nil
 // @Router       /cart [put]
 func (cc *cartControllerImpl) UpdateCartItem(c *gin.Context) {
-	c.JSON(204, responses.MessageResponse{Message: "Updated"})
+	// Get User Claims
+	claims := c.MustGet("claims").(*proto.VerifyTokenResponse)
+	// Get Cart Item Request DTO Object
+	cartItemDTO := requests.CartItemRequest{}
+	if err := c.ShouldBindJSON(&cartItemDTO); err != nil {
+		c.JSON(http.StatusBadRequest, errors.NewHTTPErrorDTO(http.StatusBadRequest, err))
+	} else if claims.GetUserId() == "" {
+		c.JSON(http.StatusForbidden, errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "You are not authorized to perform this action."))
+	} else {
+		// Create Cart Item
+		err := cc.cartService.UpdateCartItem(c.Request.Context(), &cartItemDTO, claims.GetUserId())
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, errors.NewHTTPErrorDTO(http.StatusInternalServerError, err))
+		} else {
+			c.JSON(http.StatusNoContent, responses.MessageResponse{Message: "Updated"})
+		}
+	}
 }
 
 // @Summary      Delete a Cart Item.
@@ -117,14 +133,32 @@ func (cc *cartControllerImpl) UpdateCartItem(c *gin.Context) {
 // @Tags         Cart Items
 // @Accept       json
 // @Produce      json
-// @Param        key  path      string  true  "Cart Item Key"
+// @Param        productID  path      string  true  "Cart Item Product ID"
 // @Success      204  {object}  int64
 // @Failure      400           {object}  errors.HTTPErrorDTO
 // @Failure      404           {object}  errors.HTTPErrorDTO
 // @Failure      500          {object}  nil
-// @Router       /cart/{key} [delete]
+// @Router       /cart/{productID} [delete]
 func (cc *cartControllerImpl) DeleteCartItem(c *gin.Context) {
-	c.JSON(204, responses.MessageResponse{Message: "Deleted"})
+	// Get User Claims
+	claims := c.MustGet("claims").(*proto.VerifyTokenResponse)
+	// Get Cart Item Request DTO Object
+	cartItemDTO := requests.CartItemRequest{}
+	if err := c.ShouldBindJSON(&cartItemDTO); err != nil {
+		c.JSON(http.StatusBadRequest, errors.NewHTTPErrorDTO(http.StatusBadRequest, err))
+	} else if claims.GetUserId() == "" {
+		c.JSON(http.StatusForbidden, errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "You are not authorized to perform this action."))
+	} else {
+		// Get Cart Item Product ID from URL
+		productID := c.Param("productID")
+		// Create Cart Item
+		err := cc.cartService.DeleteCartItem(c.Request.Context(), productID, claims.GetUserId())
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, errors.NewHTTPErrorDTO(http.StatusInternalServerError, err))
+		} else {
+			c.JSON(http.StatusNoContent, responses.MessageResponse{Message: "Deleted"})
+		}
+	}
 }
 
 // @Summary      Empty the Cart.
