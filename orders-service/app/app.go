@@ -1,7 +1,6 @@
 package app
 
 import (
-	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
@@ -17,12 +16,10 @@ import (
 )
 
 var (
-	server                *gin.Engine
 	orderRepository repository.OrderRepository
 	orderService    services.OrderService
 	orderController    controllers.OrderController
 	orderRoutes     routes.OrderRoutes
-	orderDB         *dynamodb.DynamoDB
 )
 
 func Start() {
@@ -39,7 +36,7 @@ func Start() {
 	configs.CreateTable(orderDB)
 	
 	orderRepository = repository.NewOrderRepositoryImpl(orderDB)
-	orderService = services. NewOrderServiceImpl(orderRepository)
+	orderService = services.NewOrderServiceImpl(orderRepository)
 	orderController = controllers.NewOrderController(orderService)
 	orderRoutes = routes.NewOrderRoutes(orderController)
 

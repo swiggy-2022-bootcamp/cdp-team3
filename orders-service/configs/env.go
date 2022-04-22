@@ -37,6 +37,16 @@ func EnvPORT() string {
 	return os.Getenv("PORT")
 }
 
+func EnvUpdateStatusTopic() string {
+	loadEnvFile()
+	return os.Getenv("UPDATE_STATUS_TOPIC")
+}
+
+func EnvUpdateStatusBrokerAddress() string {
+	loadEnvFile()
+	return os.Getenv("UPDATE_STATUS_BROKER_ADDRESS")
+}
+
 func loadEnvFile() {
 	err := godotenv.Load()
 	if err != nil {
