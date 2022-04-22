@@ -8,7 +8,7 @@ import (
 )
 
 // The CartService Layer abstracting the business logic of Carts Microservice
-type CartService interface{
+type CartService interface {
 	// GetCartItems fetches the cart items from DB
 	GetCartItems(ctx context.Context, cartID string, userID string) (*responses.CartItemsResponse, error)
 	// EmptyCart empties a cart

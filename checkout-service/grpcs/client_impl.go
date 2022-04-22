@@ -14,8 +14,8 @@ var (
 	ErrChanGRPC chan error = make(chan error)
 
 	// GRPC Client Channels
-	CartCheckoutGRPCChannel chan cart_checkout.CartCheckoutServiceClient = make(chan cart_checkout.CartCheckoutServiceClient)
-	ShippingCheckoutGRPCChannel chan shipping_checkout.ShippingClient = make(chan shipping_checkout.ShippingClient)
+	CartCheckoutGRPCChannel     chan cart_checkout.CartCheckoutServiceClient = make(chan cart_checkout.CartCheckoutServiceClient)
+	ShippingCheckoutGRPCChannel chan shipping_checkout.ShippingClient        = make(chan shipping_checkout.ShippingClient)
 )
 
 /// Function with logic for becoming GRPC Client
@@ -39,4 +39,3 @@ func BecomeGRPCClient(cartAddress string, shippingAddress string) {
 		ShippingCheckoutGRPCChannel <- shipping_checkout.NewShippingClient(conn)
 	}
 }
-

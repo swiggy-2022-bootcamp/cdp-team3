@@ -20,7 +20,7 @@ type server struct {
 
 // Procedure Implementation to Empty the Cart after Checkout
 func (s *server) EmptyCart(
-	ctx context.Context, 
+	ctx context.Context,
 	in *cart_checkout.CartEmptySignal,
 ) (*cart_checkout.CartEmptyOutput, error) {
 	// Empty Cart in DB for the given cart ID *in.CartID

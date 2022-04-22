@@ -18,7 +18,7 @@ func main() {
 	defer cancel()
 
 	// Make layered Architecture
-	db := database.GetDynamoDBClient()                            // Database
+	db := database.GetDynamoDBClient()                           // Database
 	cartRepository := repositories.NewCartRepository(db, "cart") // Repository
 	// configs.DeleteDynamoDBTable(db, "cart")                      // Delete Table
 	// configs.CreateDynamoDBTable(db, "cart")                      // Create Table

@@ -22,14 +22,14 @@ func NewCartService(cartRepository repositories.CartRepository) CartService {
 
 // GetCartItems fetches the cart items from DB
 func (cs *cartServiceImpl) GetCartItems(
-	ctx context.Context, 
-	cartID string, 
+	ctx context.Context,
+	cartID string,
 	userID string,
 ) (*responses.CartItemsResponse, error) {
 	// Attempt to fetch the Cart from DB based on request
 	var (
 		cart *models.Cart
-	 	err error
+		err  error
 	)
 	if cartID != "" {
 		cart, err = cs.cartRepository.Read(ctx, cartID)
@@ -43,13 +43,12 @@ func (cs *cartServiceImpl) GetCartItems(
 	return &responses.CartItemsResponse{CartItems: cart.Items}, nil
 }
 
-
 // EmptyCart fetches the cart identified by Cart ID or User ID and empties it
 func (cs *cartServiceImpl) EmptyCart(ctx context.Context, emptyCartRequest requests.EmptyCartRequest) error {
 	// Attempt to fetch the Cart from DB based on request
 	var (
 		cart *models.Cart
-	 	err error
+		err  error
 	)
 	if emptyCartRequest.CartID != "" {
 		cart, err = cs.cartRepository.Read(ctx, emptyCartRequest.CartID)

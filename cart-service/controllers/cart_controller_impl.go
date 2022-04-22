@@ -51,26 +51,26 @@ func (cc *cartControllerImpl) GetCartItems(c *gin.Context) {
 	cartID, userID := c.Query("cartID"), c.Query("userID")
 	if cartID == "" && userID == "" {
 		c.JSON(
-			http.StatusBadRequest, 
+			http.StatusBadRequest,
 			errors.NewHTTPErrorDTO(http.StatusBadRequest, nil, "Either Cart ID or User ID must be provided."),
 		)
 	} else if cartID != "" && userID != "" {
 		c.JSON(
-			http.StatusBadRequest, 
+			http.StatusBadRequest,
 			errors.NewHTTPErrorDTO(http.StatusBadRequest, nil, "Ambiguous Request. Both Cart ID and User ID are provided."),
 		)
 	} else if (cartID != "" && isAdmin()) || (userID != "" && isMatchedUser(userID, c)) {
 		res, err := cc.cartService.GetCartItems(c.Request.Context(), cartID, userID)
 		if err != nil {
 			c.JSON(
-				http.StatusInternalServerError, 
+				http.StatusInternalServerError,
 				errors.NewHTTPErrorDTO(http.StatusInternalServerError, err, "Error while getting Cart Items."),
 			)
 		}
 		c.JSON(200, res)
 	} else {
 		c.JSON(
-			http.StatusForbidden, 
+			http.StatusForbidden,
 			errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "You are not authorized to perform this action."),
 		)
 	}
@@ -124,12 +124,12 @@ func (cc *cartControllerImpl) EmptyCart(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errors.HTTPErrorDTO{Code: http.StatusBadRequest, Message: err.Error()})
 	} else if emptyCartRequest.CartID == "" && emptyCartRequest.UserID == "" {
 		c.JSON(
-			http.StatusBadRequest, 
+			http.StatusBadRequest,
 			errors.NewHTTPErrorDTO(http.StatusBadRequest, nil, "Either Cart ID or User ID must be provided."),
 		)
 	} else if emptyCartRequest.CartID != "" && emptyCartRequest.UserID != "" {
 		c.JSON(
-			http.StatusBadRequest, 
+			http.StatusBadRequest,
 			errors.NewHTTPErrorDTO(http.StatusBadRequest, nil, "Ambiguous Request. Both Cart ID and User ID are provided."),
 		)
 	} else if (emptyCartRequest.CartID != "" && isAdmin()) || (emptyCartRequest.UserID != "" && isMatchedUser(emptyCartRequest.UserID, c)) {
@@ -143,7 +143,7 @@ func (cc *cartControllerImpl) EmptyCart(c *gin.Context) {
 		c.JSON(204, responses.MessageResponse{Message: "Cart Emptied"})
 	} else {
 		c.JSON(
-			http.StatusForbidden, 
+			http.StatusForbidden,
 			errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "You are not authorized to perform this action."),
 		)
 	}

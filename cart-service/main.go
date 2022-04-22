@@ -15,10 +15,10 @@ import (
 )
 
 var (
-	errChanGRPC chan error = make(chan error)
+	errChanGRPC  chan error = make(chan error)
 	errChanKafka chan error = make(chan error)
-	errChanREST chan error = make(chan error)
-) 
+	errChanREST  chan error = make(chan error)
+)
 
 /// Function with logic for starting GRPC server
 func startGRPCServer(address string, cartService services.CartService) {
@@ -54,9 +54,9 @@ func main() {
 	kafkaTopic := ""
 
 	// Make layered Architecture
-	db := database.GetDynamoDBClient(); // Database
+	db := database.GetDynamoDBClient()                           // Database
 	cartRepository := repositories.NewCartRepository(db, "cart") // Repository
-	cartService := services.NewCartService(cartRepository) // Service
+	cartService := services.NewCartService(cartRepository)       // Service
 	cartController := controllers.NewCartController(cartService) // Controller
 
 	// Set up GRPC
@@ -70,15 +70,15 @@ func main() {
 
 	// Listen to errors.
 	select {
-		case err := <-errChanGRPC:
-			log.Fatal("GRPC encountered an error: ", err)
-		case err := <-errChanKafka:
-			log.Fatal("Kafka encountered an error: ", err)
-		case err := <-errChanREST:
-			log.Fatal("RESTful Microservice encountered an error: ", err)
-		default:
-			// Block main thread for this time so goroutines can run with their seperate microservices.
-			select {}
+	case err := <-errChanGRPC:
+		log.Fatal("GRPC encountered an error: ", err)
+	case err := <-errChanKafka:
+		log.Fatal("Kafka encountered an error: ", err)
+	case err := <-errChanREST:
+		log.Fatal("RESTful Microservice encountered an error: ", err)
+	default:
+		// Block main thread for this time so goroutines can run with their seperate microservices.
+		select {}
 
 	}
 }

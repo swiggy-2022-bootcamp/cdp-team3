@@ -31,18 +31,18 @@ func GetDynamoDBClient() *dynamodb.Client {
 
 // waitForTable waits for a table to be created
 func waitForTable(ctx context.Context, tableName string, db *dynamodb.Client) error {
-    w := dynamodb.NewTableExistsWaiter(db)
-    err := w.Wait(ctx,
-        &dynamodb.DescribeTableInput{
-            TableName: aws.String(tableName),
-        },
-        2*time.Minute,
-        func(o *dynamodb.TableExistsWaiterOptions) {
-            o.MaxDelay = 5 * time.Second
-            o.MinDelay = 5 * time.Second
-        },
+	w := dynamodb.NewTableExistsWaiter(db)
+	err := w.Wait(ctx,
+		&dynamodb.DescribeTableInput{
+			TableName: aws.String(tableName),
+		},
+		2*time.Minute,
+		func(o *dynamodb.TableExistsWaiterOptions) {
+			o.MaxDelay = 5 * time.Second
+			o.MinDelay = 5 * time.Second
+		},
 	)
-    return err
+	return err
 }
 
 // CreateDynamoDBTable creates a DynamoDB table
@@ -66,11 +66,11 @@ func CreateDynamoDBTable(db *dynamodb.Client, tableName string) error {
 			KeySchema: []types.KeySchemaElement{
 				{
 					AttributeName: aws.String("id"),
-					KeyType:      types.KeyTypeHash,
+					KeyType:       types.KeyTypeHash,
 				},
 				{
 					AttributeName: aws.String("user_id"),
-					KeyType:      types.KeyTypeRange,
+					KeyType:       types.KeyTypeRange,
 				},
 			},
 			BillingMode: types.BillingModePayPerRequest,

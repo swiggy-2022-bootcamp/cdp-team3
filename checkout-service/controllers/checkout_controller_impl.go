@@ -9,8 +9,8 @@ import (
 )
 
 // Implementation of the CheckoutController interface
-type checkoutControllerImpl struct { 
-	cartCheckoutGRPCClient cart_checkout.CartCheckoutServiceClient
+type checkoutControllerImpl struct {
+	cartCheckoutGRPCClient     cart_checkout.CartCheckoutServiceClient
 	shippingCheckoutGRPCClient shipping_checkout.ShippingClient
 }
 
@@ -20,7 +20,7 @@ func NewCheckoutController(
 	shippingCheckoutGRPCClient shipping_checkout.ShippingClient,
 ) CheckoutController {
 	return &checkoutControllerImpl{
-		cartCheckoutGRPCClient: cartCheckoutGRPCClient, 
+		cartCheckoutGRPCClient:     cartCheckoutGRPCClient,
 		shippingCheckoutGRPCClient: shippingCheckoutGRPCClient,
 	}
 }
@@ -86,7 +86,7 @@ func (cc *checkoutControllerImpl) OrderCompleteWebhook(c *gin.Context) {
 func (cc *checkoutControllerImpl) HealthCheck(c *gin.Context) {
 	// Generate DTO
 	c.JSON(200, responses.HealthCheckResponse{
-		ServiceHealth: "OK",
+		ServiceHealth:     "OK",
 		KafkaServerHealth: "OK",
 	})
 }

@@ -13,7 +13,7 @@ import (
 
 // CRUD Repository implementation for Cart Collection in DynamoDB
 type cartRepositoryImpl struct {
-	cartDB *dynamodb.Client
+	cartDB    *dynamodb.Client
 	tableName string
 }
 
@@ -42,7 +42,7 @@ func (cr *cartRepositoryImpl) Create(ctx context.Context, cart *models.Cart) err
 	// Put item into DB
 	_, err = cr.cartDB.PutItem(ctx, &dynamodb.PutItemInput{
 		TableName: &cr.tableName,
-		Item: data,
+		Item:      data,
 	})
 	if err != nil {
 		log.Errorf("Failed to create cart: %v", err)
@@ -56,7 +56,7 @@ func (cr *cartRepositoryImpl) Create(ctx context.Context, cart *models.Cart) err
 func (cr *cartRepositoryImpl) Read(ctx context.Context, id string) (*models.Cart, error) {
 	// Get item from DB
 	out, err := cr.cartDB.Query(ctx, &dynamodb.QueryInput{
-		TableName: aws.String(cr.tableName),
+		TableName:              aws.String(cr.tableName),
 		KeyConditionExpression: aws.String("#id = :id"),
 		ExpressionAttributeNames: map[string]string{
 			"#id": "id",
@@ -92,7 +92,7 @@ func (cr *cartRepositoryImpl) Read(ctx context.Context, id string) (*models.Cart
 func (cr *cartRepositoryImpl) ReadByUserID(ctx context.Context, userID string) (*models.Cart, error) {
 	// Get item from DB
 	out, err := cr.cartDB.Scan(ctx, &dynamodb.ScanInput{
-		TableName: aws.String(cr.tableName),
+		TableName:        aws.String(cr.tableName),
 		FilterExpression: aws.String("#user_id = :user_id"),
 		ExpressionAttributeNames: map[string]string{
 			"#user_id": "user_id",
@@ -172,7 +172,7 @@ func (cr *cartRepositoryImpl) Delete(ctx context.Context, id string) error {
 	if err != nil {
 		return err
 	}
-	
+
 	// Delete item from DB
 	_, err = cr.cartDB.DeleteItem(ctx, &dynamodb.DeleteItemInput{
 		TableName: aws.String(cr.tableName),

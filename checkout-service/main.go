@@ -12,13 +12,13 @@ import (
 var (
 	// Error Channels
 	errChanKafka chan error = make(chan error)
-	errChanREST chan error = make(chan error)
-) 
+	errChanREST  chan error = make(chan error)
+)
 
 /// Function with logic for starting REST Routes
 func generateRESTRoutes(port string) {
 	checkoutController := controllers.NewCheckoutController(
-		<-grpcs.CartCheckoutGRPCChannel, 
+		<-grpcs.CartCheckoutGRPCChannel,
 		<-grpcs.ShippingCheckoutGRPCChannel,
 	) // Controller
 	checkoutRouter := gin.Default()
@@ -55,15 +55,15 @@ func main() {
 
 	// Listen to errors.
 	select {
-		case err := <-grpcs.ErrChanGRPC:
-			log.Fatal("GRPC encountered an error: ", err)
-		case err := <-errChanKafka:
-			log.Fatal("Kafka encountered an error: ", err)
-		case err := <-errChanREST:
-			log.Fatal("RESTful Microservice encountered an error: ", err)
-		default:
-			// Block main thread for this time so goroutines can run with their seperate microservices.
-			select {}
+	case err := <-grpcs.ErrChanGRPC:
+		log.Fatal("GRPC encountered an error: ", err)
+	case err := <-errChanKafka:
+		log.Fatal("Kafka encountered an error: ", err)
+	case err := <-errChanREST:
+		log.Fatal("RESTful Microservice encountered an error: ", err)
+	default:
+		// Block main thread for this time so goroutines can run with their seperate microservices.
+		select {}
 
 	}
 }
