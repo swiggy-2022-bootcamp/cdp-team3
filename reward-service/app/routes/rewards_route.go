@@ -3,7 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/app/controllers"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/app/middlewares"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/middlewares"
 )
 
 type RewardRoutes struct {
