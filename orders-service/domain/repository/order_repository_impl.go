@@ -12,6 +12,7 @@ import (
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/models"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/errors"
 	"go.uber.org/zap"
+	"github.com/google/uuid"
 )
 
 var ordersCollection = "Orders"
@@ -228,3 +229,48 @@ func (ori OrderRepositoryImpl) GetOrdersByCustomerIdFromDB(customerId string) ([
 	return orders, nil
 }
 
+func (ori OrderRepositoryImpl) GenerateInvoiceByIdInDB(orderId string) (*models.Order, *errors.AppError) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	order := &models.Order{};
+
+	upd := expression.Set(expression.Name("invoiceId"), expression.Value(uuid.New().String()))
+	expr, err := expression.NewBuilder().WithUpdate(upd).Build()
+
+	if err != nil {
+		zap.L().Error("Error while forming expression"+err.Error())
+		return nil, errors.NewUnexpectedError("Error while forming expression "+err.Error())
+	}
+
+	input := &dynamodb.UpdateItemInput{
+		ExpressionAttributeValues: expr.Values(),
+		Key: map[string]*dynamodb.AttributeValue{
+			"orderId": {
+				S: aws.String(orderId),
+			},
+		},
+		TableName:        aws.String(ordersCollection),
+		UpdateExpression: expr.Update(),
+		ReturnValues:     aws.String("ALL_NEW"),
+		ExpressionAttributeNames: expr.Names(),
+	}
+
+	response, err := configs.DB.UpdateItemWithContext(ctx, input)
+	if err != nil {
+		zap.L().Error("Error while Updating Invoice ID in dynamoDB"+err.Error())
+		return nil, errors.NewUnexpectedError("Error while Updating Invoice ID in dynamoDB "+err.Error())
+	}
+	
+	if response.Attributes == nil {
+		zap.L().Error("Order for given ID doesn't exists - ")
+		return nil, errors.NewNotFoundError("Order for given ID doesn't exists - "+orderId)
+	}
+
+	err = dynamodbattribute.UnmarshalMap(response.Attributes, &order)
+	if err != nil {
+		zap.L().Error("Failed to unmarshal document fetched from DB - " + err.Error())
+		return nil,  errors.NewUnexpectedError("Failed to unmarshal document fetched from DB -  "+err.Error())
+	}
+
+	return order, nil
+}

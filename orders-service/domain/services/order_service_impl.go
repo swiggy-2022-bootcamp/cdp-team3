@@ -83,3 +83,13 @@ func(os OrderServiceImpl) GetOrdersByCustomerId(customerId string) ([]models.Ord
 	}
 	return result,nil
 }
+
+func(os OrderServiceImpl) GenerateInvoiceById(orderId string) (*models.Order, *errors.AppError) {
+	zap.L().Info("Inside GenerateInvoiceById Service")
+	result,err := os.orderRepository.GenerateInvoiceByIdInDB(orderId)
+	if err != nil {
+		zap.L().Error(err.Message)
+		return nil,err
+	}
+	return result,nil
+}

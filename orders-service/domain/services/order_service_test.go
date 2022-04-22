@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/errors"
@@ -572,6 +573,92 @@ func TestOrderServiceImpl_UpdateStatusById(t *testing.T) {
 
 			orderServiceImpl := NewOrderServiceImpl(orderRepository)
 			value, err := orderServiceImpl.UpdateStatusById(order_id, *updateOrderStatus)
+			tc.checkResponse(t,value, err)
+		})
+	}
+}
+
+func TestOrderServiceImpl_GenerateInvoiceById(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	order_id := "bb912edc-50d9-42d7-b7a1-9ce66d459thj"
+
+	updatedInvoiceOrder := &models.Order{
+		OrderId: order_id,
+		DateTime: time.Now(),
+		Status: "COMPLETED",
+		CustomerId: "5243c6b-8a0c-4f99-8b2b-6eeef7605a37",
+		TotalAmount: 500,
+		InvoiceId: "524dvf66b-8a0c-4f99-8b2b-6eeef7605a37",
+		OrderedProducts: []models.OrderedProduct{
+			{
+				ProductId: "3456ffc6b-8a0c-4f99-8b2b-6eeef7605a37",
+				Quantity: 5,
+			},
+			{
+				ProductId: "123ffc6b-8a0c-46599-8b2b-6eeef7605a37",
+				Quantity: 4,
+			},
+		},
+	}
+
+	testCases := []struct {
+		name          string
+		buildStubs    func(repository *mocks.MockOrderRepository)
+		checkResponse func(t *testing.T, order interface{} , err interface{})
+	}{
+		{
+			name: "SuccessGeneratedInvoiceById",
+			buildStubs: func(repository *mocks.MockOrderRepository) {
+				repository.EXPECT().
+					GenerateInvoiceByIdInDB(order_id).
+					Times(1).
+					Return(updatedInvoiceOrder, nil)
+			},
+			checkResponse: func(t *testing.T,order interface{}, err interface{}) {
+				assert.NotNil(t,order)
+				assert.Equal(t, order, updatedInvoiceOrder)
+				assert.Nil(t,err)
+			},
+		},
+		{
+			name: "FailureInvoiceNotUpdated",
+			buildStubs: func(repository *mocks.MockOrderRepository) {
+				repository.EXPECT().
+					GenerateInvoiceByIdInDB(order_id).
+					Times(1).
+					Return(nil, errors.NewUnexpectedError(""))
+			},
+			checkResponse: func(t *testing.T, order interface{}, err interface{}) {
+				assert.Nil(t,order)
+				assert.NotNil(t,err)
+			},
+		},
+		{
+			name: "FailureUnexpectedError",
+			buildStubs: func(repository *mocks.MockOrderRepository) {
+				repository.EXPECT().
+				GenerateInvoiceByIdInDB(order_id).
+					Times(1).
+					Return(nil, errors.NewUnexpectedError(""))
+			},
+			checkResponse: func(t *testing.T, order interface{}, err interface{}) {
+				assert.Nil(t,order)
+				assert.NotNil(t,err)
+			},
+		},
+	}
+
+	for i := range testCases {
+		tc := testCases[i]
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+		    orderRepository := mocks.NewMockOrderRepository(ctrl)
+			tc.buildStubs(orderRepository)
+
+			orderServiceImpl := NewOrderServiceImpl(orderRepository)
+			value, err := orderServiceImpl.GenerateInvoiceById(order_id)
 			tc.checkResponse(t,value, err)
 		})
 	}

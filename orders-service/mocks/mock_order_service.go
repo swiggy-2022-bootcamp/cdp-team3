@@ -50,6 +50,21 @@ func (mr *MockOrderServiceMockRecorder) DeleteOrderById(arg0 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOrderById", reflect.TypeOf((*MockOrderService)(nil).DeleteOrderById), arg0)
 }
 
+// GenerateInvoiceById mocks base method.
+func (m *MockOrderService) GenerateInvoiceById(arg0 string) (*models.Order, *errors.AppError) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GenerateInvoiceById", arg0)
+	ret0, _ := ret[0].(*models.Order)
+	ret1, _ := ret[1].(*errors.AppError)
+	return ret0, ret1
+}
+
+// GenerateInvoiceById indicates an expected call of GenerateInvoiceById.
+func (mr *MockOrderServiceMockRecorder) GenerateInvoiceById(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateInvoiceById", reflect.TypeOf((*MockOrderService)(nil).GenerateInvoiceById), arg0)
+}
+
 // GetAllOrders mocks base method.
 func (m *MockOrderService) GetAllOrders() ([]models.Order, *errors.AppError) {
 	m.ctrl.T.Helper()

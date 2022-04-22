@@ -12,5 +12,6 @@ type OrderService interface {
 	UpdateStatusById(orderId string, orderStatus models.OrderStatus) (*models.Order, *errors.AppError)
 	DeleteOrderById(orderId string) (*models.Order, *errors.AppError)
 
+	GenerateInvoiceById(orderId string) (*models.Order, *errors.AppError)
 	GetOrdersByCustomerId(customerId string) ([]models.Order, *errors.AppError)
 }

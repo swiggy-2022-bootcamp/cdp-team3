@@ -287,11 +287,27 @@ func  (oc OrderController) GetOrdersByCustomerId() gin.HandlerFunc {
 // @Router /orders/invoice/{orderId} [POST]
 func (oc OrderController) GenerateInvoiceById() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		zap.L().Info("Inside GenerateInvoiceById Controller")
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
+		orderId := c.Param("orderId")
 
-		c.JSON(http.StatusCreated, gin.H{
-			"message": "Order Invoice Created Successfully",
+		updatedInvoiceOrder, err := oc.orderService.GenerateInvoiceById(orderId)
+		if err != nil {
+			zap.L().Error(err.Message)
+			c.AbortWithStatusJSON(http.StatusInternalServerError,  dto.ResponseDTO{
+				Status: http.StatusInternalServerError, 
+				Message: "Internal Error", 
+				Data: map[string]interface{}{"data": err.Message},
+			})
+			return
+		}
+
+		zap.L().Info("Generated Invoice successfully")
+		c.JSON(http.StatusOK, dto.ResponseDTO{
+			Status: http.StatusOK, 
+			Message: "success", 
+			Data: map[string]interface{}{"order": updatedInvoiceOrder},
 		})
 	}
 }

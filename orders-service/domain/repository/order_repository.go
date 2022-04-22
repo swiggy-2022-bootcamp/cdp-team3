@@ -12,5 +12,6 @@ type OrderRepository interface {
 	UpdateStatusByIdInDB(orderId string, status string) (*models.Order, *errors.AppError)
 	DeleteOrderByIdInDB(orderId string) (*models.Order, *errors.AppError)
 
+	GenerateInvoiceByIdInDB(orderId string) (*models.Order, *errors.AppError)
 	GetOrdersByCustomerIdFromDB(customerId string) ([]models.Order, *errors.AppError)
 }
