@@ -246,7 +246,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/cart/{key}": {
+        "/cart/{productID}": {
             "delete": {
                 "description": "Delete an Item in the cart using its key.",
                 "consumes": [
@@ -262,8 +262,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Cart Item Key",
-                        "name": "key",
+                        "description": "Cart Item Product ID",
+                        "name": "productID",
                         "in": "path",
                         "required": true
                     }
@@ -350,7 +350,7 @@ const docTemplate = `{
                 },
                 "quantity": {
                     "description": "Quantity of the product in the cart.",
-                    "type": "string"
+                    "type": "integer"
                 }
             }
         },

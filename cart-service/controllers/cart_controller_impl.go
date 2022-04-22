@@ -30,7 +30,7 @@ func NewCartController(cartService services.CartService) CartController {
 // @Success      201          {object}  responses.MessageResponse  "Message denoting whether successfully created"
 // @Failure      400     {object}  errors.HTTPErrorDTO
 // @Failure      404     {object}  errors.HTTPErrorDTO
-// @Failure      500  {object}  nil
+// @Failure      500        {object}  nil
 // @Router       /cart [post]
 func (cc *cartControllerImpl) CreateCartItem(c *gin.Context) {
 	// Get User Claims
@@ -134,9 +134,9 @@ func (cc *cartControllerImpl) UpdateCartItem(c *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        productID  path      string  true  "Cart Item Product ID"
-// @Success      204  {object}  int64
-// @Failure      400           {object}  errors.HTTPErrorDTO
-// @Failure      404           {object}  errors.HTTPErrorDTO
+// @Success      204        {object}  int64
+// @Failure      400        {object}  errors.HTTPErrorDTO
+// @Failure      404        {object}  errors.HTTPErrorDTO
 // @Failure      500          {object}  nil
 // @Router       /cart/{productID} [delete]
 func (cc *cartControllerImpl) DeleteCartItem(c *gin.Context) {
@@ -168,8 +168,8 @@ func (cc *cartControllerImpl) DeleteCartItem(c *gin.Context) {
 // @Produce      json
 // @Param        emptyCartDTO  body      requests.EmptyCartRequest  true  "Empty Cart Request DTO. Must Either provide User ID (user request)  or  Cart  ID  (Admin Request),  but  not  both."
 // @Success      204           {object}  nil
-// @Failure      400  {object}  errors.HTTPErrorDTO
-// @Failure      404  {object}  errors.HTTPErrorDTO
+// @Failure      400           {object}  errors.HTTPErrorDTO
+// @Failure      404           {object}  errors.HTTPErrorDTO
 // @Failure      500          {object}  nil
 // @Router       /cart/empty [delete]
 func (cc *cartControllerImpl) EmptyCart(c *gin.Context) {

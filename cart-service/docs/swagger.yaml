@@ -36,7 +36,7 @@ definitions:
         type: string
       quantity:
         description: Quantity of the product in the cart.
-        type: string
+        type: integer
     required:
     - product_id
     - quantity
@@ -203,15 +203,15 @@ paths:
       summary: Update a Cart Item
       tags:
       - Cart Items
-  /cart/{key}:
+  /cart/{productID}:
     delete:
       consumes:
       - application/json
       description: Delete an Item in the cart using its key.
       parameters:
-      - description: Cart Item Key
+      - description: Cart Item Product ID
         in: path
-        name: key
+        name: productID
         required: true
         type: string
       produces:

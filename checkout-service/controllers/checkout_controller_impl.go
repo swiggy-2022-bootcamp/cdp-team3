@@ -1,8 +1,11 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
+	"github.com/swiggy-ipp/checkout-service/dto/errors"
 	"github.com/swiggy-ipp/checkout-service/dto/responses"
 	"github.com/swiggy-ipp/checkout-service/grpcs/cart_checkout"
 	"github.com/swiggy-ipp/checkout-service/grpcs/shipping_checkout"
@@ -42,9 +45,9 @@ func (cc *checkoutControllerImpl) GetOrderOverview(c *gin.Context) {
 	out, err := cc.shippingCheckoutGRPCClient.GetShippingAddress(ctx, &shipping_checkout.ShippingAddressRequest{})
 	if err != nil {
 		log.Error("Error Getting Order Overview: ", err)
-		c.JSON(500, err)
+		c.JSON(http.StatusInternalServerError, errors.NewHTTPErrorDTO(http.StatusInternalServerError, err, "Error Getting Order Overview"))
 	} else {
-		c.JSON(200, out)
+		c.JSON(http.StatusOK, out)
 	}
 }
 
@@ -65,11 +68,11 @@ func (cc *checkoutControllerImpl) OrderCompleteWebhook(c *gin.Context) {
 	out, err := cc.cartCheckoutGRPCClient.EmptyCart(ctx, &cart_checkout.CartEmptySignal{CartID: "hello123"})
 	if err != nil {
 		log.Error("Error emptying cart: ", err)
-		c.JSON(500, err)
+		c.JSON(http.StatusInternalServerError, errors.NewHTTPErrorDTO(http.StatusInternalServerError, err, "Error emptying cart"))
 	} else if !out.Result {
-		c.JSON(401, "Error")
+		c.JSON(http.StatusUnauthorized, "Error")
 	} else {
-		c.JSON(200, responses.MessageResponse{Message: "Order Complete."})
+		c.JSON(http.StatusOK, responses.MessageResponse{Message: "Order Completed."})
 	}
 }
 

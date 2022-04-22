@@ -6,12 +6,14 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
 	"github.com/swiggy-ipp/checkout-service/controllers"
 	"github.com/swiggy-ipp/checkout-service/docs"
+	"github.com/swiggy-ipp/checkout-service/middlewares"
 )
 
 const BaseURL string = "/checkout_service"
 
 func GenerateCheckoutRoutes(router *gin.Engine, checkoutController controllers.CheckoutController) {
 	checkoutServiceRouter := router.Group(BaseURL)
+	checkoutServiceRouter.Use(middlewares.AuthenticateJWT())
 	checkoutServiceConfirmRouter := checkoutServiceRouter.Group("/confirm")
 
 	// Health Check
