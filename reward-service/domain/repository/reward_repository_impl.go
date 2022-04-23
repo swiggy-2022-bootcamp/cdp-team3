@@ -25,8 +25,8 @@ func NewRewardRepositoryImpl(rewardDB *dynamodb.DynamoDB) RewardRepository {
 	}
 }
 
-func (rr RewardRepositoryImpl) AddRewardToDB(category *models.Reward) *errors.AppError {
-	data, err := dynamodbattribute.MarshalMap(category)
+func (rr RewardRepositoryImpl) AddRewardToDB(reward *models.Reward) *errors.AppError {
+	data, err := dynamodbattribute.MarshalMap(reward)
 	if err != nil {
 		zap.L().Error("Marshalling of reward failed - " + err.Error())
 		return errors.NewUnexpectedError(err.Error())
