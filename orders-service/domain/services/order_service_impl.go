@@ -4,6 +4,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/domain/repository"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/errors"
+	kafkaPro "github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/kafka"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/models"
 	"go.uber.org/zap"
 )
@@ -56,10 +57,20 @@ func (os OrderServiceImpl) UpdateStatusById(orderId string, orderStatus models.O
 		return nil, errors.NewBadRequestError("Invalid Request "+validationErr.Error())
 	}
 
+	if !(orderStatus.Status == "COMPLETED" || orderStatus.Status == "FAILED") {
+		zap.L().Error("Invalid Status")
+		return nil, errors.NewBadRequestError("Invalid Status")
+	}
+	
 	result, err := os.orderRepository.UpdateStatusByIdInDB(orderId, orderStatus.Status)
 	if err != nil {
 		zap.L().Error(err.Message)
 		return nil,err
+	}
+
+	if orderStatus.Status == "COMPLETED" {
+		//Updating 10 persent of Order Amount as Transaction Amount Service
+		go kafkaPro.AddTransactionAmountProducer(result.CustomerId, result.TotalAmount * float64(0.10))
 	}
 	return result,nil
 }

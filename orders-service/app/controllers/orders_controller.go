@@ -11,14 +11,15 @@ import (
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/domain/services"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/dto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/errors"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/kafka"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/models"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/utils"
 	"go.uber.org/zap"
 )
 
-// func init() {
-// 	go kafka.UpdateOrderStatusConsumer()
-// }
+func init() {
+	go kafka.UpdateOrderStatusConsumer()
+}
 type OrderController struct {
 	orderService services.OrderService
 }

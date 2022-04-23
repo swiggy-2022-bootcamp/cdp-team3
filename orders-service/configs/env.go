@@ -47,6 +47,16 @@ func EnvUpdateStatusBrokerAddress() string {
 	return os.Getenv("UPDATE_STATUS_BROKER_ADDRESS")
 }
 
+func EnvAddTransactionAmountBrokerAddress() string {
+	loadEnvFile()
+	return os.Getenv("ADD_TRANSACTION_AMOUNT_BROKER_ADDRESS")
+}
+
+func EnvAddTransactionAmountTopic() string {
+	loadEnvFile()
+	return os.Getenv("ADD_TRANSACTION_AMOUNT_TOPIC")
+}
+
 func loadEnvFile() {
 	err := godotenv.Load()
 	if err != nil {

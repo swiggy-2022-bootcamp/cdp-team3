@@ -32,8 +32,12 @@ func UpdateOrderStatusConsumer() {
 			if orderStatus == "COMPLETED" || orderStatus == "FAILED" {
 
 				orderRepository := repository.NewOrderRepositoryImpl(configs.DB)
-				_, err := orderRepository.UpdateStatusByIdInDB(orderId, orderStatus)
+				updatedOrder, err := orderRepository.UpdateStatusByIdInDB(orderId, orderStatus)
 				if err == nil {
+					if orderStatus == "COMPLETED" {
+						//Updating 10 persent of Order Amount as Transaction Amount Service
+						go AddTransactionAmountProducer(updatedOrder.CustomerId, updatedOrder.TotalAmount * float64(0.10))
+					}
 					zap.L().Info("Updated order status to "+orderStatus+" for order- "+orderId+" successfully through kafka topic(update_status)")	
 				} else {
 					zap.L().Error("Error updating status through kafka in DB for order - "+orderId+" "+err.Message)
