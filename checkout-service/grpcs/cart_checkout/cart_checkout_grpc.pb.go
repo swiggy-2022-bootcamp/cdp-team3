@@ -22,8 +22,10 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CartCheckoutServiceClient interface {
+	// The Remote Procedure Call to get the cart items
+	GetCartItems(ctx context.Context, in *CartIDSignal, opts ...grpc.CallOption) (*CartItemsResponse, error)
 	// The Remote Procedure Call to clear the cart.
-	EmptyCart(ctx context.Context, in *CartEmptySignal, opts ...grpc.CallOption) (*CartEmptyOutput, error)
+	EmptyCart(ctx context.Context, in *CartIDSignal, opts ...grpc.CallOption) (*CartEmptyOutput, error)
 }
 
 type cartCheckoutServiceClient struct {
@@ -34,7 +36,16 @@ func NewCartCheckoutServiceClient(cc grpc.ClientConnInterface) CartCheckoutServi
 	return &cartCheckoutServiceClient{cc}
 }
 
-func (c *cartCheckoutServiceClient) EmptyCart(ctx context.Context, in *CartEmptySignal, opts ...grpc.CallOption) (*CartEmptyOutput, error) {
+func (c *cartCheckoutServiceClient) GetCartItems(ctx context.Context, in *CartIDSignal, opts ...grpc.CallOption) (*CartItemsResponse, error) {
+	out := new(CartItemsResponse)
+	err := c.cc.Invoke(ctx, "/cart_checkout.CartCheckoutService/GetCartItems", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cartCheckoutServiceClient) EmptyCart(ctx context.Context, in *CartIDSignal, opts ...grpc.CallOption) (*CartEmptyOutput, error) {
 	out := new(CartEmptyOutput)
 	err := c.cc.Invoke(ctx, "/cart_checkout.CartCheckoutService/EmptyCart", in, out, opts...)
 	if err != nil {
@@ -47,8 +58,10 @@ func (c *cartCheckoutServiceClient) EmptyCart(ctx context.Context, in *CartEmpty
 // All implementations must embed UnimplementedCartCheckoutServiceServer
 // for forward compatibility
 type CartCheckoutServiceServer interface {
+	// The Remote Procedure Call to get the cart items
+	GetCartItems(context.Context, *CartIDSignal) (*CartItemsResponse, error)
 	// The Remote Procedure Call to clear the cart.
-	EmptyCart(context.Context, *CartEmptySignal) (*CartEmptyOutput, error)
+	EmptyCart(context.Context, *CartIDSignal) (*CartEmptyOutput, error)
 	mustEmbedUnimplementedCartCheckoutServiceServer()
 }
 
@@ -56,7 +69,10 @@ type CartCheckoutServiceServer interface {
 type UnimplementedCartCheckoutServiceServer struct {
 }
 
-func (UnimplementedCartCheckoutServiceServer) EmptyCart(context.Context, *CartEmptySignal) (*CartEmptyOutput, error) {
+func (UnimplementedCartCheckoutServiceServer) GetCartItems(context.Context, *CartIDSignal) (*CartItemsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCartItems not implemented")
+}
+func (UnimplementedCartCheckoutServiceServer) EmptyCart(context.Context, *CartIDSignal) (*CartEmptyOutput, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EmptyCart not implemented")
 }
 func (UnimplementedCartCheckoutServiceServer) mustEmbedUnimplementedCartCheckoutServiceServer() {}
@@ -72,8 +88,26 @@ func RegisterCartCheckoutServiceServer(s grpc.ServiceRegistrar, srv CartCheckout
 	s.RegisterService(&CartCheckoutService_ServiceDesc, srv)
 }
 
+func _CartCheckoutService_GetCartItems_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CartIDSignal)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CartCheckoutServiceServer).GetCartItems(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cart_checkout.CartCheckoutService/GetCartItems",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CartCheckoutServiceServer).GetCartItems(ctx, req.(*CartIDSignal))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _CartCheckoutService_EmptyCart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CartEmptySignal)
+	in := new(CartIDSignal)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -85,7 +119,7 @@ func _CartCheckoutService_EmptyCart_Handler(srv interface{}, ctx context.Context
 		FullMethod: "/cart_checkout.CartCheckoutService/EmptyCart",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CartCheckoutServiceServer).EmptyCart(ctx, req.(*CartEmptySignal))
+		return srv.(CartCheckoutServiceServer).EmptyCart(ctx, req.(*CartIDSignal))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -97,6 +131,10 @@ var CartCheckoutService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "cart_checkout.CartCheckoutService",
 	HandlerType: (*CartCheckoutServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetCartItems",
+			Handler:    _CartCheckoutService_GetCartItems_Handler,
+		},
 		{
 			MethodName: "EmptyCart",
 			Handler:    _CartCheckoutService_EmptyCart_Handler,

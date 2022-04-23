@@ -2,9 +2,10 @@ syntax = "proto3";
 package cart_checkout;
 option go_package = "/grpcs/cart_checkout";
 
-// The Signal having the cart ID to clear.
-message CartEmptySignal {
+// The Signal having the Cart ID or the User ID to do operations with
+message CartIDSignal {
   string cartID = 1;
+  string userID = 2;
 }
 
 // The Signal having the boolean value of whether the cart was cleared.
@@ -12,8 +13,24 @@ message CartEmptyOutput {
   bool result = 1;
 }
 
+// Definition of a Cart Item
+message CartItem {
+  string productID = 1;
+  int64 quantity = 2;
+  float price = 3;
+}
+
+// The Response having the list of Cart Items
+message CartItemsResponse { 
+  bool result = 1;
+  repeated CartItem cartItems = 2;
+}
+
 // The GRPC service to communicate between cart and checkout services.
 service CartCheckoutService {
+  // The Remote Procedure Call to get the cart items
+  rpc GetCartItems (CartIDSignal) returns (CartItemsResponse) {};
+
   // The Remote Procedure Call to clear the cart.
-  rpc EmptyCart(CartEmptySignal) returns (CartEmptyOutput) {}
+  rpc EmptyCart(CartIDSignal) returns (CartEmptyOutput) {}
 }

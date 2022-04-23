@@ -77,8 +77,15 @@ func (cs *cartServiceImpl) GetCartItems(
 	if err != nil {
 		return nil, err
 	}
+	// Calculate the total price of the cart
+	totalPrice := 0.0
+	for _, item := range cart.Items {
+		totalPrice += float64(item.Quantity) * item.Price
+	}
 	// Return the Cart Items
-	return &responses.CartItemsResponse{CartItems: cart.Items}, nil
+	return &responses.CartItemsResponse{
+		Total: totalPrice, CartItems: cart.Items,
+	}, nil
 }
 
 // UpdateCartItem updates a Cart Item

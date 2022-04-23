@@ -323,10 +323,15 @@ const docTemplate = `{
         "models.CartItem": {
             "type": "object",
             "required": [
+                "price",
                 "product_id",
                 "quantity"
             ],
             "properties": {
+                "price": {
+                    "description": "Price of the product in the cart.",
+                    "type": "number"
+                },
                 "product_id": {
                     "description": "ID of the product",
                     "type": "string"
@@ -376,6 +381,10 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.CartItem"
                     }
+                },
+                "total": {
+                    "description": "Total price of the cart.",
+                    "type": "number"
                 }
             }
         },

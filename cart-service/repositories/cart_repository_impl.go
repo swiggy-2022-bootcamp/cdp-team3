@@ -28,7 +28,7 @@ func NewCartRepository(db *dynamodb.Client, tableName string) CartRepository {
 // Create creates a new cart
 func (cr *cartRepositoryImpl) Create(ctx context.Context, cart *models.Cart) error {
 	// Form key if not present
-	if cart.Id == "" {
+	if cart.ID == "" {
 		cart.GenerateKey()
 	}
 
@@ -135,7 +135,7 @@ func (cr *cartRepositoryImpl) UpdateCartItems(ctx context.Context, cart *models.
 	}
 
 	// Get current item from DB
-	out, err := cr.Read(ctx, cart.Id)
+	out, err := cr.Read(ctx, cart.ID)
 	if err != nil {
 		log.Error("Failed to read cart: ", err)
 		return err
@@ -146,7 +146,7 @@ func (cr *cartRepositoryImpl) UpdateCartItems(ctx context.Context, cart *models.
 		TableName: aws.String(cr.tableName),
 		Key: map[string]types.AttributeValue{
 			"id": &types.AttributeValueMemberS{
-				Value: out.Id,
+				Value: out.ID,
 			},
 			"user_id": &types.AttributeValueMemberS{
 				Value: out.UserID,
@@ -182,7 +182,7 @@ func (cr *cartRepositoryImpl) Delete(ctx context.Context, id string) error {
 		TableName: aws.String(cr.tableName),
 		Key: map[string]types.AttributeValue{
 			"id": &types.AttributeValueMemberS{
-				Value: out.Id,
+				Value: out.ID,
 			},
 			"user_id": &types.AttributeValueMemberS{
 				Value: out.UserID,

@@ -66,7 +66,7 @@ const docTemplate = `{
                 "tags": [
                     "Checkout API"
                 ],
-                "summary": "Get an overview of the order",
+                "summary": "Creates a pending order if it is valid and gets an overview of it.",
                 "responses": {
                     "200": {
                         "description": "Order Overview Data",

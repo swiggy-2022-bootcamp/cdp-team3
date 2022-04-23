@@ -19,6 +19,9 @@ definitions:
     type: object
   models.CartItem:
     properties:
+      price:
+        description: Price of the product in the cart.
+        type: number
       product_id:
         description: ID of the product
         type: string
@@ -26,6 +29,7 @@ definitions:
         description: Quantity of the product in the cart.
         type: integer
     required:
+    - price
     - product_id
     - quantity
     type: object
@@ -57,6 +61,9 @@ definitions:
         items:
           $ref: '#/definitions/models.CartItem'
         type: array
+      total:
+        description: Total price of the cart.
+        type: number
     type: object
   responses.HealthCheckResponse:
     properties:

@@ -20,6 +20,7 @@ func generateRESTRoutes(port string) {
 	checkoutController := controllers.NewCheckoutController(
 		<-grpcs.CartCheckoutGRPCChannel,
 		<-grpcs.ShippingCheckoutGRPCChannel,
+		<-grpcs.OrderCheckoutGRPCChannel,
 	) // Controller
 	checkoutRouter := gin.Default()
 	routes.GenerateCheckoutRoutes(checkoutRouter, checkoutController)
@@ -45,6 +46,7 @@ func main() {
 	go grpcs.BecomeGRPCClient(
 		configs.CartServiceGRPCAddress(),
 		configs.ShippingServiceGRPCAddress(),
+		configs.OrderGRPCAddress(),
 	)
 
 	// Set up Kafka listener

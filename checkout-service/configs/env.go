@@ -41,3 +41,12 @@ func ShippingServiceGRPCAddress() string {
 
 	return os.Getenv("SHIPPING_SERVICE_GRPC_ADDRESS")
 }
+
+func OrderGRPCAddress() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file.")
+	}
+
+	return os.Getenv("ORDER_SERVICE_GRPC_ADDRESS")
+}

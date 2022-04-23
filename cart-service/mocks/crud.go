@@ -41,9 +41,9 @@ func main() {
 	cart.Items[0].ProductID = "updated"
 	cartRepository.UpdateCartItems(ctx, cart)
 	// Read
-	cart, _ = cartRepository.Read(ctx, cart.Id)
+	cart, _ = cartRepository.Read(ctx, cart.ID)
 	logrus.Info(cart)
 	// Delete
-	cartRepository.Delete(ctx, cart.Id)
+	cartRepository.Delete(ctx, cart.ID)
 
 }
