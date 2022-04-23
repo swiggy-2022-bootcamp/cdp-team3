@@ -33,7 +33,7 @@ func GenerateCartRoutes(router *gin.Engine, cartController controllers.CartContr
 	cartServiceCartRouter.PUT("/", cartController.UpdateCartItem)
 
 	// Delete Cart Items
-	cartServiceCartRouter.DELETE("/:key", cartController.DeleteCartItem)
+	cartServiceCartRouter.DELETE("/:productID", cartController.DeleteCartItem)
 
 	// Delete Entire Cart
 	cartServiceCartRouter.DELETE("/empty", cartController.EmptyCart)
