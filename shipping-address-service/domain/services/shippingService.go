@@ -7,7 +7,7 @@ import (
 
 type ShippingService interface {
 	
-	InsertShippingAddress(shippingAddress *models.ShippingAddress) ( *apperrors.AppError)
+	InsertShippingAddress(shippingAddress *models.ShippingAddress) (  string,*apperrors.AppError)
 	FindShippingAddressById(ShippingAddressID string) (*models.ShippingAddress,*apperrors.AppError)
 	UpdateShippingAddressById(id string,shippingAddress *models.ShippingAddress) (bool, *apperrors.AppError)
 	DeleteShippingAddressById(shippingAddressId string) (bool, *apperrors.AppError) 

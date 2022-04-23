@@ -8,9 +8,9 @@ import (
 type ShippingRepository interface {
 	
 	 DBHealthCheck() bool
-	 InsertShippingAddressToDB(shippingAddress *models.ShippingAddress) ( *apperrors.AppError)
+	 InsertShippingAddressToDB(shippingAddress *models.ShippingAddress) ( string,*apperrors.AppError)
 	 FindShippingAddressByIdFromDB(ShippingAddressID string) (*models.ShippingAddress,*apperrors.AppError)
-	 UpdateShippingAddressByIdFromDB(id string,shippingAddress *models.ShippingAddress) (bool, *apperrors.AppError) 
-	 DeleteShippingAddressByIdFromDB(id string) (bool, *apperrors.AppError) 
+	 UpdateShippingAddressByIdFromDB(ShippingAddressID string,shippingAddress *models.ShippingAddress) (bool, *apperrors.AppError) 
+	 DeleteShippingAddressByIdFromDB(ShippingAddressID string) (bool, *apperrors.AppError) 
 	
 }

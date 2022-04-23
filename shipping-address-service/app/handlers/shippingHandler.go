@@ -61,12 +61,13 @@ if validationErr := validate.Struct(&shippingAddress); validationErr != nil {
 }
 	shippingAddressRecord := toPersistedDynamodbEntitySA(shippingAddress)
 	
-	err := th.shippingService.InsertShippingAddress(shippingAddressRecord)
+	id,err := th.shippingService.InsertShippingAddress(shippingAddressRecord)
 		if err != nil {
 		ctx.Error(err.Error())
 		ctx.JSON(err.Code, gin.H{"message": err.Message})
 		return
 	}
+	fmt.Println("Id",id)
 	ctx.JSON(http.StatusOK, gin.H{"message": "Shipping Address added successfully"})
 }
 }

@@ -40,15 +40,17 @@ func (s ShippingRepositoryImpl) DBHealthCheck() bool {
 	}
 	return true
 }
-func (s ShippingRepositoryImpl) InsertShippingAddressToDB(shippingAddress *models.ShippingAddress) (*apperrors.AppError) {
+func (s ShippingRepositoryImpl) InsertShippingAddressToDB(shippingAddress *models.ShippingAddress) ( string,*apperrors.AppError) {
 
 	fmt.Println("inside repo",shippingAddress)
+	Id:=shippingAddress.Id
+	fmt.Println(Id)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	
 	av, err := dynamodbattribute.MarshalMap(shippingAddress)
 	if err != nil {
-		return  apperrors.NewUnexpectedError(err.Error())
+		return  "",apperrors.NewUnexpectedError(err.Error())
 	}
 	fmt.Println(shippingAddress)
     fmt.Println("\n")
@@ -62,10 +64,10 @@ func (s ShippingRepositoryImpl) InsertShippingAddressToDB(shippingAddress *model
 	_, err = s.shippingDB.PutItemWithContext(ctx, input)
 
 	if err != nil {
-		return apperrors.NewUnexpectedError(err.Error())
+		return "",apperrors.NewUnexpectedError(err.Error())
 	}
 
-	return nil
+	return Id,nil
 }
 
 func (s ShippingRepositoryImpl) FindShippingAddressByIdFromDB(ShippingAddressID string) (*models.ShippingAddress,*apperrors.AppError){

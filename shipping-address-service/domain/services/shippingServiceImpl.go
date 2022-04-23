@@ -17,16 +17,16 @@ type ShippingServiceImpl struct {
 func NewShippingServiceImpl(shippingRepository repository.ShippingRepository) ShippingService {
 	return &ShippingServiceImpl{shippingRepository: shippingRepository}
 }
-func (p ShippingServiceImpl) InsertShippingAddress(shipping *models.ShippingAddress) (*apperros.AppError) {
+func (p ShippingServiceImpl) InsertShippingAddress(shipping *models.ShippingAddress) (string,*apperros.AppError) {
 fmt.Println("Inside service",shipping)
 	
-	 err := p.shippingRepository.InsertShippingAddressToDB(shipping)
+	 id,err := p.shippingRepository.InsertShippingAddressToDB(shipping)
 	if err != nil {
 		fmt.Println(err)
 		logger.Error(err)
-		return  err
+		return  "",err
 	}
-	return nil
+	return id,nil
 }
 func (p ShippingServiceImpl) FindShippingAddressById(id string) (*models.ShippingAddress,*apperros.AppError) {
 fmt.Println("Inside service",id)

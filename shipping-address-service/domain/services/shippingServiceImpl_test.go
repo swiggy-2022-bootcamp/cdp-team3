@@ -9,7 +9,7 @@ import (
 	"github.com/cdp-team3/shipping-address-service/mocks"
     "testing"
 )
-func TestTransactionServiceImpl_FindShippingAddressById(t *testing.T) {
+func TestShippingServiceImpl_FindShippingAddressById(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	ShippingAddressID := "bb912edc-50d9-42d7-b7a1-9ce66d459thj"
 
@@ -94,7 +94,7 @@ func TestTransactionServiceImpl_FindShippingAddressById(t *testing.T) {
 	}
 }
 
-func TestTransactionServiceImpl_AddShippingAddress(t *testing.T) {
+func TestShippingServiceImpl_AddShippingAddress(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	shippingAddress := &models.ShippingAddress{
 		
