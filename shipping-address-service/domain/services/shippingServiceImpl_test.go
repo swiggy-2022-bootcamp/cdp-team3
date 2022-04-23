@@ -4,12 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"github.com/cdp-team3/shipping-address-service/domain/services"
 	app_erros "github.com/cdp-team3/shipping-address-service/app-errors"
 	"github.com/cdp-team3/shipping-address-service/domain/models"
-	 "github.com/cdp-team3/shipping-address-service/mocks"
-
-	"testing"
+	"github.com/cdp-team3/shipping-address-service/mocks"
+    "testing"
 )
 func TestTransactionServiceImpl_FindShippingAddressById(t *testing.T) {
 	gin.SetMode(gin.TestMode)
@@ -89,7 +87,7 @@ func TestTransactionServiceImpl_FindShippingAddressById(t *testing.T) {
 			shippingRepository := mocks.NewMockShippingRepository(ctrl)
 			tc.buildStubs(shippingRepository)
 
-			shippingServiceImpl := services.NewShippingServiceImpl(shippingRepository)
+			shippingServiceImpl := NewShippingServiceImpl(shippingRepository)
 			shippingAddress, err := shippingServiceImpl.FindShippingAddressById(ShippingAddressID)
 			tc.checkResponse(t,  shippingAddress, err)
 		})
@@ -169,7 +167,7 @@ func TestTransactionServiceImpl_AddShippingAddress(t *testing.T) {
 			shippingRepository := mocks.NewMockShippingRepository(ctrl)
 			tc.buildStubs(shippingRepository)
 
-			shippingServiceImpl := services.NewShippingServiceImpl(shippingRepository)
+			shippingServiceImpl := NewShippingServiceImpl(shippingRepository)
 			err := shippingServiceImpl.InsertShippingAddress(shippingAddress)
 			tc.checkResponse(t, err)
 		})
@@ -239,7 +237,7 @@ func TestShippingServiceImpl_DeleteShippingAddressById(t *testing.T) {
 			shippingRepository := mocks.NewMockShippingRepository(ctrl)
 			tc.buildStubs(shippingRepository)
 
-			shippingServiceImpl := services.NewShippingServiceImpl(shippingRepository)
+			shippingServiceImpl := NewShippingServiceImpl(shippingRepository)
 			value, err := shippingServiceImpl.DeleteShippingAddressById(ShippingAddressID)
 			tc.checkResponse(t,value, err)
 		})
@@ -321,7 +319,7 @@ func TestShippingServiceImpl_UpdateShippingAddressById(t *testing.T) {
 			shippingRepository := mocks.NewMockShippingRepository(ctrl)
 			tc.buildStubs(shippingRepository)
 
-			shippingServiceImpl := services.NewShippingServiceImpl(shippingRepository)
+			shippingServiceImpl := NewShippingServiceImpl(shippingRepository)
 			value, err := shippingServiceImpl.UpdateShippingAddressById(ShippingAddressID,shippingAddress)
 			tc.checkResponse(t,value, err)
 		})

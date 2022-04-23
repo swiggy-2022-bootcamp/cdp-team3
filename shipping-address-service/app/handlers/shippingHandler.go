@@ -49,12 +49,16 @@ func (th ShippingHandler) AddNewShippingAddress() gin.HandlerFunc {
 
 	if err := ctx.BindJSON(&shippingAddress); err != nil {
 		ctx.Error(err)
-		err_ := apperros.NewBadRequestError(err.Error())
-		ctx.JSON(err_.Code, gin.H{"message": err_.Message})
+		err := apperros.NewBadRequestError(err.Error())
+		ctx.JSON(err.Code, gin.H{"message": err.Message})
 		return
 	}
     fmt.Println(shippingAddress)
-
+//use the validator library to validate required fields
+if validationErr := validate.Struct(&shippingAddress); validationErr != nil {
+	ctx.JSON(http.StatusBadRequest, gin.H{"message": validationErr.Error()})
+	return
+}
 	shippingAddressRecord := toPersistedDynamodbEntitySA(shippingAddress)
 	
 	err := th.shippingService.InsertShippingAddress(shippingAddressRecord)
@@ -82,7 +86,7 @@ func (th ShippingHandler) GetShippingAddress() gin.HandlerFunc  {
 	res,err := th.shippingService.FindShippingAddressById(Id)
 		if err != nil {
 		ctx.Error(err.Error())
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Message})
+		ctx.JSON(err.Code, gin.H{"message": err.Message})
 		return
 	}
 	ctx.JSON(http.StatusOK,res)
