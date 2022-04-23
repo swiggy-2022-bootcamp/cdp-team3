@@ -33,6 +33,15 @@ definitions:
     - product_id
     - quantity
     type: object
+  requests.CartIDRequest:
+    properties:
+      cart_id:
+        description: ID of the cart
+        type: string
+      user_id:
+        description: ID of the user
+        type: string
+    type: object
   requests.CartItemRequest:
     properties:
       product_id:
@@ -44,15 +53,6 @@ definitions:
     required:
     - product_id
     - quantity
-    type: object
-  requests.EmptyCartRequest:
-    properties:
-      cart_id:
-        description: ID of the cart
-        type: string
-      user_id:
-        description: ID of the user
-        type: string
     type: object
   responses.CartItemsResponse:
     properties:
@@ -214,7 +214,7 @@ paths:
     delete:
       consumes:
       - application/json
-      description: Delete an Item in the cart using its key.
+      description: Delete an Item in the cart using its Product ID.
       parameters:
       - description: Cart Item Product ID
         in: path
@@ -247,13 +247,13 @@ paths:
       - application/json
       description: Empty the Cart for an user.
       parameters:
-      - description: Empty Cart Request DTO. Must Either provide User ID (user request)  or  Cart  ID  (Admin
+      - description: Cart ID Request DTO. Must Either provide User ID (user request)  or  Cart  ID  (Admin
           Request),  but  not  both.
         in: body
         name: emptyCartDTO
         required: true
         schema:
-          $ref: '#/definitions/requests.EmptyCartRequest'
+          $ref: '#/definitions/requests.CartIDRequest'
       produces:
       - application/json
       responses:

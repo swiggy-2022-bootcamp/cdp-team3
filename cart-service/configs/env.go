@@ -15,12 +15,20 @@ func EnvKafkaBrokerAddress() string {
 	return os.Getenv("KAFKA_BROKER_ADDRESS")
 }
 
+func EnvKafkaUserCreatedTopic() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file.")
+	}
+	return os.Getenv("KAFKA_USER_CREATED_TOPIC")
+}
+
 func EnvKafkaUserDeletedTopic() string {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file.")
 	}
-	return os.Getenv("KAFKA_TOPIC")
+	return os.Getenv("KAFKA_USER_DELETED_TOPIC")
 }
 
 func EnvRegion() string {

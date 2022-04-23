@@ -129,7 +129,7 @@ func (cc *cartControllerImpl) UpdateCartItem(c *gin.Context) {
 }
 
 // @Summary      Delete a Cart Item.
-// @Description  Delete an Item in the cart using its key.
+// @Description  Delete an Item in the cart using its Product ID.
 // @Tags         Cart Items
 // @Accept       json
 // @Produce      json
@@ -166,7 +166,7 @@ func (cc *cartControllerImpl) DeleteCartItem(c *gin.Context) {
 // @Tags         Cart Overall
 // @Accept       json
 // @Produce      json
-// @Param        emptyCartDTO  body      requests.EmptyCartRequest  true  "Empty Cart Request DTO. Must Either provide User ID (user request)  or  Cart  ID  (Admin Request),  but  not  both."
+// @Param        emptyCartDTO  body      requests.CartIDRequest  true  "Cart ID Request DTO. Must Either provide User ID (user request)  or  Cart  ID  (Admin Request),  but  not  both."
 // @Success      204           {object}  nil
 // @Failure      400           {object}  errors.HTTPErrorDTO
 // @Failure      404           {object}  errors.HTTPErrorDTO

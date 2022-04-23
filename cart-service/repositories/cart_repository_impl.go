@@ -26,7 +26,7 @@ func NewCartRepository(db *dynamodb.Client, tableName string) CartRepository {
 }
 
 // Create creates a new cart
-func (cr *cartRepositoryImpl) Create(ctx context.Context, cart *models.Cart) error {
+func (cr *cartRepositoryImpl) Create(ctx context.Context, cart *models.Cart) (*models.Cart, error) {
 	// Form key if not present
 	if cart.ID == "" {
 		cart.GenerateKey()
@@ -36,7 +36,7 @@ func (cr *cartRepositoryImpl) Create(ctx context.Context, cart *models.Cart) err
 	data, err := cart.Marshal()
 	if err != nil {
 		log.Error("Failed to serialize: ", err)
-		return err
+		return nil, err
 	}
 
 	// Put item into DB
@@ -46,10 +46,10 @@ func (cr *cartRepositoryImpl) Create(ctx context.Context, cart *models.Cart) err
 	})
 	if err != nil {
 		log.Errorf("Failed to create cart: %v", err)
-		return err
+		return nil, err
 	}
 	log.Info("Created cart: ", cart)
-	return nil
+	return cart, nil
 }
 
 // Read reads a cart by its ID
@@ -109,7 +109,11 @@ func (cr *cartRepositoryImpl) ReadByUserID(ctx context.Context, userID string) (
 		return nil, err
 	} else if out.Items == nil || len(out.Items) == 0 {
 		log.Infof("Cart with User ID %s not found", userID)
-		return nil, errors.New("Cart not found")
+		out, err := cr.Create(ctx, &models.Cart{UserID: userID, Items: []models.CartItem{}})
+		if err != nil {
+			return nil, err
+		}
+		return out, nil
 	} else if len(out.Items) > 1 {
 		log.Infof("Multiple carts with User ID %s found", userID)
 		return nil, errors.New("Multiple carts with same ID found")

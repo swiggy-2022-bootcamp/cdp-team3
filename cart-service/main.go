@@ -59,7 +59,7 @@ func main() {
 		configs.EnvKafkaUserDeletedTopic(),
 		cartService,
 	) // Kafka Listener
-	go kafkaCartDeleteListener.KafkaDeleteConsume()
+	go kafkaCartDeleteListener.KafkaUserIDConsume()
 
 	// Set up routes for Cart Microservice
 	go generateRESTRoutes(configs.EnvServicePort(), cartController)

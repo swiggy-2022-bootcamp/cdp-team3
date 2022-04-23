@@ -20,6 +20,28 @@ func NewCartService(cartRepository repositories.CartRepository) CartService {
 	return &cartServiceImpl{cartRepository: cartRepository}
 }
 
+// CreateCart creates a Cart for user identified by User ID
+func (cs *cartServiceImpl) CreateCart(ctx context.Context, userID string) error {
+	// Attempt to fetch the Cart from DB
+	cart, err := cs.cartRepository.ReadByUserID(ctx, userID)
+	if err != nil {
+		return err
+	}
+
+	// Create a new Cart with no items, if it doesn't exist
+	if cart == nil {
+		cart = &models.Cart{
+			UserID: userID,
+			Items:  []models.CartItem{},
+		}
+		_, err = cs.cartRepository.Create(ctx, cart)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // CreateCartItem creates a new Cart Item
 func (cs *cartServiceImpl) CreateCartItem(
 	ctx context.Context,
@@ -37,7 +59,7 @@ func (cs *cartServiceImpl) CreateCartItem(
 		if item.ProductID == cartItemRequest.ProductID {
 			item.Quantity += cartItemRequest.Quantity
 			err = cs.cartRepository.UpdateCartItems(ctx, cart)
-			if err != nil {	
+			if err != nil {
 				return err
 			}
 			return nil
@@ -55,7 +77,7 @@ func (cs *cartServiceImpl) CreateCartItem(
 		log.Errorf("Failed to create cart item: %v", err)
 	}
 	return err
-}	
+}
 
 // GetCartItems fetches the cart items from DB
 func (cs *cartServiceImpl) GetCartItems(
@@ -183,7 +205,7 @@ func (cs *cartServiceImpl) DeleteCart(ctx context.Context, cartIDRequest request
 	if err != nil {
 		return err
 	}
-	
+
 	// Delete the cart
 	err = cs.cartRepository.Delete(ctx, cart.ID)
 	if err != nil {

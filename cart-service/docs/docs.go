@@ -215,12 +215,12 @@ const docTemplate = `{
                 "summary": "Empty the Cart.",
                 "parameters": [
                     {
-                        "description": "Empty Cart Request DTO. Must Either provide User ID (user request)  or  Cart  ID  (Admin Request),  but  not  both.",
+                        "description": "Cart ID Request DTO. Must Either provide User ID (user request)  or  Cart  ID  (Admin Request),  but  not  both.",
                         "name": "emptyCartDTO",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/requests.EmptyCartRequest"
+                            "$ref": "#/definitions/requests.CartIDRequest"
                         }
                     }
                 ],
@@ -248,7 +248,7 @@ const docTemplate = `{
         },
         "/cart/{productID}": {
             "delete": {
-                "description": "Delete an Item in the cart using its key.",
+                "description": "Delete an Item in the cart using its Product ID.",
                 "consumes": [
                     "application/json"
                 ],
@@ -342,6 +342,19 @@ const docTemplate = `{
                 }
             }
         },
+        "requests.CartIDRequest": {
+            "type": "object",
+            "properties": {
+                "cart_id": {
+                    "description": "ID of the cart",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "ID of the user",
+                    "type": "string"
+                }
+            }
+        },
         "requests.CartItemRequest": {
             "type": "object",
             "required": [
@@ -356,19 +369,6 @@ const docTemplate = `{
                 "quantity": {
                     "description": "Quantity of the product in the cart.",
                     "type": "integer"
-                }
-            }
-        },
-        "requests.EmptyCartRequest": {
-            "type": "object",
-            "properties": {
-                "cart_id": {
-                    "description": "ID of the cart",
-                    "type": "string"
-                },
-                "user_id": {
-                    "description": "ID of the user",
-                    "type": "string"
                 }
             }
         },

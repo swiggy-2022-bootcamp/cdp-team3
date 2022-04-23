@@ -9,7 +9,7 @@ import (
 // CRUD Repository for Cart Collection in DynamoDB
 type CartRepository interface {
 	// Create creates a new cart
-	Create(ctx context.Context, cart *models.Cart) error
+	Create(ctx context.Context, cart *models.Cart) (*models.Cart, error)
 	// Read reads a cart by its ID
 	Read(ctx context.Context, id string) (*models.Cart, error)
 	// Read by userID reads a cart by its associated userID
