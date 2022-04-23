@@ -2,8 +2,8 @@ package grpcs
 
 import (
 	"github.com/swiggy-ipp/checkout-service/grpcs/cart_checkout"
-	"github.com/swiggy-ipp/checkout-service/grpcs/shipping_checkout"
 	order_checkout "github.com/swiggy-ipp/checkout-service/grpcs/order/proto"
+	"github.com/swiggy-ipp/checkout-service/grpcs/shipping_checkout"
 
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -17,7 +17,7 @@ var (
 	// GRPC Client Channels
 	CartCheckoutGRPCChannel     chan cart_checkout.CartCheckoutServiceClient = make(chan cart_checkout.CartCheckoutServiceClient)
 	ShippingCheckoutGRPCChannel chan shipping_checkout.ShippingClient        = make(chan shipping_checkout.ShippingClient)
-	OrderCheckoutGRPCChannel    chan order_checkout.OrderServiceClient = make(chan order_checkout.OrderServiceClient)
+	OrderCheckoutGRPCChannel    chan order_checkout.OrderServiceClient       = make(chan order_checkout.OrderServiceClient)
 )
 
 /// Function with logic for becoming GRPC Client

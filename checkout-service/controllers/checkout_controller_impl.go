@@ -8,8 +8,8 @@ import (
 	"github.com/swiggy-ipp/checkout-service/dto/errors"
 	"github.com/swiggy-ipp/checkout-service/dto/responses"
 	authProto "github.com/swiggy-ipp/checkout-service/grpcs/auth/proto"
-	orderProto "github.com/swiggy-ipp/checkout-service/grpcs/order/proto"
 	"github.com/swiggy-ipp/checkout-service/grpcs/cart_checkout"
+	orderProto "github.com/swiggy-ipp/checkout-service/grpcs/order/proto"
 	"github.com/swiggy-ipp/checkout-service/grpcs/shipping_checkout"
 )
 
@@ -17,7 +17,7 @@ import (
 type checkoutControllerImpl struct {
 	cartCheckoutGRPCClient     cart_checkout.CartCheckoutServiceClient
 	shippingCheckoutGRPCClient shipping_checkout.ShippingClient
-	orderGRPCClient 		  orderProto.OrderServiceClient
+	orderGRPCClient            orderProto.OrderServiceClient
 }
 
 // Create a new Cart Controller
@@ -29,7 +29,7 @@ func NewCheckoutController(
 	return &checkoutControllerImpl{
 		cartCheckoutGRPCClient:     cartCheckoutGRPCClient,
 		shippingCheckoutGRPCClient: shippingCheckoutGRPCClient,
-		orderGRPCClient: orderGRPCClient,
+		orderGRPCClient:            orderGRPCClient,
 	}
 }
 
@@ -75,7 +75,7 @@ func (cc *checkoutControllerImpl) GetOrderOverview(c *gin.Context) {
 		orderedProducts := mapCartItemsToOrderedProducts(cartOut.CartItems)
 		out, err := cc.orderGRPCClient.CreateOrder(c.Request.Context(), &orderProto.CreateOrderRequest{
 			Order: &orderProto.RequestOrder{
-				CustomerId: claims.UserId,
+				CustomerId:      claims.UserId,
 				OrderedProducts: orderedProducts,
 			},
 		})
