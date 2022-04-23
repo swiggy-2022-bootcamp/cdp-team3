@@ -6,6 +6,7 @@ import (
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/errors"
 	kafkaPro "github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/kafka"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/models"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/utils"
 	"go.uber.org/zap"
 )
 var validate = validator.New()
@@ -71,6 +72,10 @@ func (os OrderServiceImpl) UpdateStatusById(orderId string, orderStatus models.O
 	if orderStatus.Status == "COMPLETED" {
 		//Updating 10 persent of Order Amount as Transaction Amount Service
 		go kafkaPro.AddTransactionAmountProducer(result.CustomerId, result.TotalAmount * float64(0.10))
+
+		//Calling Checkout Service to Clear the Cart
+		go utils.ClearCart(result.CustomerId);
+		
 	}
 	return result,nil
 }

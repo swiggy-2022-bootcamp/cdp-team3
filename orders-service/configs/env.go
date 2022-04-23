@@ -57,6 +57,11 @@ func EnvAddTransactionAmountTopic() string {
 	return os.Getenv("ADD_TRANSACTION_AMOUNT_TOPIC")
 }
 
+func EnvCheckOutPORT() string {
+	loadEnvFile()
+	return os.Getenv("CHECKOUT_SERVICE_PORT")
+}
+
 func loadEnvFile() {
 	err := godotenv.Load()
 	if err != nil {

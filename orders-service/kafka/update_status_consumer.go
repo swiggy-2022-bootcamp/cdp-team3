@@ -7,6 +7,7 @@ import (
 	kafka "github.com/segmentio/kafka-go"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/configs"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/domain/repository"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/utils"
 	"go.uber.org/zap"
 )
 
@@ -37,6 +38,9 @@ func UpdateOrderStatusConsumer() {
 					if orderStatus == "COMPLETED" {
 						//Updating 10 persent of Order Amount as Transaction Amount Service
 						go AddTransactionAmountProducer(updatedOrder.CustomerId, updatedOrder.TotalAmount * float64(0.10))
+
+						//Calling Checkout Service to Clear the Cart
+						go utils.ClearCart(updatedOrder.CustomerId);
 					}
 					zap.L().Info("Updated order status to "+orderStatus+" for order- "+orderId+" successfully through kafka topic(update_status)")	
 				} else {
