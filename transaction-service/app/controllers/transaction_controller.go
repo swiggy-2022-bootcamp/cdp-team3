@@ -13,6 +13,7 @@ import (
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/dto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/models"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/repository"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/utils"
 	"go.uber.org/zap"
 )
 
@@ -111,6 +112,14 @@ func (tc TransactionController) GetTransactionByCustomerId() gin.HandlerFunc {
 		defer cancel()
 
 		customerId := c.Param("customerId")
+
+		if !utils.IsAdmin(c) && !utils.CheckLoggedInUserWithTransactionCustomerId(c, customerId) {
+			zap.L().Error("Not authorized to view transaction points of customer")
+			c.JSON(http.StatusUnauthorized, dto.ResponseDTO{
+				Status:  http.StatusUnauthorized,
+				Message: "Not authorized to view transaction points of customer",
+			})
+		}
 
 		transactionList, err := tc.transactionRepository.GetTransactionByCustomerIdInDB(customerId)
 
