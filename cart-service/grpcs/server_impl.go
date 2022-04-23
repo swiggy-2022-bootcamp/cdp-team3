@@ -26,7 +26,7 @@ func (s *server) EmptyCart(
 	// Empty Cart in DB for the given user ID or cart ID
 	err := s.cartService.EmptyCart(
 		ctx, 
-		requests.EmptyCartRequest{UserID: in.UserID, CartID: in.CartID},
+		requests.CartIDRequest{UserID: in.UserID, CartID: in.CartID},
 	)
 	if err != nil {
 		return &cart_checkout.CartEmptyOutput{Result: false}, err

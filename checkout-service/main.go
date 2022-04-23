@@ -29,28 +29,13 @@ func generateRESTRoutes(port string) {
 	errChanREST <- checkoutRouter.Run(":" + port)
 }
 
-/// Function with logic for starting Kafka listener
-func startKafka(topic string) {
-	// Set up Kafka listener
-	// ctx := context.Background()
-	// go services.Consume(topic, services.DeserializeAndSaveDiseaseDiagnosis, ctx)
-}
-
 func main() {
-	// Get configs
-	kafkaTopic := ""
-
-	// Make Layered Architecture
-
 	// Set up GRPC
 	go grpcs.BecomeGRPCClient(
-		configs.CartServiceGRPCAddress(),
-		configs.ShippingServiceGRPCAddress(),
-		configs.OrderGRPCAddress(),
+		configs.EnvCartServiceGRPCAddress(),
+		configs.EnvShippingServiceGRPCAddress(),
+		configs.EnvOrderGRPCAddress(),
 	)
-
-	// Set up Kafka listener
-	go startKafka(kafkaTopic)
 
 	// Set up routes for Checkout Microservice
 	go generateRESTRoutes(configs.EnvServicePort())

@@ -53,9 +53,8 @@ func (cs *cartServiceImpl) CreateCartItem(
 	err = cs.cartRepository.UpdateCartItems(ctx, cart)
 	if err != nil {
 		log.Errorf("Failed to create cart item: %v", err)
-		return err
 	}
-	return nil
+	return err
 }	
 
 // GetCartItems fetches the cart items from DB
@@ -143,16 +142,16 @@ func (cs *cartServiceImpl) DeleteCartItem(
 }
 
 // EmptyCart fetches the cart identified by Cart ID or User ID and empties it
-func (cs *cartServiceImpl) EmptyCart(ctx context.Context, emptyCartRequest requests.EmptyCartRequest) error {
+func (cs *cartServiceImpl) EmptyCart(ctx context.Context, cartIDRequest requests.CartIDRequest) error {
 	// Attempt to fetch the Cart from DB based on request
 	var (
 		cart *models.Cart
 		err  error
 	)
-	if emptyCartRequest.CartID != "" {
-		cart, err = cs.cartRepository.Read(ctx, emptyCartRequest.CartID)
+	if cartIDRequest.CartID != "" {
+		cart, err = cs.cartRepository.Read(ctx, cartIDRequest.CartID)
 	} else {
-		cart, err = cs.cartRepository.ReadByUserID(ctx, emptyCartRequest.UserID)
+		cart, err = cs.cartRepository.ReadByUserID(ctx, cartIDRequest.UserID)
 	}
 	// Check for errors
 	if err != nil {
@@ -164,9 +163,33 @@ func (cs *cartServiceImpl) EmptyCart(ctx context.Context, emptyCartRequest reque
 	err = cs.cartRepository.UpdateCartItems(ctx, cart)
 	if err != nil {
 		log.Errorf("Failed to empty cart: %v", err)
+	}
+	return err
+}
+
+// DeleteCart deletes a Cart from DB
+func (cs *cartServiceImpl) DeleteCart(ctx context.Context, cartIDRequest requests.CartIDRequest) error {
+	// Attempt to fetch the Cart from DB based on request
+	var (
+		cart *models.Cart
+		err  error
+	)
+	if cartIDRequest.CartID != "" {
+		cart, err = cs.cartRepository.Read(ctx, cartIDRequest.CartID)
+	} else {
+		cart, err = cs.cartRepository.ReadByUserID(ctx, cartIDRequest.UserID)
+	}
+	// Check for errors
+	if err != nil {
 		return err
 	}
-	return nil
+	
+	// Delete the cart
+	err = cs.cartRepository.Delete(ctx, cart.ID)
+	if err != nil {
+		log.Error("Could not delete Cart: " + err.Error())
+	}
+	return err
 }
 
 // DBHealthCheck checks the health of the DB

@@ -7,6 +7,22 @@ import (
 	"github.com/joho/godotenv"
 )
 
+func EnvKafkaBrokerAddress() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file.")
+	}
+	return os.Getenv("KAFKA_BROKER_ADDRESS")
+}
+
+func EnvKafkaUserDeletedTopic() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file.")
+	}
+	return os.Getenv("KAFKA_TOPIC")
+}
+
 func EnvRegion() string {
 	err := godotenv.Load()
 	if err != nil {

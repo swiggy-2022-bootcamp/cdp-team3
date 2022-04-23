@@ -8,6 +8,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.3
 	github.com/gin-gonic/gin v1.7.7
 	github.com/joho/godotenv v1.4.0
+	github.com/segmentio/kafka-go v0.4.31
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
 	github.com/swaggo/gin-swagger v1.4.1
 	github.com/swaggo/swag v1.7.9
@@ -29,6 +30,8 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.16.3 // indirect
 	github.com/aws/smithy-go v1.11.2 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
+	github.com/klauspost/compress v1.14.2 // indirect
+	github.com/pierrec/lz4/v4 v4.1.14 // indirect
 )
 
 require (

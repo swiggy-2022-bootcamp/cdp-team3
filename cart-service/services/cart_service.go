@@ -18,7 +18,9 @@ type CartService interface {
 	// DeleteCartItem deletes a Cart Item
 	DeleteCartItem(ctx context.Context, productID string, userID string)  error
 	// EmptyCart empties a cart
-	EmptyCart(ctx context.Context, emptyCartRequest requests.EmptyCartRequest) error
+	EmptyCart(ctx context.Context, cartIDRequest requests.CartIDRequest) error
+	//DeleteCart deletes a cart from DB
+	DeleteCart(ctx context.Context, cartIDRequest requests.CartIDRequest) error
 	// DBHealthCheck checks the health of the DB
 	DBHealthCheck(ctx context.Context) error
 }

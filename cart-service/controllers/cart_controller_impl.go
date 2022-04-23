@@ -174,7 +174,7 @@ func (cc *cartControllerImpl) DeleteCartItem(c *gin.Context) {
 // @Router       /cart/empty [delete]
 func (cc *cartControllerImpl) EmptyCart(c *gin.Context) {
 	// Extract the request
-	var emptyCartRequest requests.EmptyCartRequest
+	var emptyCartRequest requests.CartIDRequest
 	if err := c.ShouldBindJSON(&emptyCartRequest); err != nil {
 		c.JSON(http.StatusBadRequest, errors.HTTPErrorDTO{Code: http.StatusBadRequest, Message: err.Error()})
 	} else if emptyCartRequest.CartID == "" && emptyCartRequest.UserID == "" {

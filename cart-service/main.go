@@ -12,6 +12,7 @@ import (
 	"github.com/swiggy-ipp/cart-service/repositories"
 	"github.com/swiggy-ipp/cart-service/routes"
 	"github.com/swiggy-ipp/cart-service/services"
+	"github.com/swiggy-ipp/cart-service/utils"
 )
 
 var (
@@ -42,17 +43,7 @@ func generateRESTRoutes(port string, cartController controllers.CartController) 
 	errChanREST <- cartRouter.Run(":" + port)
 }
 
-/// Function with logic for starting Kafka listener
-func startKafka(topic string) {
-	// Set up Kafka listener
-	// ctx := context.Background()
-	// go services.Consume(topic, services.DeserializeAndSaveDiseaseDiagnosis, ctx)
-}
-
 func main() {
-	// Get configs
-	kafkaTopic := ""
-
 	// Make layered Architecture
 	db := database.GetDynamoDBClient()                           // Database
 	cartRepository := repositories.NewCartRepository(db, "cart") // Repository
@@ -62,8 +53,13 @@ func main() {
 	// Set up GRPC
 	go startGRPCServer(configs.EnvServiceGRPCAddress(), cartService)
 
-	// Set up Kafka listener
-	go startKafka(kafkaTopic)
+	// Set up Kafka listeners
+	kafkaCartDeleteListener := utils.NewKafkaCartConsumeService(
+		configs.EnvKafkaBrokerAddress(),
+		configs.EnvKafkaUserDeletedTopic(),
+		cartService,
+	) // Kafka Listener
+	go kafkaCartDeleteListener.KafkaDeleteConsume()
 
 	// Set up routes for Cart Microservice
 	go generateRESTRoutes(configs.EnvServicePort(), cartController)

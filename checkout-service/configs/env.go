@@ -7,12 +7,20 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func EnvMonogoURI() string {
+func EnvKafkaBrokerAddress() string {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file.")
 	}
-	return os.Getenv("MONGO_URI")
+	return os.Getenv("KAFKA_BROKER_ADDRESS")
+}
+
+func EnvKafkaUserDeletedTopic() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file.")
+	}
+	return os.Getenv("KAFKA_TOPIC")
 }
 
 func EnvServicePort() string {
@@ -24,7 +32,7 @@ func EnvServicePort() string {
 	return os.Getenv("CHECKOUT_SERVICE_PORT")
 }
 
-func CartServiceGRPCAddress() string {
+func EnvCartServiceGRPCAddress() string {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file.")
@@ -33,7 +41,7 @@ func CartServiceGRPCAddress() string {
 	return os.Getenv("CART_SERVICE_GRPC_ADDRESS")
 }
 
-func ShippingServiceGRPCAddress() string {
+func EnvShippingServiceGRPCAddress() string {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file.")
@@ -42,7 +50,7 @@ func ShippingServiceGRPCAddress() string {
 	return os.Getenv("SHIPPING_SERVICE_GRPC_ADDRESS")
 }
 
-func OrderGRPCAddress() string {
+func EnvOrderGRPCAddress() string {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file.")
