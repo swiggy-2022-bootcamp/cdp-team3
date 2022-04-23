@@ -12,5 +12,10 @@ Contains the Checkout Microservice for the final Swiggy I++ E-Commerce Applicati
 
 ## GRPC Connections
 
-1. Checkout Service -> Checkout Service: To send Checkout confirm signal to clear user's Cart.
-2. Checkout Service -> Shipping Service: To send request to receive user's Shipping Address.
+1. Checkout Service -> Cart Service: To send Checkout confirm signal to clear User's Cart.
+
+2. Checkout Service <- Cart Service: To receive the items in the User's Cart to validate and create Order.
+
+3. Checkout Service -> Shipping Service: To receive and validate user's Shipping Address before creating Order.
+
+4. Checkout Service -> Order Service: To create Order if everything is proper in checkout.
