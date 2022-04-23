@@ -13,8 +13,8 @@ const BaseURL string = "/cart_service"
 
 func GenerateCartRoutes(router *gin.Engine, cartController controllers.CartController) {
 	cartServiceRouter := router.Group(BaseURL)
-	cartServiceRouter.Use(middlewares.AuthenticateJWT())
 	cartServiceCartRouter := cartServiceRouter.Group("/cart")
+	cartServiceCartRouter.Use(middlewares.AuthenticateJWT())
 
 	// Health Check
 	cartServiceRouter.GET("/", cartController.HealthCheck)

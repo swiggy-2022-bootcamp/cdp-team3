@@ -13,8 +13,8 @@ const BaseURL string = "/checkout_service"
 
 func GenerateCheckoutRoutes(router *gin.Engine, checkoutController controllers.CheckoutController) {
 	checkoutServiceRouter := router.Group(BaseURL)
-	checkoutServiceRouter.Use(middlewares.AuthenticateJWT())
 	checkoutServiceConfirmRouter := checkoutServiceRouter.Group("/confirm")
+	checkoutServiceConfirmRouter.Use(middlewares.AuthenticateJWT())
 
 	// Health Check
 	checkoutServiceRouter.GET("/", checkoutController.HealthCheck)

@@ -216,6 +216,6 @@ func (cs *cartServiceImpl) DeleteCart(ctx context.Context, cartIDRequest request
 
 // DBHealthCheck checks the health of the DB
 func (cs *cartServiceImpl) DBHealthCheck(ctx context.Context) error {
-	_, err := cs.cartRepository.Read(ctx, "")
+	_, err := cs.cartRepository.Read(ctx, "health_check_ignore")
 	return err
 }

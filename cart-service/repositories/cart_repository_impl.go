@@ -72,9 +72,9 @@ func (cr *cartRepositoryImpl) Read(ctx context.Context, id string) (*models.Cart
 		return nil, err
 	} else if out.Items == nil || len(out.Items) == 0 {
 		log.Infof("Cart with ID %s not found", id)
-		return nil, errors.New("Cart not found")
+		return nil, nil
 	} else if len(out.Items) > 1 {
-		log.Infof("Multiple carts with ID %s found", id)
+		log.Errorf("Multiple carts with ID %s found", id)
 		return nil, errors.New("Multiple carts with same ID found")
 	} else {
 		// Model *dynamodb.GetItemOutput into cart

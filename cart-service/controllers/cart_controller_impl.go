@@ -28,9 +28,9 @@ func NewCartController(cartService services.CartService) CartController {
 // @Produce      json
 // @Param        cartItemDTO  body      requests.CartItemRequest   true  "Item to be added to the Cart"
 // @Success      201          {object}  responses.MessageResponse  "Message denoting whether successfully created"
-// @Failure      400     {object}  errors.HTTPErrorDTO
-// @Failure      404     {object}  errors.HTTPErrorDTO
-// @Failure      500        {object}  nil
+// @Failure      400          {object}  errors.HTTPErrorDTO
+// @Failure      404          {object}  errors.HTTPErrorDTO
+// @Failure      500          {object}  nil
 // @Router       /cart [post]
 func (cc *cartControllerImpl) CreateCartItem(c *gin.Context) {
 	// Get User Claims
@@ -60,8 +60,8 @@ func (cc *cartControllerImpl) CreateCartItem(c *gin.Context) {
 // @Param        cartID  query     string                       false  "ID of the Cart to get the items for."
 // @Param        userID  query     string                       false  "ID of the User to get the items for."
 // @Success      200     {object}  responses.CartItemsResponse  "List of Cart Items"
-// @Failure      400          {object}  errors.HTTPErrorDTO
-// @Failure      404          {object}  errors.HTTPErrorDTO
+// @Failure      400     {object}  errors.HTTPErrorDTO
+// @Failure      404     {object}  errors.HTTPErrorDTO
 // @Failure      500     {object}  nil
 // @Router       /cart [get]
 func (cc *cartControllerImpl) GetCartItems(c *gin.Context) {
@@ -106,7 +106,7 @@ func (cc *cartControllerImpl) GetCartItems(c *gin.Context) {
 // @Success      204          {object}  responses.MessageResponse  "Message denoting whether successfully updated"
 // @Failure      400          {object}  errors.HTTPErrorDTO
 // @Failure      404          {object}  errors.HTTPErrorDTO
-// @Failure      500           {object}  nil
+// @Failure      500          {object}  nil
 // @Router       /cart [put]
 func (cc *cartControllerImpl) UpdateCartItem(c *gin.Context) {
 	// Get User Claims
@@ -137,7 +137,7 @@ func (cc *cartControllerImpl) UpdateCartItem(c *gin.Context) {
 // @Success      204        {object}  int64
 // @Failure      400        {object}  errors.HTTPErrorDTO
 // @Failure      404        {object}  errors.HTTPErrorDTO
-// @Failure      500          {object}  nil
+// @Failure      500        {object}  nil
 // @Router       /cart/{productID} [delete]
 func (cc *cartControllerImpl) DeleteCartItem(c *gin.Context) {
 	// Get User Claims
@@ -170,7 +170,7 @@ func (cc *cartControllerImpl) DeleteCartItem(c *gin.Context) {
 // @Success      204           {object}  nil
 // @Failure      400           {object}  errors.HTTPErrorDTO
 // @Failure      404           {object}  errors.HTTPErrorDTO
-// @Failure      500          {object}  nil
+// @Failure      500           {object}  nil
 // @Router       /cart/empty [delete]
 func (cc *cartControllerImpl) EmptyCart(c *gin.Context) {
 	// Extract the request
@@ -232,8 +232,4 @@ func (cc *cartControllerImpl) HealthCheck(c *gin.Context) {
 		KafkaServerHealth: "OK",
 		DBHealth:          dbHealth,
 	})
-}
-
-func isAdmin() bool {
-	return true
 }
