@@ -10,11 +10,10 @@ import (
 	"github.com/google/uuid"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/configs"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/domain/services"
-	rewardproto "github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/grpc/reward"
-	rewardprotof "github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/grpc/reward/proto"
-
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/dto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/errors"
+	rewardproto "github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/grpc/reward"
+	rewardprotof "github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/grpc/reward/proto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/models"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/utils"
 	"go.uber.org/zap"
@@ -31,9 +30,10 @@ func NewRewardController(rewardService services.RewardService) RewardController 
 func dynamoModelConv(reward models.Reward) *models.Reward {
 	return &models.Reward{
 
-		RewardId:   uuid.New().String(),
-		CustomerId: reward.CustomerId,
-		Rewards:    reward.Rewards,
+		RewardId:    uuid.New().String(),
+		CustomerId:  reward.CustomerId,
+		Description: reward.Description,
+		Rewards:     reward.Rewards,
 	}
 }
 func protoConv(reward models.Reward) *rewardprotof.RewardDetails {
