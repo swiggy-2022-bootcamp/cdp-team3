@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package protos;
+
+option go_package = "/proto";
+
+service RewardPoints{
+  rpc SendRewardPoints (RewardDetails) returns (SuccessMessage);
+}
+
+message RewardDetails{
+  string UserId  = 1;
+  int32 Reward   = 2;
+}
+
+message SuccessMessage{
+  string IsAdded  = 1;
+}

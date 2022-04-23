@@ -10,11 +10,13 @@ import (
 	"github.com/google/uuid"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/configs"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/domain/services"
+	rewardproto "github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/grpc/reward"
+	rewardprotof "github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/grpc/reward/proto"
+
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/dto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/errors"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/models"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/utils"
-
 	"go.uber.org/zap"
 )
 
@@ -34,6 +36,12 @@ func dynamoModelConv(reward models.Reward) *models.Reward {
 		Rewards:    reward.Rewards,
 	}
 }
+func protoConv(reward models.Reward) *rewardprotof.RewardDetails {
+	return &rewardprotof.RewardDetails{
+		UserId: reward.CustomerId,
+		Reward: reward.Rewards,
+	}
+}
 
 // AddReward godoc
 // @Summary Adds Reward Point To The Customer
@@ -49,6 +57,7 @@ func dynamoModelConv(reward models.Reward) *models.Reward {
 // @Router /rewards [POST]
 func (rc RewardController) AddReward(c *gin.Context) {
 	zap.L().Info("Inside AddReward Controller")
+
 	var reward models.Reward
 
 	if err := c.BindJSON(&reward); err != nil {
@@ -60,6 +69,11 @@ func (rc RewardController) AddReward(c *gin.Context) {
 	}
 
 	rewardRecord := dynamoModelConv(reward)
+	protoRecord := protoConv(reward)
+	p, _ := rewardproto.SendRewardPoints(protoRecord)
+	if p.IsAdded != "Success" {
+		return
+	}
 	err := rc.rewardService.AddReward(rewardRecord)
 	if err != nil {
 		zap.L().Error(err.Message)
