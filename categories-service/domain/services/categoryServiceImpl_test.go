@@ -4,8 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"github.com/cdp-team3/categories-service/domain/services"
-	app_erros "github.com/cdp-team3/categories-service/app-errors"
+     app_erros "github.com/cdp-team3/categories-service/app-errors"
 	"github.com/cdp-team3/categories-service/domain/models"
 	 "github.com/cdp-team3/categories-service/mocks"
 	 "testing"
@@ -91,7 +90,7 @@ func TestCategoryServiceImpl_GetCategory(t *testing.T) {
 			categoryRepository := mocks.NewMockCategoryRepository(ctrl)
 			tc.buildStubs(categoryRepository)
 
-			categoryServiceImpl := services.NewCategoryServiceImpl(categoryRepository)
+			categoryServiceImpl := NewCategoryServiceImpl(categoryRepository)
 			category, err := categoryServiceImpl.GetCategory(category_id)
 			tc.checkResponse(t,category, err)
 		})
@@ -188,7 +187,7 @@ categoryDesc2 := models.CategoryDescription{
 			categoryRepository := mocks.NewMockCategoryRepository(ctrl)
 			tc.buildStubs(categoryRepository)
 
-			categoryServiceImpl := services.NewCategoryServiceImpl(categoryRepository)
+			categoryServiceImpl := NewCategoryServiceImpl(categoryRepository)
 			res, err := categoryServiceImpl.GetAllCategory()
 			tc.checkResponse(t,  res, err)
 		})
@@ -271,7 +270,7 @@ category := &models.Category{
 			categoryRepository := mocks.NewMockCategoryRepository(ctrl)
 			tc.buildStubs(categoryRepository)
 
-			categoryServiceImpl := services.NewCategoryServiceImpl(categoryRepository)
+			categoryServiceImpl := NewCategoryServiceImpl(categoryRepository)
 			err := categoryServiceImpl.AddCategory(category)
 			tc.checkResponse(t, err)
 		})
@@ -340,7 +339,7 @@ func TestCategoryServiceImpl_DeleteCategoryByID(t *testing.T) {
 			categoryRepository := mocks.NewMockCategoryRepository(ctrl)
 			tc.buildStubs(categoryRepository)
 
-			categoryServiceImpl := services.NewCategoryServiceImpl(categoryRepository)
+			categoryServiceImpl := NewCategoryServiceImpl(categoryRepository)
 			value, err := categoryServiceImpl.DeleteCategoryByID(category_id)
 			tc.checkResponse(t,value, err)
 		})
@@ -409,7 +408,7 @@ func TestCategoryServiceImpl_DeleteCategories(t *testing.T) {
 			categoryRepository := mocks.NewMockCategoryRepository(ctrl)
 			tc.buildStubs(categoryRepository)
 
-			categoryServiceImpl := services.NewCategoryServiceImpl(categoryRepository)
+			categoryServiceImpl := NewCategoryServiceImpl(categoryRepository)
 			value, err := categoryServiceImpl.DeleteCategories(categoriesId)
 			tc.checkResponse(t,value, err)
 		})
@@ -495,7 +494,7 @@ func TestCategoryServiceImpl_UpdateCategoriesById(t *testing.T) {
 		    categoryRepository := mocks.NewMockCategoryRepository(ctrl)
 			tc.buildStubs(categoryRepository)
 
-			categoryServiceImpl := services.NewCategoryServiceImpl(categoryRepository)
+			categoryServiceImpl := NewCategoryServiceImpl(categoryRepository)
 			value, err := categoryServiceImpl.UpdateCategoryByID(category_id,category)
 			tc.checkResponse(t,value, err)
 		})

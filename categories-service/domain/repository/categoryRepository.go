@@ -6,14 +6,13 @@ import (
 	
 )
 type CategoryRepository interface {
-	AddCategoryToDB(category *models.Category) *apperrors.AppError
-	FindAllCategoryFromDB() ([]models.Category, *apperrors.AppError)
-	// DeleteCategoryByIDFromDB(categoryId string) (bool, *apperros.AppError)
-	// GetCategoryByCategoryIdFromDB(categoryId string) (*models.Category, *apperros.AppError)
-	 DBHealthCheck() bool
+	DBHealthCheck() bool
+
+	 AddCategoryToDB(category *models.Category) *apperrors.AppError
+	 FindAllCategoryFromDB() ([]models.Category, *apperrors.AppError)
 	 GetCategoryFromDB(category_id string)(*models.Category, *apperrors.AppError)
 	 DeleteCategoryByIDFromDB(category_id string) (bool,*apperrors.AppError)
 	 DeleteCategoriesFromDB(categoryIds []string) (bool,*apperrors.AppError)
 	 UpdateCategoryByIdFromDB(category_id string,category *models.Category) (bool, *apperrors.AppError)
-	// UpdateCategoryByIdFromDB(categoryId string,category *models.Category) *apperros.AppError
+	
 }

@@ -28,14 +28,15 @@ func toPersistedDynamodbEntitySA(o models.Category) *models.Category {
 		
 	}
 }
-func (th CategoryHandler) AddCategory(c *gin.Context) {
+func (th CategoryHandler) AddCategory() (gin.HandlerFunc){
+	return func(ctx *gin.Context) {
 	//userId := c.Param("userId")
 	var category models.Category
 
-	if err := c.BindJSON(&category); err != nil {
-		c.Error(err)
+	if err := ctx.BindJSON(&category); err != nil {
+		ctx.Error(err)
 		err_ := apperros.NewBadRequestError(err.Error())
-		c.JSON(err_.Code, gin.H{"message": err_.Message})
+		ctx.JSON(err_.Code, gin.H{"message": err_.Message})
 		return
 	}
 
@@ -51,13 +52,15 @@ func (th CategoryHandler) AddCategory(c *gin.Context) {
 	// }
 	err := th.categoryService.AddCategory(categoryRecord)
 		if err != nil {
-		c.Error(err.Error())
-		c.JSON(err.Code, gin.H{"message": err.Message})
+		ctx.Error(err.Error())
+		ctx.JSON(err.Code, gin.H{"message": err.Message})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Category added successfully"})
+	ctx.JSON(http.StatusOK, gin.H{"message": "Category added successfully"})
 }
-func (th CategoryHandler) GetAllCategory(c *gin.Context) {
+}
+func (th CategoryHandler) GetAllCategory() (gin.HandlerFunc){
+	return func(ctx *gin.Context) {
 	//userId := c.Param("userId")
 	//var category models.Category
 
@@ -77,23 +80,26 @@ func (th CategoryHandler) GetAllCategory(c *gin.Context) {
 	
 	result,err := th.categoryService.GetAllCategory()
 		if err != nil {
-		c.Error(err.Error())
-		c.JSON(err.Code, gin.H{"message": err.Message})
+		ctx.Error(err.Error())
+		ctx.JSON(err.Code, gin.H{"message": err.Message})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"categories": result})
+	ctx.JSON(http.StatusOK, gin.H{"categories": result})
+}
 }
 
 
-func (th CategoryHandler) GetCategory(c *gin.Context) {
-	category_id := c.Param("category_id")
+func (th CategoryHandler) GetCategory()  (gin.HandlerFunc){
+	return func(ctx *gin.Context) {
+	category_id := ctx.Param("category_id")
 	category, err := th.categoryService.GetCategory(category_id)
 	if err != nil {
-		c.Error(err.Error())
-		c.JSON(err.Code, gin.H{"message": err.Message})
+		ctx.Error(err.Error())
+		ctx.JSON(err.Code, gin.H{"message": err.Message})
 		return
 	}
-	c.JSON(http.StatusOK, category)
+	ctx.JSON(http.StatusOK, category)
+}
 }
 
 func (th CategoryHandler) DeleteCategories() (gin.HandlerFunc){
@@ -115,32 +121,36 @@ func (th CategoryHandler) DeleteCategories() (gin.HandlerFunc){
 	}
 	ctx.JSON(http.StatusOK,gin.H{"message": "Categories deleted successfully"})}
 }
-func (th CategoryHandler) DeleteCategory(c *gin.Context) {
-	category_id := c.Param("category_id")
+func (th CategoryHandler) DeleteCategory() (gin.HandlerFunc) {
+	return func(ctx *gin.Context){
+	category_id := ctx.Param("category_id")
 	fmt.Println("Inside category id",category_id)
 	 _,err := th.categoryService.DeleteCategoryByID(category_id)
 	if err != nil {
-		c.Error(err.Error())
-		c.JSON(err.Code, gin.H{"message": err.Message})
+		ctx.Error(err.Error())
+		ctx.JSON(err.Code, gin.H{"message": err.Message})
 		return
 	}
-	c.JSON(http.StatusOK,gin.H{"message": "Category deleted successfully"})
+	ctx.JSON(http.StatusOK,gin.H{"message": "Category deleted successfully"})
+	}
 }
-func (th CategoryHandler) UpdateCategory(c *gin.Context) {
-	category_id := c.Param("category_id")
+func (th CategoryHandler) UpdateCategory() (gin.HandlerFunc) {
+	return func(ctx *gin.Context){
+	category_id := ctx.Param("category_id")
 	var category *models.Category
       //  defer cancel()
 	    // validate the request body
-        if err := c.BindJSON(&category); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        if err := ctx.BindJSON(&category); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
             return
         }
 	res, err := th.categoryService.UpdateCategoryByID(category_id,category)
 	if err != nil {
-		c.Error(err.Error())
-		c.JSON(err.Code, gin.H{"message": err.Message})
+		ctx.Error(err.Error())
+		ctx.JSON(err.Code, gin.H{"message": err.Message})
 		return
 	}
-	c.JSON(http.StatusOK,res)
+	ctx.JSON(http.StatusOK,res)
+}
 }
 

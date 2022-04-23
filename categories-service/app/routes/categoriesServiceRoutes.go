@@ -16,19 +16,18 @@ func NewCategoryRoutes(categoriesHandler handlers.CategoryHandler, healthCheckha
 	return CategoriesRoutes{categoriesHandler: categoriesHandler, healthCheckhandler: healthCheckhandler}
 }
 func (tr CategoriesRoutes) InitRoutes(newRouter *gin.RouterGroup) {
-	//public := router.Group("/auth")
+
 	newRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	newRouter.GET("/", tr.healthCheckhandler.HealthCheck)
 	
-	//public := router.Group("/auth")
+	
 	newRouter.Use(middlewares.AuthenticateJWT())
 	newRouter.Use(middlewares.OnlyAdmin())
-	newRouter.POST("/categories", tr.categoriesHandler.AddCategory)
-	newRouter.GET("/categories", tr.categoriesHandler.GetAllCategory)
-	newRouter.GET("/categories/:category_id",  tr.categoriesHandler.GetCategory)
-	newRouter.DELETE("/categories/:category_id",  tr.categoriesHandler.DeleteCategory)
-
-	newRouter.DELETE("/categories/",  tr.categoriesHandler.DeleteCategories())
-	newRouter.PUT("/categories/:category_id",  tr.categoriesHandler.UpdateCategory)
+	newRouter.POST("/categories", tr.categoriesHandler.AddCategory())
+	newRouter.GET("/categories", tr.categoriesHandler.GetAllCategory())
+	newRouter.GET("/categories/:category_id",  tr.categoriesHandler.GetCategory())
+	newRouter.DELETE("/categories/:category_id",  tr.categoriesHandler.DeleteCategory())
+    newRouter.DELETE("/categories/",  tr.categoriesHandler.DeleteCategories())
+	newRouter.PUT("/categories/:category_id",  tr.categoriesHandler.UpdateCategory())
 	
 }
