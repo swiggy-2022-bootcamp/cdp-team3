@@ -4,6 +4,7 @@ import (
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/domain/repository"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/errors"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/models"
+
 	"go.uber.org/zap"
 )
 
@@ -17,6 +18,7 @@ func NewRewardServiceImpl(rewardRepository repository.RewardRepository) RewardSe
 
 func (rs RewardServiceImpl) AddReward(reward *models.Reward) *errors.AppError {
 	zap.L().Info("Inside AddReward Service")
+
 	err := rs.rewardRepository.AddRewardToDB(reward)
 	if err != nil {
 		zap.L().Error(err.Message)
