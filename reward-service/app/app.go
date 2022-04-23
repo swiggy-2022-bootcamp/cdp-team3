@@ -12,7 +12,6 @@ import (
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/domain/repository"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/domain/services"
 
-	// orderGrpc "github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/grpc/order"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/utils"
 	"go.uber.org/zap"
 )
@@ -44,7 +43,6 @@ func Start() {
 	rewardController = controllers.NewRewardController(rewardService)
 	rewardRoutes = routes.NewRewardRoutes(rewardController)
 
-	// go orderGrpc.InitializeGRPCServer(configs.EnvGrpcOrderServerPORT())
 	router := StartRestServer()
 	router.Run(":" + configs.EnvPORT())
 }
