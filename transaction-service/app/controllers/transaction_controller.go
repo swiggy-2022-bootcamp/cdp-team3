@@ -12,12 +12,16 @@ import (
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/configs"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/dto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/grpc/admin"
-	adminProto "github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/grpc/admin/proto"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/kafka"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/models"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/repository"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/utils"
 	"go.uber.org/zap"
 )
+
+func init() {
+	go kafka.AddTransactionAmountConsumer()
+}
 
 type TransactionController struct {
 	transactionRepository repository.TransactionRepository
@@ -27,12 +31,6 @@ func NewTransactionController(transactionRepository repository.TransactionReposi
 	return TransactionController{transactionRepository : transactionRepository}
 }
 
-func protoConv(transaction models.Transaction) *adminProto.TransactionDetails {
-	return &adminProto.TransactionDetails{
-		UserId: transaction.CustomerID,
-		TransactionAmount: float32(transaction.Amount),
-	}
-}
 
 var validate = validator.New()
 
@@ -81,7 +79,7 @@ func (tc TransactionController)AddTransactionAmtToCustomer() gin.HandlerFunc {
 			CustomerID: customerId,
 		}
 
-		transactionAmountAdmin := protoConv(transactionFromClient)
+		transactionAmountAdmin := utils.ProtoConv(transactionFromClient)
 		grpcResponse, _ := admin.SendTransactionAmount(transactionAmountAdmin)
 
 		if grpcResponse.IsAdded != "Success" {

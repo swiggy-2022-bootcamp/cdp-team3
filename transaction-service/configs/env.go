@@ -37,6 +37,16 @@ func EnvGrpcAdminClientPORT() string {
 	return os.Getenv("GRPC_ADMIN_CLIENT_PORT")
 }
 
+func EnvAddTransactionAmountBrokerAddress() string {
+	loadEnvFile()
+	return os.Getenv("ADD_TRANSACTION_AMOUNT_BROKER_ADDRESS")
+}
+
+func EnvAddTransactionAmountTopic() string {
+	loadEnvFile()
+	return os.Getenv("ADD_TRANSACTION_AMOUNT_TOPIC")
+}
+
 func loadEnvFile() {
 	err := godotenv.Load()
 	if err != nil {
