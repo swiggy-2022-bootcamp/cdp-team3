@@ -2,21 +2,27 @@ package controllers
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/configs"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/dto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/models"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/repository"
 	"go.uber.org/zap"
 )
+
+type TransactionController struct {
+	transactionRepository repository.TransactionRepository
+}
+
+func NewTransactionController(transactionRepository repository.TransactionRepository) TransactionController {
+	return TransactionController{transactionRepository : transactionRepository}
+}
 
 const transactionCollection = "Transaction"
 var validate = validator.New()
@@ -35,24 +41,25 @@ var validate = validator.New()
 // @Failure	500  {number} 	http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /transaction/{customerId} [POST]
-func AddTransactionAmtToCustomer() gin.HandlerFunc {
+func (tc TransactionController)AddTransactionAmtToCustomer() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		customerId := c.Param("customerId")
 		zap.L().Info("Inside AddTransactionAmtToCustomer Controller")
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		var transaction models.Transaction
-		transaction.CustomerID = customerId
 		defer cancel()
 
+		var transactionFromClient models.Transaction
+		customerId := c.Param("customerId")
+		transactionFromClient.CustomerID = customerId
+
 		//validate the request body
-		if err := c.BindJSON(&transaction); err != nil {
+		if err := c.BindJSON(&transactionFromClient); err != nil {
 			zap.L().Error("Error validating the request body"+err.Error())
 			c.JSON(http.StatusBadRequest, dto.ResponseDTO{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
 		}
 
 		//use the validator library to validate required fields
-		if validationErr := validate.Struct(&transaction); validationErr != nil {
+		if validationErr := validate.Struct(&transactionFromClient); validationErr != nil {
 				zap.L().Error("Required fields not present"+validationErr.Error())
 				c.JSON(http.StatusBadRequest,  dto.ResponseDTO{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": validationErr.Error()}})
 				return
@@ -62,44 +69,26 @@ func AddTransactionAmtToCustomer() gin.HandlerFunc {
 		//TODO: Add amount to customer DB as well
 		newTransaction := models.Transaction{
 			TransactionId: uuid.New().String(),
-			Amount: transaction.Amount,
-			Description: transaction.Description,
+			Amount: transactionFromClient.Amount,
+			Description: transactionFromClient.Description,
 			CustomerID: customerId,
 		}
 		
-		data, err := dynamodbattribute.MarshalMap(newTransaction)
+		transaction, err := tc.transactionRepository.AddTransactionAmtToCustomerInDB(newTransaction)
 		if err != nil {
-			zap.L().Error("Marshalling of transaction failed - " + err.Error())
-			c.JSON(http.StatusBadRequest,  dto.ResponseDTO{
-				Status: http.StatusBadRequest, 
-				Message: "Marshalling of transaction failed", 
-				Data: map[string]interface{}{"data": err.Error()},
+			zap.L().Error(err.Message)
+			c.AbortWithStatusJSON(err.Code, dto.ResponseDTO{
+				Status:  err.Code,
+				Message: err.Message,
 			})
 			return
 		}
 
-		query := &dynamodb.PutItemInput{
-			Item:      data,
-			TableName: aws.String(transactionCollection),
-		}
-
-		result, err := configs.DB.PutItem(query)
-		if err != nil {
-			zap.L().Error("Failed to add transaction - " + err.Error())
-			c.JSON(http.StatusBadRequest,  dto.ResponseDTO{
-				Status: http.StatusBadRequest, 
-				Message: "Failed to add transaction", 
-				Data: map[string]interface{}{"data": err.Error()},
-			})
-			return
-		}
-
-		dataInBytes,_ := json.Marshal(result)
-		zap.L().Info("Successfully added transaction"+string(dataInBytes))
+		zap.L().Info("Successfully added transaction to customer"+customerId)
 		c.JSON(http.StatusCreated, dto.ResponseDTO{
 			Status: http.StatusCreated, 
 			Message: "success", 
-			Data: map[string]interface{}{"data": result},
+			Data: map[string]interface{}{"transaction": transaction},
 		})
 	}
 }
@@ -115,12 +104,38 @@ func AddTransactionAmtToCustomer() gin.HandlerFunc {
 // @Failure	500  {number} http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /transaction/{customerId} [GET]
-func GetTransactionByCustomerId() gin.HandlerFunc {
+func (tc TransactionController) GetTransactionByCustomerId() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		zap.L().Info("Inside GetTransactionByCustomerId Controller")
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
-		c.JSON(http.StatusCreated, gin.H{
-			"amount": "2000",
+
+		customerId := c.Param("customerId")
+
+		transactionList, err := tc.transactionRepository.GetTransactionByCustomerIdInDB(customerId)
+
+		if err != nil {
+			zap.L().Error(err.Message)
+			c.AbortWithStatusJSON(err.Code, dto.ResponseDTO{
+				Status:  err.Code,
+				Message: err.Message,
+			})
+			return
+		}
+
+		zap.L().Info("Fetched all transaction for customer " + customerId + "successfully")
+
+		var totalTransactionAmount float64;
+		for _, trans := range transactionList {
+			totalTransactionAmount += trans.Amount
+		}
+		c.JSON(http.StatusOK, dto.ResponseDTO{
+			Status:  http.StatusOK,
+			Message: "success",
+			Data:    map[string]interface{}{
+				"transactions": transactionList,
+				"totalAmount": totalTransactionAmount,
+			},
 		})
 	}
 }

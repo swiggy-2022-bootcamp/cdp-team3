@@ -22,6 +22,11 @@ func EnvRegion() string {
 	return os.Getenv("REGION")
 }
 
+func EnvPORT() string {
+	loadEnvFile()
+	return os.Getenv("PORT")
+}
+
 func loadEnvFile() {
 	err := godotenv.Load()
 	if err != nil {

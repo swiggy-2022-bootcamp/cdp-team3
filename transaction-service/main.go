@@ -1,16 +1,8 @@
 package main
 
 import (
+	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/app"
 	_ "github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/docs"
-
-	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/configs"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/controllers"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/routes"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/utils"
-	"go.uber.org/zap"
 )
 
 // @title           Swagger Transaction Service API
@@ -31,23 +23,5 @@ import (
 // @in header
 // @name Authorization
 func main() {
-
-	//Initialize Logger
-	log := utils.InitializeLogger()
-
-  zap.ReplaceGlobals(log)
-  defer log.Sync()
-  log.Info("Transaction Service Started")
-	
-	//Initialize DB
-	transactionDB := configs.ConnectDB()
-	configs.CreateTable(transactionDB)
-
-	router := gin.Default()
-
-	router.GET("/", controllers.HealthCheck())
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
-	routes.TransactionRoute(router)
-	router.Run(":3005")
+	app.Start()
 }
