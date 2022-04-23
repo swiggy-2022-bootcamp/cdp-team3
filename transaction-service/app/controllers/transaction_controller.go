@@ -11,6 +11,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/configs"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/dto"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/grpc/admin"
+	adminProto "github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/grpc/admin/proto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/models"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/repository"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/utils"
@@ -25,7 +27,13 @@ func NewTransactionController(transactionRepository repository.TransactionReposi
 	return TransactionController{transactionRepository : transactionRepository}
 }
 
-const transactionCollection = "Transaction"
+func protoConv(transaction models.Transaction) *adminProto.TransactionDetails {
+	return &adminProto.TransactionDetails{
+		UserId: transaction.CustomerID,
+		TransactionAmount: float32(transaction.Amount),
+	}
+}
+
 var validate = validator.New()
 
 // AddTransactionAmtToCustomer godoc
@@ -66,15 +74,24 @@ func (tc TransactionController)AddTransactionAmtToCustomer() gin.HandlerFunc {
 				return
 		}
 
-		//TODO: Validate if customer is present
-		//TODO: Add amount to customer DB as well
 		newTransaction := models.Transaction{
 			TransactionId: uuid.New().String(),
 			Amount: transactionFromClient.Amount,
 			Description: transactionFromClient.Description,
 			CustomerID: customerId,
 		}
-		
+
+		transactionAmountAdmin := protoConv(transactionFromClient)
+		grpcResponse, _ := admin.SendTransactionAmount(transactionAmountAdmin)
+
+		if grpcResponse.IsAdded != "Success" {
+			zap.L().Error("Error Updating Transaction Amount for the Customer through Admin GRPC")
+			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
+				Status: http.StatusInternalServerError, Message: "error",
+			})
+			return
+		}
+
 		transaction, err := tc.transactionRepository.AddTransactionAmtToCustomerInDB(newTransaction)
 		if err != nil {
 			zap.L().Error(err.Message)

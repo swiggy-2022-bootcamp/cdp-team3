@@ -32,6 +32,11 @@ func EnvGrpcAuthClientPORT() string {
 	return os.Getenv("GRPC_AUTH_CLIENT_PORT")
 }
 
+func EnvGrpcAdminClientPORT() string {
+	loadEnvFile()
+	return os.Getenv("GRPC_ADMIN_CLIENT_PORT")
+}
+
 func loadEnvFile() {
 	err := godotenv.Load()
 	if err != nil {
