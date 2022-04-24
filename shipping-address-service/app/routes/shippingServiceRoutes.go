@@ -23,5 +23,8 @@ func (sr ShippingRoutes) InitRoutes(newRouter *gin.RouterGroup) {
 	newRouter.POST("/shippingaddress", sr.shippingHandler.AddNewShippingAddress())
 	newRouter.PUT("/shippingaddress/:id",  sr.shippingHandler.HandleUpdateShippingAddressByID())
     newRouter.DELETE("/shippingaddress/:id",  sr.shippingHandler.HandleDeleteShippingAddressById())
+	newRouter.GET("/shippingaddress/existing/:userId",  sr.shippingHandler.GetDefaultShippingAddressOfUser())
+	newRouter.POST("/shippingaddress/existing/:id",  sr.shippingHandler.HandleSetExistingShippingAddressToDefault())
+
 
 }

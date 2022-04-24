@@ -11,5 +11,7 @@ type ShippingService interface {
 	FindShippingAddressById(ShippingAddressID string) (*models.ShippingAddress,*apperrors.AppError)
 	UpdateShippingAddressById(id string,shippingAddress *models.ShippingAddress) (bool, *apperrors.AppError)
 	DeleteShippingAddressById(shippingAddressId string) (bool, *apperrors.AppError) 
+	HandleSetExistingShippingAddressToDefaultById(shippingAddressId string) (bool, *apperrors.AppError)
+	GetDefaultShippingAddressOfUserById(userId string)(*models.ShippingAddress,*apperrors.AppError)
 	
 }

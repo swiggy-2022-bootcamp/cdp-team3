@@ -53,3 +53,19 @@ func (p ShippingServiceImpl) DeleteShippingAddressById(shippingAddressId string)
 	}
 	return true, nil
 }
+func (p ShippingServiceImpl) HandleSetExistingShippingAddressToDefaultById(shippingAddressId string) (bool, *apperros.AppError) {
+	_, err := p.shippingRepository.HandleSetExistingShippingAddressToDefaultByIdToDB(shippingAddressId)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+
+func (p ShippingServiceImpl) GetDefaultShippingAddressOfUserById(userId string) (*models.ShippingAddress, *apperros.AppError) {
+	res, err := p.shippingRepository.GetDefaultShippingAddressOfUserByIdFromDB(userId)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}

@@ -12,5 +12,6 @@ type ShippingRepository interface {
 	 FindShippingAddressByIdFromDB(ShippingAddressID string) (*models.ShippingAddress,*apperrors.AppError)
 	 UpdateShippingAddressByIdFromDB(ShippingAddressID string,shippingAddress *models.ShippingAddress) (bool, *apperrors.AppError) 
 	 DeleteShippingAddressByIdFromDB(ShippingAddressID string) (bool, *apperrors.AppError) 
-	
+	 HandleSetExistingShippingAddressToDefaultByIdToDB(ShippingAddressID string) (bool,*apperrors.AppError)
+	 GetDefaultShippingAddressOfUserByIdFromDB(userId string) (*models.ShippingAddress,*apperrors.AppError)
 }

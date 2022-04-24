@@ -164,3 +164,51 @@ ERROR: 2022/04/20 17:01:07 [Connection to dynamoDB failed.]
 ERROR: 2022/04/20 17:01:07 [Got error calling CreateTable: %s UnrecognizedClientException: The security token included in the request is invalid.
 	status code: 400, request id: RVO178G6F5HJFQ94BKVS774J67VV4KQNSO5AEMVJF66Q9ASUAAJG]
 ERROR: 2022/04/20 17:01:26 [Database connection is down.]
+INFO: 2022/04/24 19:42:46 [Created the table{
+  TableDescription: {
+    AttributeDefinitions: [{
+        AttributeName: "id",
+        AttributeType: "S"
+      }],
+    CreationDateTime: 2022-04-24 14:12:56.904 +0000 UTC,
+    ItemCount: 0,
+    KeySchema: [{
+        AttributeName: "id",
+        KeyType: "HASH"
+      }],
+    ProvisionedThroughput: {
+      NumberOfDecreasesToday: 0,
+      ReadCapacityUnits: 10,
+      WriteCapacityUnits: 10
+    },
+    TableArn: "arn:aws:dynamodb:us-east-1:447105169968:table/ShippingAddress",
+    TableId: "0d369f3e-d180-477a-b08a-032e347a4ad4",
+    TableName: "ShippingAddress",
+    TableSizeBytes: 0,
+    TableStatus: "CREATING"
+  }
+}]
+ERROR: 2022/04/24 19:56:18 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/24 20:05:11 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/24 20:10:29 [Categories for given ID doesn't exists - ]
+ERROR: 2022/04/24 20:10:29 [0xc000005140]
+ERROR: 2022/04/24 20:22:15 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/24 20:31:57 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/24 20:35:05 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/24 20:36:40 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/24 20:38:12 [Failed to unmarshal document fetched from DB - UnmarshalTypeError: cannot unmarshal bool into Go value of type string]
+ERROR: 2022/04/24 20:38:12 [0xc000005368]
+ERROR: 2022/04/24 20:39:30 [Shipping Address for given ID doesn't exists - ]
+ERROR: 2022/04/24 20:39:31 [0xc000492d08]
+ERROR: 2022/04/24 20:48:02 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/24 20:48:57 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/24 20:51:12 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/24 21:30:43 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/24 21:38:10 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/24 21:49:03 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/24 21:51:26 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/24 22:08:33 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/24 22:13:34 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/24 22:15:58 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/25 01:32:55 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]
+ERROR: 2022/04/25 01:39:52 [Got error calling CreateTable: %s ResourceInUseException: Table already exists: ShippingAddress]

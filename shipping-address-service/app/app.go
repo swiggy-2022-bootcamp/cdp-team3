@@ -17,7 +17,7 @@ import (
 	"github.com/cdp-team3/shipping-address-service/domain/repository"
 	"github.com/cdp-team3/shipping-address-service/domain/services"
 	"github.com/cdp-team3/shipping-address-service/utils/logger"
-    "github.com/cdp-team3/shipping-address-service/app/grpcs/shipping_checkout"
+    "github.com/cdp-team3/shipping-address-service/app/grpcs/shipping"
 	"google.golang.org/grpc"
 	"sync"
 	//"syscall"
@@ -119,7 +119,7 @@ func StartGRPCServer1(lis net.Listener) error {
 	// Create a gRPC server object
 	//s := grpc.NewServer()
 	grpcServer := grpc.NewServer()
-	shipping_checkout.RegisterShippingServer(grpcServer, shippingServiceProto)
+	shipping.RegisterShippingServer(grpcServer, shippingServiceProto)
 //	cart_checkout.RegisterCheckoutServiceServer(s, &server{})
 	fmt.Printf("Server listening at %v", lis.Addr())
 	// Start serving requests
@@ -152,23 +152,23 @@ func StartRESTServer(){
     }
 }
 
-func StartGRPCServer() {
-	fmt.Println("Inside creating GRPC server")
-	GRPC_ADDRESSS_PORT := os.Getenv("GRPC_ADDRESSS_PORT")
-	lis, err := net.Listen("tcp", GRPC_ADDRESSS_PORT)
-	if err != nil {
-		fmt.Println("failed to listen on port")
-		logger.Error("Failed to listen on port %v with error %v", GRPC_ADDRESSS_PORT, err)
-	}
+// func StartGRPCServer() {
+// 	fmt.Println("Inside creating GRPC server")
+// 	GRPC_ADDRESSS_PORT := os.Getenv("GRPC_ADDRESSS_PORT")
+// 	lis, err := net.Listen("tcp", GRPC_ADDRESSS_PORT)
+// 	if err != nil {
+// 		fmt.Println("failed to listen on port")
+// 		logger.Error("Failed to listen on port %v with error %v", GRPC_ADDRESSS_PORT, err)
+// 	}
 	
-	grpcServer := grpc.NewServer()
-	shipping_checkout.RegisterShippingServer(grpcServer, shippingServiceProto)
-	err = grpcServer.Serve(lis)
-	if err != nil {
-		fmt.Println("Error in starting grpc server",err)
-		logger.Error("Failed to start the grpc server : %v", err)
-	}
-	logger.Info("GRPC server started successfully")
-	fmt.Println("GRPC server started successfully")
+// 	grpcServer := grpc.NewServer()
+// 	shipping_checkout.RegisterShippingServer(grpcServer, shippingServiceProto)
+// 	err = grpcServer.Serve(lis)
+// 	if err != nil {
+// 		fmt.Println("Error in starting grpc server",err)
+// 		logger.Error("Failed to start the grpc server : %v", err)
+// 	}
+// 	logger.Info("GRPC server started successfully")
+// 	fmt.Println("GRPC server started successfully")
 	
-}
+// }

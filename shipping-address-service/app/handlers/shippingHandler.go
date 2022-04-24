@@ -31,6 +31,8 @@ func toPersistedDynamodbEntitySA(o *models.ShippingAddress) *models.ShippingAddr
 		Address2:  o.Address2,
 		CountryID: o.CountryID,
 		PostCode:  o.PostCode,
+		UserID: o.UserID,
+		DefaultAddress: o.DefaultAddress,
 	}
 }
 
@@ -53,13 +55,14 @@ func (th ShippingHandler) AddNewShippingAddress() gin.HandlerFunc {
 		ctx.JSON(err.Code, gin.H{"message": err.Message})
 		return
 	}
-    fmt.Println(shippingAddress)
+    fmt.Println("in handler",shippingAddress)
 //use the validator library to validate required fields
-if validationErr := validate.Struct(&shippingAddress); validationErr != nil {
-	ctx.JSON(http.StatusBadRequest, gin.H{"message": validationErr.Error()})
-	return
-}
+// if validationErr := validate.Struct(&shippingAddress); validationErr != nil {
+// 	ctx.JSON(http.StatusBadRequest, gin.H{"message": validationErr.Error()})
+// 	return
+// }
 	shippingAddressRecord := toPersistedDynamodbEntitySA(shippingAddress)
+	fmt.Println("record",shippingAddressRecord)
 	
 	id,err := th.shippingService.InsertShippingAddress(shippingAddressRecord)
 		if err != nil {
@@ -148,14 +151,46 @@ func (sh ShippingHandler) HandleDeleteShippingAddressById() gin.HandlerFunc {
 }
 
 
+func (sh ShippingHandler) GetDefaultShippingAddressOfUser() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		userId := ctx.Param("userId")
+		fmt.Println(userId)
+		res, err := sh.shippingService.GetDefaultShippingAddressOfUserById(userId)
+
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, res)
+			return
+		}
+
+		ctx.JSON(http.StatusAccepted, res)
+	}
+}
+
+
+func (sh ShippingHandler) HandleSetExistingShippingAddressToDefault() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id := ctx.Param("id")
+		fmt.Println(id)
+		res, err := sh.shippingService.HandleSetExistingShippingAddressToDefaultById(id)
+
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, res)
+			return
+		}
+
+		ctx.JSON(http.StatusAccepted, res)
+	}
+}
+
+
 type ShippingAddressRecordDTO struct {
 	FirstName string `json:"firstname"`
 	LastName  string `json:"lastname"`
 	City      string `json:"city"`
 	Address1  string `json:"address_1"`
 	Address2  string `json:"address_2"`
-	CountryID int    `json:"country_id"`
-	PostCode  int    `json:"postcode"`
+	CountryID uint32    `json:"country_id"`
+	PostCode  uint32    `json:"postcode"`
 }
 func convertShippingAddressDTOtoShippingAddressModel(saDto ShippingAddressRecordDTO) *models.ShippingAddress {
 
