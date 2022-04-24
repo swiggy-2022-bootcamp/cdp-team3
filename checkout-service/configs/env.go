@@ -7,6 +7,51 @@ import (
 	"github.com/joho/godotenv"
 )
 
+func EnvAuthHost() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file.")
+	}
+
+	return os.Getenv("AUTH_HOST")
+}
+
+func EnvCartHost() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file.")
+	}
+
+	return os.Getenv("CART_HOST")
+}
+
+func EnvCheckoutHost() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file.")
+	}
+
+	return os.Getenv("CHECKOUT_HOST")
+}
+
+func EnvOrderHost() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file.")
+	}
+
+	return os.Getenv("ORDER_HOST")
+}
+
+func EnvShippingHost() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file.")
+	}
+
+	return os.Getenv("SHIPPING_HOST")
+}
+
 func EnvKafkaBrokerPort() string {
 	err := godotenv.Load()
 	if err != nil {
@@ -32,6 +77,15 @@ func EnvServicePort() string {
 	return os.Getenv("CHECKOUT_SERVICE_PORT")
 }
 
+func EnvAuthServiceGRPCPort() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file.")
+	}
+
+	return os.Getenv("AUTH_SERVICE_GRPC_PORT")
+}
+
 func EnvCartServiceGRPCPort() string {
 	err := godotenv.Load()
 	if err != nil {
@@ -41,6 +95,15 @@ func EnvCartServiceGRPCPort() string {
 	return os.Getenv("CART_SERVICE_GRPC_PORT")
 }
 
+func EnvOrderServiceGRPCPort() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file.")
+	}
+
+	return os.Getenv("ORDER_SERVICE_GRPC_PORT")
+}
+
 func EnvShippingServiceGRPCPort() string {
 	err := godotenv.Load()
 	if err != nil {
@@ -48,13 +111,4 @@ func EnvShippingServiceGRPCPort() string {
 	}
 
 	return os.Getenv("SHIPPING_SERVICE_GRPC_PORT")
-}
-
-func EnvOrderGRPCPort() string {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file.")
-	}
-
-	return os.Getenv("ORDER_SERVICE_GRPC_PORT")
 }

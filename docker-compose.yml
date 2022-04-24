@@ -1,0 +1,77 @@
+networks:
+  ecommerce:
+    name: "ecommerce"
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.5.0.0/16
+          ip_range: 10.5.0.0/24
+          gateway: 10.5.0.1
+          aux_addresses:
+            kafka: 10.5.0.1
+            zookeeper: 10.5.0.2
+            auth: 10.5.0.3
+            cart: 10.5.0.4
+            checkout: 10.5.0.5
+            order: 10.5.0.6
+            shipping: 10.5.0.7
+services:
+  cart_service:
+    build: ./cart-service
+    networks:
+    - "ecommerce"
+    ports:
+      - "3010:3010"
+      - "9010:9010"
+    depends_on:
+      - broker
+    environment:
+      - CART_HOST=cart
+      - CART_SERVICE_PORT=3010
+      - CART_SERVICE_GRPC_PORT=9010
+      - KAFKA_BROKER_ADDRESS=kafka:9092
+
+  checkout_service:
+    build: ./checkout-service
+    networks:
+      - "ecommerce"
+    ports:
+      - "3011:3011"
+    environment:
+      - AUTH_HOST=auth
+      - AUTH_SERVICE_GRPC_PORT=9012
+      - CART_HOST=cart
+      - CART_SERVICE_GRPC_PORT=9010
+      - CHECKOUT_HOST=checkout
+      - CHECKOUT_SERVICE_PORT=3011
+      - CHECKOUT_SERVICE_GRPC_PORT=9011
+      - ORDER_HOST=order
+      - ORDER_SERVICE_GRPC_PORT=9013
+      - SHIPPING_HOST=shipping
+      - SHIPPING_SERVICE_GRPC_PORT=9014
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: confluentinc/cp-kafka:7.0.1
+    container_name: broker
+    ports:
+    # To learn about configuring Kafka for access across networks see
+    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
