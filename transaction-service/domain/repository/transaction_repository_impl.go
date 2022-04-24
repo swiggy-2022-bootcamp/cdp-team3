@@ -58,7 +58,7 @@ func(tri TransactionRepositoryImpl) GetTransactionByCustomerIdInDB(customerId st
 	return transactions, nil
 }
 
-func(tri TransactionRepositoryImpl) AddTransactionAmtToCustomerInDB(transaction models.Transaction) (*models.Transaction, *errors.AppError) {
+func(tri TransactionRepositoryImpl) AddTransactionAmtToCustomerInDB(transaction *models.Transaction) (*models.Transaction, *errors.AppError) {
 	
 	data, err := dynamodbattribute.MarshalMap(transaction)
 	if err != nil {
@@ -77,5 +77,5 @@ func(tri TransactionRepositoryImpl) AddTransactionAmtToCustomerInDB(transaction 
 		return nil, errors.NewUnexpectedError("Failed to add transaction - " + err.Error())
 	}
 	fmt.Print(result)
-	return &transaction, nil
+	return transaction, nil
 }

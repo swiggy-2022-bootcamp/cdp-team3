@@ -7,13 +7,15 @@ import (
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/app/controllers"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/app/routes"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/configs"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/repository"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/domain/repository"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/domain/services"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/utils"
 	"go.uber.org/zap"
 )
 
 var (
 	transactionRepository repository.TransactionRepository
+	transactionService services.TransactionService
 	transactionController controllers.TransactionController
 	transactionRoutes routes.TransactionRoutes
 )
@@ -31,7 +33,8 @@ func Start(){
 	configs.CreateTable(transactionDB)
 
 	transactionRepository = repository.NewTransactionRepositoryImpl(transactionDB)
-	transactionController = controllers.NewTransactionController(transactionRepository)
+	transactionService = services.NewTransactionServiceImpl(transactionRepository)
+	transactionController = controllers.NewTransactionController(transactionService)
 	transactionRoutes = routes.NewTransactionRoutes(transactionController)
 
 	router := gin.Default()
