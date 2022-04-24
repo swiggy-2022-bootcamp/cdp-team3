@@ -7,5 +7,5 @@ import (
 
 type TransactionRepository interface {
 	GetTransactionByCustomerIdInDB(customerId string) ([]models.Transaction, *errors.AppError)
-	AddTransactionAmtToCustomerInDB(transaction models.Transaction) (*models.Transaction, *errors.AppError)
+	AddTransactionAmtToCustomerInDB(transaction *models.Transaction) (*models.Transaction, *errors.AppError)
 }

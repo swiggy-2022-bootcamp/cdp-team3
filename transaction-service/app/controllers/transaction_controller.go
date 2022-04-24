@@ -8,27 +8,22 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"github.com/google/uuid"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/configs"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/domain/services"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/dto"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/grpc/admin"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/kafka"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/models"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/repository"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/utils"
 	"go.uber.org/zap"
 )
 
-func init() {
-	go kafka.AddTransactionAmountConsumer()
-}
-
+// func init() {
+// 	go kafka.AddTransactionAmountConsumer()
+// }
 type TransactionController struct {
-	transactionRepository repository.TransactionRepository
+	transactionService services.TransactionService
 }
 
-func NewTransactionController(transactionRepository repository.TransactionRepository) TransactionController {
-	return TransactionController{transactionRepository : transactionRepository}
+func NewTransactionController(transactionService services.TransactionService) TransactionController {
+	return TransactionController{transactionService : transactionService}
 }
 
 
@@ -48,15 +43,16 @@ var validate = validator.New()
 // @Failure	500  {number} 	http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /transaction/{customerId} [POST]
-func (tc TransactionController)AddTransactionAmtToCustomer() gin.HandlerFunc {
+func (tc TransactionController) AddTransactionAmtToCustomer() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		zap.L().Info("Inside AddTransactionAmtToCustomer Controller")
 		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
-		var transactionFromClient models.Transaction
 		customerId := c.Param("customerId")
-		transactionFromClient.CustomerID = customerId
+		transactionFromClient := &models.Transaction {
+			CustomerID: customerId,
+		}
 
 		//validate the request body
 		if err := c.BindJSON(&transactionFromClient); err != nil {
@@ -65,32 +61,7 @@ func (tc TransactionController)AddTransactionAmtToCustomer() gin.HandlerFunc {
 			return
 		}
 
-		//use the validator library to validate required fields
-		if validationErr := validate.Struct(&transactionFromClient); validationErr != nil {
-				zap.L().Error("Required fields not present"+validationErr.Error())
-				c.JSON(http.StatusBadRequest,  dto.ResponseDTO{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": validationErr.Error()}})
-				return
-		}
-
-		newTransaction := models.Transaction{
-			TransactionId: uuid.New().String(),
-			Amount: transactionFromClient.Amount,
-			Description: transactionFromClient.Description,
-			CustomerID: customerId,
-		}
-
-		transactionAmountAdmin := utils.ProtoConv(transactionFromClient)
-		grpcResponse, _ := admin.SendTransactionAmount(transactionAmountAdmin)
-
-		if grpcResponse.IsAdded != "Success" {
-			zap.L().Error("Error Updating Transaction Amount for the Customer through Admin GRPC")
-			c.JSON(http.StatusInternalServerError,  dto.ResponseDTO{
-				Status: http.StatusInternalServerError, Message: "error",
-			})
-			return
-		}
-
-		transaction, err := tc.transactionRepository.AddTransactionAmtToCustomerInDB(newTransaction)
+		transaction, err := tc.transactionService.AddTransactionAmtToCustomer(transactionFromClient)
 		if err != nil {
 			zap.L().Error(err.Message)
 			c.AbortWithStatusJSON(err.Code, dto.ResponseDTO{
@@ -99,7 +70,6 @@ func (tc TransactionController)AddTransactionAmtToCustomer() gin.HandlerFunc {
 			})
 			return
 		}
-
 		zap.L().Info("Successfully added transaction to customer"+customerId)
 		c.JSON(http.StatusCreated, dto.ResponseDTO{
 			Status: http.StatusCreated, 
@@ -128,15 +98,15 @@ func (tc TransactionController) GetTransactionByCustomerId() gin.HandlerFunc {
 
 		customerId := c.Param("customerId")
 
-		if !utils.IsAdmin(c) && !utils.CheckLoggedInUserWithTransactionCustomerId(c, customerId) {
-			zap.L().Error("Not authorized to view transaction points of customer")
-			c.JSON(http.StatusUnauthorized, dto.ResponseDTO{
-				Status:  http.StatusUnauthorized,
-				Message: "Not authorized to view transaction points of customer",
-			})
-		}
+		// if !utils.IsAdmin(c) && !utils.CheckLoggedInUserWithTransactionCustomerId(c, customerId) {
+		// 	zap.L().Error("Not authorized to view transaction points of customer")
+		// 	c.JSON(http.StatusUnauthorized, dto.ResponseDTO{
+		// 		Status:  http.StatusUnauthorized,
+		// 		Message: "Not authorized to view transaction points of customer",
+		// 	})
+		// }
 
-		transactionList, err := tc.transactionRepository.GetTransactionByCustomerIdInDB(customerId)
+		transactionList, err := tc.transactionService.GetTransactionByCustomerId(customerId)
 
 		if err != nil {
 			zap.L().Error(err.Message)

@@ -3,7 +3,6 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/app/controllers"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/middlewares"
 )
 
 type TransactionRoutes struct {
@@ -16,7 +15,7 @@ func NewTransactionRoutes(transactionController controllers.TransactionControlle
 
 func (tr TransactionRoutes)TransactionRoutes(router *gin.Engine) {
 
-	router.Use(middlewares.AuthenticateJWT())
+	// router.Use(middlewares.AuthenticateJWT())
 	router.GET("/transaction/:customerId", tr.transactionController.GetTransactionByCustomerId())
-	router.POST("/transaction/:customerId", middlewares.OnlyAdmin(), tr.transactionController.AddTransactionAmtToCustomer())
+	router.POST("/transaction/:customerId", /*middlewares.OnlyAdmin(),*/ tr.transactionController.AddTransactionAmtToCustomer())
 }
