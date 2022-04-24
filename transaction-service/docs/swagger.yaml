@@ -1,0 +1,115 @@
+definitions:
+  models.Transaction:
+    properties:
+      amount:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+    required:
+    - amount
+    type: object
+host: localhost:3005
+info:
+  contact:
+    email: swiggyb1035@datascience.manipal.edu
+    name: Jaithun Mahira
+  description: Admin can add and view transaction amount for a customer based on custmer
+    ID
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Transaction Service API
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: This request will return 200 OK if server is up..
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+      summary: To check if the service is running or not.
+      tags:
+      - Health
+  /transaction/{customerId}:
+    get:
+      description: Get the total transaction amount credited to the customer based
+        on customer ID.
+      parameters:
+      - description: Customer Id
+        in: path
+        name: customerId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Transaction'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Get transaction amount for a customer.
+      tags:
+      - Transaction Service
+    post:
+      consumes:
+      - application/json
+      description: This request will add transaction amount to a customer by customer
+        ID
+      parameters:
+      - description: Customer Id
+        in: path
+        name: customerId
+        required: true
+        type: string
+      - description: Transaction details
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/models.Transaction'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Transaction'
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Adds transaction amount
+      tags:
+      - Transacion Service
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
