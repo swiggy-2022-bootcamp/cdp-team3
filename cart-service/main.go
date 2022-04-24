@@ -24,7 +24,7 @@ var (
 /// Function with logic for starting GRPC server
 func startGRPCServer(address string, cartService services.CartService) {
 	// Create a listener on TCP port
-	lis, err := net.Listen("tcp", "0.0.0.0:"+address)
+	lis, err := net.Listen("tcp", address)
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 		errChanGRPC <- err
@@ -40,7 +40,7 @@ func generateRESTRoutes(port string, cartController controllers.CartController) 
 	routes.GenerateCartRoutes(cartRouter, cartController)
 
 	// Run REST Microservice
-	errChanREST <- cartRouter.Run("0.0.0.0:" + port)
+	errChanREST <- cartRouter.Run(configs.EnvCartHost() + ":" + port)
 }
 
 func main() {
@@ -51,11 +51,15 @@ func main() {
 	cartController := controllers.NewCartController(cartService) // Controller
 
 	// Set up GRPC
-	go startGRPCServer(configs.EnvServiceGRPCPort(), cartService)
+	go startGRPCServer(configs.EnvCartHost() + ":" + configs.EnvCartServiceGRPCPort(), cartService)
 
 	// Set up Kafka listeners
+	kafkaCartCreateListener := utils.NewKafkaCartConsumeService(
+		configs.EnvKafkaUserCreatedTopic(),
+		cartService,
+	) // Kafka Listener
+	go kafkaCartCreateListener.KafkaUserIDConsume()
 	kafkaCartDeleteListener := utils.NewKafkaCartConsumeService(
-		configs.EnvKafkaBrokerAddress(),
 		configs.EnvKafkaUserDeletedTopic(),
 		cartService,
 	) // Kafka Listener

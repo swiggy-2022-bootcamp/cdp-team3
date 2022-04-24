@@ -62,6 +62,15 @@ func EnvSecretKey() string {
 	return os.Getenv("AWS_SECRET_ACCESS_KEY")
 }
 
+func EnvCartHost() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file.")
+	}
+
+	return os.Getenv("CART_HOST")
+}
+
 func EnvServicePort() string {
 	err := godotenv.Load()
 	if err != nil {
@@ -71,7 +80,7 @@ func EnvServicePort() string {
 	return os.Getenv("CART_SERVICE_PORT")
 }
 
-func EnvServiceGRPCPort() string {
+func EnvCartServiceGRPCPort() string {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file.")

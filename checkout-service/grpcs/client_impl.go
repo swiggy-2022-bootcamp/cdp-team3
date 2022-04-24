@@ -1,6 +1,7 @@
 package grpcs
 
 import (
+	"github.com/swiggy-ipp/checkout-service/configs"
 	"github.com/swiggy-ipp/checkout-service/grpcs/cart_checkout"
 	order_checkout "github.com/swiggy-ipp/checkout-service/grpcs/order/proto"
 	"github.com/swiggy-ipp/checkout-service/grpcs/shipping_checkout"
@@ -11,19 +12,25 @@ import (
 )
 
 var (
-	// Error Channels
+	// Error GRPC Channel
 	ErrChanGRPC chan error = make(chan error)
 
 	// GRPC Client Channels
-	CartCheckoutGRPCChannel     chan cart_checkout.CartCheckoutServiceClient = make(chan cart_checkout.CartCheckoutServiceClient)
-	ShippingCheckoutGRPCChannel chan shipping_checkout.ShippingClient        = make(chan shipping_checkout.ShippingClient)
-	OrderCheckoutGRPCChannel    chan order_checkout.OrderServiceClient       = make(chan order_checkout.OrderServiceClient)
+	// Cart <-> Checkout GRPC Client Channel
+	CartCheckoutGRPCChannel chan cart_checkout.CartCheckoutServiceClient = make(chan cart_checkout.CartCheckoutServiceClient)
+	// Shipping <-> Checkout GRPC Client Channel
+	ShippingCheckoutGRPCChannel chan shipping_checkout.ShippingClient = make(chan shipping_checkout.ShippingClient)
+	// Order <-> Checkout GRPC Client Channel
+	OrderCheckoutGRPCChannel chan order_checkout.OrderServiceClient = make(chan order_checkout.OrderServiceClient)
 )
 
 /// Function with logic for becoming GRPC Client
-func BecomeGRPCClient(cartPort string, shippingPort string, orderPort string) {
+func BecomeGRPCClient() {
 	// For Cart Checkout
-	conn, err := grpc.Dial("0.0.0.0:"+cartPort, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(
+		configs.EnvCartHost() + ":" + configs.EnvCartServiceGRPCPort(), 
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 		ErrChanGRPC <- err
@@ -31,7 +38,10 @@ func BecomeGRPCClient(cartPort string, shippingPort string, orderPort string) {
 		CartCheckoutGRPCChannel <- cart_checkout.NewCartCheckoutServiceClient(conn)
 	}
 	// For Shipping Checkout
-	conn, err = grpc.Dial("0.0.0.0:"+shippingPort, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err = grpc.Dial(
+		configs.EnvShippingHost() + ":" + configs.EnvShippingServiceGRPCPort(), 
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 		ErrChanGRPC <- err
@@ -39,7 +49,10 @@ func BecomeGRPCClient(cartPort string, shippingPort string, orderPort string) {
 		ShippingCheckoutGRPCChannel <- shipping_checkout.NewShippingClient(conn)
 	}
 	// For Order Checkout
-	conn, err = grpc.Dial("0.0.0.0:"+orderPort, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err = grpc.Dial(
+		configs.EnvOrderHost() + ":" + configs.EnvOrderServiceGRPCPort(), 
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 		ErrChanGRPC <- err

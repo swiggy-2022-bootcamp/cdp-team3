@@ -26,6 +26,5 @@ RUN go build -o /main .
 
 # Expose the application as a port and run it
 EXPOSE ${CHECKOUT_SERVICE_PORT}
-EXPOSE ${CHECKOUT_SERVICE_GRPC_PORT}
 
 CMD ["/main"]

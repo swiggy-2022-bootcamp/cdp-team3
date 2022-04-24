@@ -12,19 +12,16 @@ import (
 
 // KafkaCartConsumeService is a Kafka Consumer for Cart Service
 type KafkaCartConsumeService struct {
-	brokerPort  string
 	topic       string
 	cartService services.CartService
 }
 
 // Create a new Kafka Cart Consumer
 func NewKafkaCartConsumeService(
-	brokerPort string,
 	topic string,
 	cartService services.CartService,
 ) *KafkaCartConsumeService {
 	return &KafkaCartConsumeService{
-		brokerPort:  brokerPort,
 		topic:       topic,
 		cartService: cartService,
 	}
@@ -38,7 +35,7 @@ func (kc *KafkaCartConsumeService) KafkaUserIDConsume() {
 	ctx := context.Background()
 	l := log.New()
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{"0.0.0.0:" + kc.brokerPort},
+		Brokers: []string{configs.EnvKafkaBrokerAddress()},
 		Topic:   kc.topic,
 		GroupID: "my-group",
 		Logger:  l,

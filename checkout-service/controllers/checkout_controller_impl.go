@@ -73,11 +73,12 @@ func (cc *checkoutControllerImpl) GetOrderOverview(c *gin.Context) {
 		}
 
 		// Make GRPC Call to Order Service
-		orderedProducts := mapCartItemsToOrderedProducts(cartOut.CartItems)
+		orderedProducts, amt := mapCartItemsToOrderedProducts(cartOut.CartItems)
 		out, err := cc.orderGRPCClient.CreateOrder(c.Request.Context(), &orderProto.CreateOrderRequest{
 			Order: &orderProto.RequestOrder{
 				CustomerId:      claims.UserId,
 				OrderedProducts: orderedProducts,
+				TotalAmount: amt,
 			},
 		})
 		if err != nil {
@@ -142,14 +143,16 @@ func validateShippingAddress(address *shipping_checkout.ShippingAddressResponse)
 	return address.GetAddress1() != "" && address.GetPostcode() != 0 && address.GetCity() != "" && address.GetFirstname() != ""
 }
 
-// Utility function to map Cart Items to Order Products Data Type for cross service compatibility
-func mapCartItemsToOrderedProducts(cartItem []*cart_checkout.CartItem) []*orderProto.OrderedProduct {
+// Utility function to map Cart Items to Order Products Data Type and calculate total amount for cross service compatibility
+func mapCartItemsToOrderedProducts(cartItem []*cart_checkout.CartItem) ([]*orderProto.OrderedProduct, float32) {
 	orderedProducts := make([]*orderProto.OrderedProduct, len(cartItem))
+	var totalAmount float32 = 0.0
 	for i, item := range cartItem {
+		totalAmount += item.GetPrice() * float32(item.GetQuantity())
 		orderedProducts[i] = &orderProto.OrderedProduct{
 			ProductId: item.ProductID,
 			Quantity:  item.Quantity,
 		}
 	}
-	return orderedProducts
+	return orderedProducts, totalAmount
 }
