@@ -1,26 +1,8 @@
-networks:
-  ecommerce:
-    name: "ecommerce"
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.5.0.0/16
-          ip_range: 10.5.0.0/24
-          gateway: 10.5.0.1
-          aux_addresses:
-            kafka: 10.5.0.1
-            zookeeper: 10.5.0.2
-            auth: 10.5.0.3
-            cart: 10.5.0.4
-            checkout: 10.5.0.5
-            order: 10.5.0.6
-            shipping: 10.5.0.7
 services:
-  cart_service:
-    build: ./cart-service
-    networks:
-    - "ecommerce"
+  cart:
+    build: 
+      context: ./cart-service
+      dockerfile: ./Dockerfile
     ports:
       - "3010:3010"
       - "9010:9010"
@@ -30,12 +12,12 @@ services:
       - CART_HOST=cart
       - CART_SERVICE_PORT=3010
       - CART_SERVICE_GRPC_PORT=9010
-      - KAFKA_BROKER_ADDRESS=kafka:9092
+      - KAFKA_BROKER_ADDRESS=broker:9092
 
-  checkout_service:
-    build: ./checkout-service
-    networks:
-      - "ecommerce"
+  checkout:
+    build: 
+      context: ./checkout-service
+      dockerfile: ./Dockerfile
     ports:
       - "3011:3011"
     environment:
@@ -71,7 +53,7 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092,PLAINTEXT_INTERNAL://broker:29092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
