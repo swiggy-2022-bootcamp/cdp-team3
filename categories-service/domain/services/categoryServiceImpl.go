@@ -4,6 +4,7 @@ import (
 	"fmt"
 	//"net/http"
 	"github.com/cdp-team3/categories-service/domain/models"
+	//"github.com/cdp-team3/categories-service/app/grpcs"
 	apperros "github.com/cdp-team3/categories-service/app-errors"
 	"github.com/cdp-team3/categories-service/domain/repository"
 	"github.com/cdp-team3/categories-service/utils/logger"
@@ -67,13 +68,19 @@ func (p CategoryServiceImpl) DeleteCategories(categories []string) (bool,*apperr
 func (p CategoryServiceImpl) DeleteCategoryByID(category_id string) (bool,*apperros.AppError) {
 
 
-	 res,err := p.categoryRepository.DeleteCategoryByIDFromDB(category_id)
-	if err != nil {
-		fmt.Println(err)
-		logger.Error(err)
-		return  res,err
-	}
-	return res,nil
+     
+	// if res == true{
+	//	return false,apperrors.NewConflictRequestError(err.Error())
+	// } else{
+		res,err := p.categoryRepository.DeleteCategoryByIDFromDB(category_id)
+		if err != nil {
+			fmt.Println(err)
+			logger.Error(err)
+			return  res,err
+		}
+		return res,nil
+	// }
+	
 }
 func (p CategoryServiceImpl) UpdateCategoryByID(category_id string,category *models.Category) (bool,*apperros.AppError) {
 

@@ -5,6 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"
+	"github.com/cdp-team3/categories-service/app/grpcs"
+	"github.com/cdp-team3/categories-service/app/grpcs/products"
 	"github.com/google/uuid"
 	apperros "github.com/cdp-team3/categories-service/app-errors"
 	"github.com/cdp-team3/categories-service/domain/models"
@@ -113,6 +115,18 @@ func (th CategoryHandler) DeleteCategories() (gin.HandlerFunc){
 			return
 		}
 		fmt.Println("clist",categoryList)
+		client, _ := grpcs.GetProductsGrpcClient()
+		val,er:=client.DeleteCategories(ctx.Request.Context(),&products.CategoriesDeleteRequest{CategoriesId:categoryList})
+		fmt.Println(val)
+		fmt.Println(er)
+		// if err != nil {
+		// 	logger.Error("Error while deleting categories: ", err)
+		// 	ctx.JSON(http.StatusInternalServerError, app_errors.NewHTTPErrorDTO(http.StatusInternalServerError, err, "Error Getting Shipping Address"))
+		// 	return
+		// } else if validateShippingAddress(shippingOut) == false {
+		// 	//ctx.JSON(http.StatusBadRequest, app_errors.NewHTTPErrorDTO(http.StatusBadRequest, nil, "Shipping Address is not valid."))
+		// 	return
+		// }
 	_,err := th.categoryService.DeleteCategories(categoryList)
 	if err != nil {
 		ctx.Error(err.Error())
@@ -123,12 +137,24 @@ func (th CategoryHandler) DeleteCategories() (gin.HandlerFunc){
 }
 func (th CategoryHandler) DeleteCategory() (gin.HandlerFunc) {
 	return func(ctx *gin.Context){
-	category_id := ctx.Param("category_id")
+		category_id := ctx.Param("category_id")
 	fmt.Println("Inside category id",category_id)
-	 _,err := th.categoryService.DeleteCategoryByID(category_id)
-	if err != nil {
-		ctx.Error(err.Error())
-		ctx.JSON(err.Code, gin.H{"message": err.Message})
+		client, err := grpcs.GetProductsGrpcClient()
+		val,err:=client.DeleteCategory(ctx.Request.Context(),&products.CategoryDeleteRequest{CategoryId:category_id})
+		fmt.Println(val)
+		fmt.Println(err)
+		// if err != nil {
+		// 	logger.Error("Error while deleting categories: ", err)
+		// 	ctx.JSON(http.StatusInternalServerError, app_errors.NewHTTPErrorDTO(http.StatusInternalServerError, err, "Error Getting Shipping Address"))
+		// 	return
+		// } else if validateShippingAddress(shippingOut) == false {
+		// 	//ctx.JSON(http.StatusBadRequest, app_errors.NewHTTPErrorDTO(http.StatusBadRequest, nil, "Shipping Address is not valid."))
+		// 	return
+		// }
+	 _,err_ := th.categoryService.DeleteCategoryByID(category_id)
+	if err_ != nil {
+		ctx.Error(err_.Error())
+		ctx.JSON(err_.Code, gin.H{"message": err_.Message})
 		return
 	}
 	ctx.JSON(http.StatusOK,gin.H{"message": "Category deleted successfully"})
