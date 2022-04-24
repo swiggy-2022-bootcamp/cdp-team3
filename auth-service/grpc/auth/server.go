@@ -15,7 +15,7 @@ import (
 )
 
 type AuthServer struct {
-	auth.UnimplementedAuthServiceServer
+	auth.AuthServiceServer
 }
 
 func (s *AuthServer) VerifyToken(ctx context.Context, req *auth.VerifyTokenRequest) (*auth.VerifyTokenResponse, error) {

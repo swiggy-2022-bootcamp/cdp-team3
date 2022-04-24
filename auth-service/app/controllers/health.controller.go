@@ -2,8 +2,13 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/domain/services"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/utils"
 )
+
+type HealthController struct {
+	healthService services.HealthService
+}
 
 // HealthCheck godoc
 // @Summary HealthCheck

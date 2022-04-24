@@ -13,6 +13,7 @@ import (
 	_ "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/configs"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/domain/services"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/dto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/models"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/utils"
@@ -21,6 +22,16 @@ import (
 const requestTimeout = time.Second * 5
 
 var logger = utils.NewLoggerService("auth-controller")
+
+type AuthController struct {
+	authService services.AuthService
+}
+
+func NewAuthController(authService services.AuthService) *AuthController {
+	return &AuthController{
+		authService: authService,
+	}
+}
 
 // Login godoc
 // @Summary Login
