@@ -13,6 +13,8 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/configs"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/domain/repository"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/domain/services"
 	order "github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/grpc/order/proto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/models"
 	"go.uber.org/zap"
@@ -51,7 +53,7 @@ func (s *server) CreateOrder(ctx context.Context, req *order.CreateOrderRequest)
 	if validationErr := validate.Struct(&newOrder); validationErr != nil {
 			zap.L().Error("Required fields not present"+validationErr.Error())
 			return nil, status.Errorf(
-				codes.Internal,
+				codes.InvalidArgument,
 				fmt.Sprintf("Required fields not present: %v", validationErr.Error()),
 			)
 	}
@@ -78,13 +80,52 @@ func (s *server) CreateOrder(ctx context.Context, req *order.CreateOrderRequest)
 	}
 	zap.L().Info("Successfully created Order"+result.GoString())
 	return &order.CreateOrderResponse{
-		Order: &order.ResponseOrder{
+		Order: &order.CheckoutResponseOrder{
 			OrderId: newOrder.OrderId,
 			DateTime: newOrder.DateTime.String(),
 			Status: newOrder.Status,
 			CustomerId: newOrder.CustomerId,
 			TotalAmount: float32(newOrder.TotalAmount),
 			OrderedProducts: orderFromClient.OrderedProducts,
+		},
+	}, nil
+}
+
+func (s *server) GetOrder(ctx context.Context, req *order.GetOrderRequest) (*order.GetOrderResponse, error) {
+	zap.L().Info("Inside Get Order Protobuf")
+	orderIdFromClient := req.OrderId
+
+	//Checking if orderId is present
+	if len(orderIdFromClient) < 1 {
+			zap.L().Error("Order Id is Not Present in Request")
+			return nil, status.Errorf(
+				codes.InvalidArgument,
+				"Order Id is Not Present in Request",
+			)
+	}
+
+	orderRepository := repository.NewOrderRepositoryImpl(configs.DB)
+	orderService := services.NewOrderServiceImpl(orderRepository)
+
+	orderResponse, err := orderService.GetOrderById(orderIdFromClient)
+
+	if err != nil {
+		zap.L().Error(err.Message + "PayMent GRPC Call to Get Order Details")
+		return nil, status.Errorf(
+			codes.Code(err.Code),
+			err.Message,
+		)
+	}
+
+	zap.L().Info("Successfully Fetched Order Details for Payments")
+	return &order.GetOrderResponse{
+		Order: &order.PaymentResponseOrder{
+			OrderId: orderResponse.OrderId,
+			DateTime: orderResponse.DateTime.String(),
+			Status: orderResponse.Status,
+			CustomerId: orderResponse.CustomerId,
+			TotalAmount: float32(orderResponse.TotalAmount),
+			ShippingAddressId: orderResponse.ShippingAddressId,
 		},
 	}, nil
 }

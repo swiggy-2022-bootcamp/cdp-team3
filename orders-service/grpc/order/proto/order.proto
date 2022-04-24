@@ -4,7 +4,7 @@ package order;
 
 option go_package = "./order";
 
-message ResponseOrder {
+message CheckoutResponseOrder {
 	string orderId = 1;
 	string dateTime = 2;
 	string status = 3;
@@ -12,6 +12,15 @@ message ResponseOrder {
 	float totalAmount = 5;
 	string shippingAddressId = 6;
   repeated OrderedProduct orderedProducts = 7;
+}
+
+message PaymentResponseOrder {
+	string orderId = 1;
+	string dateTime = 2;
+	string status = 3;
+	string customerId = 4;
+	float totalAmount = 5;
+	string shippingAddressId = 6;
 }
 
 message RequestOrder {
@@ -31,9 +40,18 @@ message CreateOrderRequest {
 }
   
 message CreateOrderResponse {
-  ResponseOrder order = 1;
+  CheckoutResponseOrder order = 1;
+}
+
+message GetOrderRequest {
+	string orderId = 1;
 }
   
+message GetOrderResponse {
+  PaymentResponseOrder order = 1;
+}
+    
 service OrderService {
 	rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
+	rpc GetOrder (GetOrderRequest) returns (GetOrderResponse);
 }
