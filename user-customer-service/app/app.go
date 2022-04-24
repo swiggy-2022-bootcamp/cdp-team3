@@ -5,21 +5,21 @@ import (
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/app/controllers"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/app/routes"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/configs"
-	_ "github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/docs"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/domain/repository"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/domain/services"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/app/controllers"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/app/routes"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/configs"
+	_ "github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/docs"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/domain/repository"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/domain/services"
 
-	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/utils"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/utils"
 	"go.uber.org/zap"
 )
 
 var (
 	server           *gin.Engine
-	rewardRepository repository.RewardRepository
-	rewardService    services.RewardService
+	rewardRepository repository.UserRepository
+	rewardService    services.UserService
 	rewardController controllers.RewardController
 	rewardRoutes     routes.RewardRoutes
 	rewardDB         *dynamodb.DynamoDB
@@ -38,8 +38,8 @@ func Start() {
 	rewardDB := configs.ConnectDB()
 	configs.CreateTable(rewardDB)
 
-	rewardRepository = repository.NewRewardRepositoryImpl(rewardDB)
-	rewardService = services.NewRewardServiceImpl(rewardRepository)
+	rewardRepository = repository.NewUserRepositoryImpl(rewardDB)
+	rewardService = services.NewUserServiceImpl(rewardRepository)
 	rewardController = controllers.NewRewardController(rewardService)
 	rewardRoutes = routes.NewRewardRoutes(rewardController)
 
