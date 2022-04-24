@@ -1,97 +1,59 @@
 definitions:
-  models.Reward:
+  models.User:
     properties:
+      addressId:
+        items:
+          type: string
+        type: array
+      approved:
+        type: string
+      cart:
+        items:
+          type: string
+        type: array
+      confirmpassword:
+        type: string
       customerId:
         type: string
-      rewardId:
+      dateAdded:
+        type: string
+      email:
+        type: string
+      firstname:
+        type: string
+      lastname:
+        type: string
+      password:
         type: string
       rewards:
-        type: integer
-    required:
-    - customerId
-    - rewardId
-    - rewards
-    type: object
-  models.SwaggerReward:
-    properties:
-      customerId:
         type: string
-      rewards:
+      status:
+        type: string
+      telephone:
+        type: string
+      transactionpoints:
         type: integer
-    required:
-    - customerId
-    - rewards
+      username:
+        type: string
     type: object
-host: localhost:3008
+host: localhost:3=8071
 info:
   contact:
-    email: swiggyb3014@datascience.manipal.edu
-    name: Uttej Immadi
+    email: swiggyb1010@datascience.manipal.edu
+    name: Aman Gupta
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
-  title: BuyItNow Rewards Service
+  title: BuyItNow User Service
   version: "1.0"
 paths:
   /:
     get:
       consumes:
       - application/json
-      description: This request will return 200 OK if server is up..
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties: true
-            type: object
-        "400":
-          description: Bad Request
-          schema:
-            type: number
-      summary: To check if the service is running or not.
-      tags:
-      - Health
-  /rewards:
-    get:
-      consumes:
-      - application/json
-      description: This request will fetch all the rewards
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Reward'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            type: number
-        "500":
-          description: Internal Server Error
-          schema:
-            type: number
-      security:
-      - Bearer Token: []
-      summary: Fetch all the rewards
-      tags:
-      - Rewards Service
-    post:
-      consumes:
-      - application/json
-      description: Adds Reward Point To The Customer based on the given ID
-      parameters:
-      - description: reward details
-        in: body
-        name: Details
-        required: true
-        schema:
-          $ref: '#/definitions/models.SwaggerReward'
+      description: When a request is made to the / endpoint, if the service is running,
+        it returns "Okay"
       produces:
       - application/json
       responses:
@@ -107,16 +69,77 @@ paths:
           description: Internal Server Error
           schema:
             type: number
-      summary: Adds Reward Point To The Customer
+      summary: Checks whether the service is up & running
       tags:
-      - Rewards Service
-  /rewards/{rewardId}:
-    get:
-      description: Get reward details based on Reward ID.
+      - Health
+  /customers:
+    post:
+      consumes:
+      - application/json
+      description: creates a customer account when the admin is verified
       parameters:
-      - description: Reward Id
+      - description: customer details
+        in: body
+        name: Customer
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: creates a customer account
+      tags:
+      - Admin
+  /customers/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: deletes The Customer Details based on the given ID
+      parameters:
+      - description: customer details
+        in: body
+        name: Customer
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: deletes a customer account
+      tags:
+      - Admin
+    get:
+      consumes:
+      - application/json
+      description: fetches the details of a customer based on the given ID
+      parameters:
+      - description: customer id
         in: path
-        name: rewardId
+        name: CustomerID
         required: true
         type: string
       produces:
@@ -125,23 +148,26 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Reward'
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
         "500":
           description: Internal Server Error
           schema:
             type: number
-      security:
-      - Bearer Token: []
-      summary: Get reward based on reward ID.
+      summary: fetches a customer account by ID
       tags:
-      - Rewards Service
-  /rewards/user/{userId}:
-    get:
-      description: Get rewards details of a customer based on Customer ID.
+      - Admin
+    put:
+      consumes:
+      - application/json
+      description: Updates The Customer Details
       parameters:
-      - description: User Id
+      - description: customer id
         in: path
-        name: userId
+        name: CustomerID
         required: true
         type: string
       produces:
@@ -150,18 +176,18 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/models.Reward'
-            type: array
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
         "500":
           description: Internal Server Error
           schema:
             type: number
-      security:
-      - Bearer Token: []
-      summary: Get rewards of a customer based on customer ID.
+      summary: Updates a customer account
       tags:
-      - Rewards Service
+      - Admin
 securityDefinitions:
   ApiKeyAuth:
     in: header

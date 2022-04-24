@@ -1,56 +1,28 @@
 package errors
 
-import (
-	"errors"
-	"net/http"
-)
+import "net/http"
 
-type AppError struct {
-	Code    int    `json:",omitempty"`
-	Message string `json:"message"`
+type UserError struct {
+	Status       int
+	ErrorMessage string
 }
 
-func (e AppError) Error() error {
-	return errors.New(e.Message)
+func (customerError *UserError) Error() string {
+	return customerError.ErrorMessage
 }
 
-func (e AppError) AsMessage() *AppError {
-	return &AppError{
-		Message: e.Message,
-	}
+func NewMalformedIdError() *UserError {
+	return &UserError{http.StatusBadRequest, "Malformed customer id"}
 }
 
-func NewNotFoundError(message string) *AppError {
-	return &AppError{
-		Message: message,
-		Code:    http.StatusNotFound,
-	}
+func NewMarshallError() *UserError {
+	return &UserError{http.StatusBadRequest, "Failed to marshal the customer"}
 }
 
-func NewUnexpectedError(message string) *AppError {
-	return &AppError{
-		Message: message,
-		Code:    http.StatusInternalServerError,
-	}
+func NewUserNotFoundError() *UserError {
+	return &UserError{http.StatusNotFound, "User not found"}
 }
 
-func NewBadRequestError(message string) *AppError {
-	return &AppError{
-		Message: message,
-		Code:    http.StatusBadRequest,
-	}
-}
-
-func NewConflictRequestError(message string) *AppError {
-	return &AppError{
-		Message: message,
-		Code:    http.StatusConflict,
-	}
-}
-
-func NewExpectationFailed(message string) *AppError {
-	return &AppError{
-		Message: message,
-		Code:    http.StatusExpectationFailed,
-	}
+func NewEmailAlreadyRegisteredError() *UserError {
+	return &UserError{http.StatusBadRequest, "User with given email already exists"}
 }

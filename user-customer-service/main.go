@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/app"
-	_ "github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/docs"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/app"
+	_ "github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/docs"
 )
 
 // @title           BuyItNow User Service

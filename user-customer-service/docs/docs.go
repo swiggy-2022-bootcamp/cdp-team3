@@ -12,8 +12,8 @@ const docTemplate = `{
         "title": "{{.Title}}",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
-            "name": "Uttej Immadi",
-            "email": "swiggyb3014@datascience.manipal.edu"
+            "name": "Aman Gupta",
+            "email": "swiggyb1010@datascience.manipal.edu"
         },
         "license": {
             "name": "Apache 2.0",
@@ -26,7 +26,7 @@ const docTemplate = `{
     "paths": {
         "/": {
             "get": {
-                "description": "This request will return 200 OK if server is up..",
+                "description": "When a request is made to the / endpoint, if the service is running, it returns \"Okay\"",
                 "consumes": [
                     "application/json"
                 ],
@@ -36,50 +36,12 @@ const docTemplate = `{
                 "tags": [
                     "Health"
                 ],
-                "summary": "To check if the service is running or not.",
+                "summary": "Checks whether the service is up \u0026 running",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "number"
-                        }
-                    }
-                }
-            }
-        },
-        "/rewards": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer Token": []
-                    }
-                ],
-                "description": "This request will fetch all the rewards",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Rewards Service"
-                ],
-                "summary": "Fetch all the rewards",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Reward"
-                            }
+                            "type": "String"
                         }
                     },
                     "400": {
@@ -95,9 +57,11 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
+            }
+        },
+        "/customers": {
             "post": {
-                "description": "Adds Reward Point To The Customer based on the given ID",
+                "description": "creates a customer account when the admin is verified",
                 "consumes": [
                     "application/json"
                 ],
@@ -105,17 +69,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Rewards Service"
+                    "Admin"
                 ],
-                "summary": "Adds Reward Point To The Customer",
+                "summary": "creates a customer account",
                 "parameters": [
                     {
-                        "description": "reward details",
-                        "name": "Details",
+                        "description": "customer details",
+                        "name": "Customer",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.SwaggerReward"
+                            "$ref": "#/definitions/models.User"
                         }
                     }
                 ],
@@ -141,26 +105,24 @@ const docTemplate = `{
                 }
             }
         },
-        "/rewards/user/{userId}": {
+        "/customers/{id}": {
             "get": {
-                "security": [
-                    {
-                        "Bearer Token": []
-                    }
+                "description": "fetches the details of a customer based on the given ID",
+                "consumes": [
+                    "application/json"
                 ],
-                "description": "Get rewards details of a customer based on Customer ID.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Rewards Service"
+                    "Admin"
                 ],
-                "summary": "Get rewards of a customer based on customer ID.",
+                "summary": "fetches a customer account by ID",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "User Id",
-                        "name": "userId",
+                        "description": "customer id",
+                        "name": "CustomerID",
                         "in": "path",
                         "required": true
                     }
@@ -169,10 +131,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Reward"
-                            }
+                            "type": "String"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "number"
                         }
                     },
                     "500": {
@@ -182,28 +147,24 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/rewards/{rewardId}": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer Token": []
-                    }
+            },
+            "put": {
+                "description": "Updates The Customer Details",
+                "consumes": [
+                    "application/json"
                 ],
-                "description": "Get reward details based on Reward ID.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Rewards Service"
+                    "Admin"
                 ],
-                "summary": "Get reward based on reward ID.",
+                "summary": "Updates a customer account",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Reward Id",
-                        "name": "rewardId",
+                        "description": "customer id",
+                        "name": "CustomerID",
                         "in": "path",
                         "required": true
                     }
@@ -212,7 +173,57 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Reward"
+                            "type": "String"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "deletes The Customer Details based on the given ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "deletes a customer account",
+                "parameters": [
+                    {
+                        "description": "customer details",
+                        "name": "Customer",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "number"
                         }
                     },
                     "500": {
@@ -226,37 +237,59 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.Reward": {
+        "models.User": {
             "type": "object",
-            "required": [
-                "customerId",
-                "rewardId",
-                "rewards"
-            ],
             "properties": {
+                "addressId": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "approved": {
+                    "type": "string"
+                },
+                "cart": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "confirmpassword": {
+                    "type": "string"
+                },
                 "customerId": {
                     "type": "string"
                 },
-                "rewardId": {
+                "dateAdded": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "firstname": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "password": {
                     "type": "string"
                 },
                 "rewards": {
-                    "type": "integer"
-                }
-            }
-        },
-        "models.SwaggerReward": {
-            "type": "object",
-            "required": [
-                "customerId",
-                "rewards"
-            ],
-            "properties": {
-                "customerId": {
                     "type": "string"
                 },
-                "rewards": {
+                "status": {
+                    "type": "string"
+                },
+                "telephone": {
+                    "type": "string"
+                },
+                "transactionpoints": {
                     "type": "integer"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         }
@@ -273,10 +306,10 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:3008",
+	Host:             "localhost:3=8071",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "BuyItNow Rewards Service",
+	Title:            "BuyItNow User Service",
 	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
