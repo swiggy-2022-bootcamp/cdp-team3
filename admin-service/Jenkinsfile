@@ -2,10 +2,6 @@ pipeline {
     
     agent any
 
-    tools {
-        go '1.17'
-    }
-
     environment {
 		DOCKERHUB_CREDENTIALS=credentials('git')
         PATH = "$PATH:/usr/local/bin"
