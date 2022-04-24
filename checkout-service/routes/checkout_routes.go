@@ -28,5 +28,5 @@ func GenerateCheckoutRoutes(router *gin.Engine, checkoutController controllers.C
 	checkoutServiceConfirmRouter.POST("/", checkoutController.GetOrderOverview)
 
 	// Clear Cart and Unset Session Data
-	checkoutServiceConfirmRouter.POST("/success", checkoutController.OrderCompleteWebhook)
+	checkoutServiceRouter.POST("/confirm/success", checkoutController.OrderCompleteWebhook)
 }

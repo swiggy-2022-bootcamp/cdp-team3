@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"github.com/swiggy-ipp/checkout-service/dto/errors"
+	"github.com/swiggy-ipp/checkout-service/dto/requests"
 	"github.com/swiggy-ipp/checkout-service/dto/responses"
 	authProto "github.com/swiggy-ipp/checkout-service/grpcs/auth/proto"
 	"github.com/swiggy-ipp/checkout-service/grpcs/cart_checkout"
@@ -39,9 +40,9 @@ func NewCheckoutController(
 // @Accept       json
 // @Produce      json
 // @Success      200  {object}  responses.MessageResponse  "Order Overview Data"
-// @Failure      400  {object}  errors.HTTPErrorDTO
-// @Failure      404  {object}  errors.HTTPErrorDTO
-// @Failure      500  {object}  nil
+// @Failure      400            {object}  errors.HTTPErrorDTO
+// @Failure      404            {object}  errors.HTTPErrorDTO
+// @Failure      500            {object}  nil
 // @Router       /confirm [post]
 func (cc *checkoutControllerImpl) GetOrderOverview(c *gin.Context) {
 	// Get User Claims
@@ -93,19 +94,20 @@ func (cc *checkoutControllerImpl) GetOrderOverview(c *gin.Context) {
 // @Tags         Checkout API
 // @Accept       json
 // @Produce      json
-// @Success      200  {object}  responses.MessageResponse  "Cart Cleared message DTO."
+// @Param        userIDRequest  body      requests.UserIDRequest     true  "User ID Request DTO."  
+// @Success      200            {object}  responses.MessageResponse  "Cart Cleared message DTO."
 // @Failure      400  {object}  errors.HTTPErrorDTO
 // @Failure      404  {object}  errors.HTTPErrorDTO
 // @Failure      500  {object}  nil
 // @Router       /confirm/success [post]
 func (cc *checkoutControllerImpl) OrderCompleteWebhook(c *gin.Context) {
-	// Get User Claims
-	claims := c.MustGet("claims").(*authProto.VerifyTokenResponse)
-	if claims.GetUserId() == "" {
-		c.JSON(http.StatusForbidden, errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "User ID needs to be sent as Authorization."))
+	// Get User ID from Request
+	userIDRequest := &requests.UserIDRequest{}
+	if err := c.ShouldBindJSON(userIDRequest); err != nil {
+		c.JSON(http.StatusBadRequest, errors.NewHTTPErrorDTO(http.StatusBadRequest, err, "User ID Request DTO is not valid."))
 	} else {
 		// Make GRPC Call
-		out, err := cc.cartCheckoutGRPCClient.EmptyCart(c.Request.Context(), &cart_checkout.CartIDSignal{UserID: claims.UserId})
+		out, err := cc.cartCheckoutGRPCClient.EmptyCart(c.Request.Context(), &cart_checkout.CartIDSignal{UserID: userIDRequest.UserID})
 		if err != nil {
 			log.Error("Error emptying cart: ", err)
 			c.JSON(http.StatusInternalServerError, errors.NewHTTPErrorDTO(http.StatusInternalServerError, err, "Error emptying cart"))

@@ -21,9 +21,9 @@ var (
 )
 
 /// Function with logic for becoming GRPC Client
-func BecomeGRPCClient(cartAddress string, shippingAddress string, orderAddress string) {
+func BecomeGRPCClient(cartPort string, shippingPort string, orderPort string) {
 	// For Cart Checkout
-	conn, err := grpc.Dial(cartAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial("0.0.0.0:" + cartPort, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 		ErrChanGRPC <- err
@@ -31,7 +31,7 @@ func BecomeGRPCClient(cartAddress string, shippingAddress string, orderAddress s
 		CartCheckoutGRPCChannel <- cart_checkout.NewCartCheckoutServiceClient(conn)
 	}
 	// For Shipping Checkout
-	conn, err = grpc.Dial(shippingAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err = grpc.Dial("0.0.0.0:" + shippingPort, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 		ErrChanGRPC <- err
@@ -39,7 +39,7 @@ func BecomeGRPCClient(cartAddress string, shippingAddress string, orderAddress s
 		ShippingCheckoutGRPCChannel <- shipping_checkout.NewShippingClient(conn)
 	}
 	// For Order Checkout
-	conn, err = grpc.Dial(orderAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err = grpc.Dial("0.0.0.0:" + orderPort, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Did not connect: %v", err)
 		ErrChanGRPC <- err

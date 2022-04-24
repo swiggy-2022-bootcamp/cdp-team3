@@ -26,15 +26,15 @@ func generateRESTRoutes(port string) {
 	routes.GenerateCheckoutRoutes(checkoutRouter, checkoutController)
 
 	// Run REST Microservice
-	errChanREST <- checkoutRouter.Run(":" + port)
+	errChanREST <- checkoutRouter.Run("0.0.0.0:" + port)
 }
 
 func main() {
 	// Set up GRPC
 	go grpcs.BecomeGRPCClient(
-		configs.EnvCartServiceGRPCAddress(),
-		configs.EnvShippingServiceGRPCAddress(),
-		configs.EnvOrderGRPCAddress(),
+		configs.EnvCartServiceGRPCPort(),
+		configs.EnvShippingServiceGRPCPort(),
+		configs.EnvOrderGRPCPort(),
 	)
 
 	// Set up routes for Checkout Microservice

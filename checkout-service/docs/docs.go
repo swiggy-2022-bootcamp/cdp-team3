@@ -105,6 +105,17 @@ const docTemplate = `{
                     "Checkout API"
                 ],
                 "summary": "Order Successful Webhook",
+                "parameters": [
+                    {
+                        "description": "User ID Request DTO.",
+                        "name": "userIDRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.UserIDRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Cart Cleared message DTO.",
@@ -154,6 +165,14 @@ const docTemplate = `{
                     "description": "Brief Error Message",
                     "type": "string",
                     "example": "Status bad request."
+                }
+            }
+        },
+        "requests.UserIDRequest": {
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "string"
                 }
             }
         },

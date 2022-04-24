@@ -17,6 +17,11 @@ definitions:
         example: Status bad request.
         type: string
     type: object
+  requests.UserIDRequest:
+    properties:
+      userId:
+        type: string
+    type: object
   responses.HealthCheckResponse:
     properties:
       db_health:
@@ -95,6 +100,13 @@ paths:
       - application/json
       description: Webhook hit when Order is successful to clear Cart and Unset Session
         Data.
+      parameters:
+      - description: User ID Request DTO.
+        in: body
+        name: userIDRequest
+        required: true
+        schema:
+          $ref: '#/definitions/requests.UserIDRequest'
       produces:
       - application/json
       responses:

@@ -15,10 +15,6 @@ WORKDIR /app
 # Copy project files into the image
 COPY ./ ./
 
-# Set up environetment variables
-ENV CHECKOUT_SERVICE_PORT=3011
-ENV CHECKOUT_SERVICE_GRPC_PORT=30100
-
 # Get Dependencies
 RUN go mod download
 

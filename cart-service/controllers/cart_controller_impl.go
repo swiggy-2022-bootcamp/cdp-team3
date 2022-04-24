@@ -174,15 +174,15 @@ func (cc *cartControllerImpl) DeleteCartItem(c *gin.Context) {
 // @Router       /cart/empty [delete]
 func (cc *cartControllerImpl) EmptyCart(c *gin.Context) {
 	// Extract the request
-	var emptyCartRequest requests.CartIDRequest
-	if err := c.ShouldBindJSON(&emptyCartRequest); err != nil {
+	var cartIDRequest requests.CartIDRequest
+	if err := c.ShouldBindJSON(&cartIDRequest); err != nil {
 		c.JSON(http.StatusBadRequest, errors.HTTPErrorDTO{Code: http.StatusBadRequest, Message: err.Error()})
-	} else if emptyCartRequest.CartID == "" && emptyCartRequest.UserID == "" {
+	} else if cartIDRequest.CartID == "" && cartIDRequest.UserID == "" {
 		c.JSON(
 			http.StatusBadRequest,
 			errors.NewHTTPErrorDTO(http.StatusBadRequest, nil, "Either Cart ID or User ID must be provided."),
 		)
-	} else if emptyCartRequest.CartID != "" && emptyCartRequest.UserID != "" {
+	} else if cartIDRequest.CartID != "" && cartIDRequest.UserID != "" {
 		c.JSON(
 			http.StatusBadRequest,
 			errors.NewHTTPErrorDTO(http.StatusBadRequest, nil, "Ambiguous Request. Both Cart ID and User ID are provided."),
@@ -190,8 +190,8 @@ func (cc *cartControllerImpl) EmptyCart(c *gin.Context) {
 	} else {
 		// Get User Claims
 		claims := c.MustGet("claims").(*proto.VerifyTokenResponse)
-		if (emptyCartRequest.CartID != "" && claims.GetIsAdmin()) || (emptyCartRequest.UserID != "" && emptyCartRequest.UserID == claims.GetUserId()) {
-			err := cc.cartService.EmptyCart(c.Request.Context(), emptyCartRequest)
+		if (cartIDRequest.CartID != "" && claims.GetIsAdmin()) || (cartIDRequest.UserID != "" && cartIDRequest.UserID == claims.GetUserId()) {
+			err := cc.cartService.EmptyCart(c.Request.Context(), cartIDRequest)
 			if err != nil {
 				c.JSON(
 					http.StatusInternalServerError,

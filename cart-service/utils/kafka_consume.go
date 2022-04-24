@@ -12,19 +12,19 @@ import (
 
 // KafkaCartConsumeService is a Kafka Consumer for Cart Service
 type KafkaCartConsumeService struct {
-	brokerAddress string
+	brokerPort string
 	topic         string
 	cartService   services.CartService
 }
 
 // Create a new Kafka Cart Consumer
 func NewKafkaCartConsumeService(
-	brokerAddress string,
+	brokerPort string,
 	topic string,
 	cartService services.CartService,
 ) *KafkaCartConsumeService {
 	return &KafkaCartConsumeService{
-		brokerAddress: brokerAddress,
+		brokerPort: brokerPort,
 		topic:         topic,
 		cartService:   cartService,
 	}
@@ -38,7 +38,7 @@ func (kc *KafkaCartConsumeService) KafkaUserIDConsume() {
 	ctx := context.Background()
 	l := log.New()
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{kc.brokerAddress},
+		Brokers: []string{"0.0.0.0:" + kc.brokerPort},
 		Topic:   kc.topic,
 		GroupID: "my-group",
 		Logger:  l,
@@ -49,22 +49,24 @@ func (kc *KafkaCartConsumeService) KafkaUserIDConsume() {
 		msg, err := r.ReadMessage(ctx)
 		if err != nil {
 			log.Error("Could not read Kafka Message: " + err.Error())
-		}
+		} else if msg.Value == nil || len(msg.Value) == 0 {
+			log.Error("Received empty Kafka Message")
+		} else {
+			// After receiving the message, log its value and apply the callback
+			log.Info(string(msg.Key) + ": " + string(msg.Value))
 
-		// After receiving the message, log its value and apply the callback
-		log.Info(string(msg.Key) + ": " + string(msg.Value))
-
-		if kc.topic == configs.EnvKafkaUserCreatedTopic() {
-			// Create Cart by User ID
-			err = kc.cartService.CreateCart(ctx, string(msg.Value))
-			if err != nil {
-				log.Error("Could not create cart: " + err.Error())
-			}
-		} else if kc.topic == configs.EnvKafkaUserDeletedTopic() {
-			// Delete Cart by User ID
-			err = kc.cartService.DeleteCart(ctx, requests.CartIDRequest{UserID: string(msg.Key)})
-			if err != nil {
-				log.Error("Could not delete cart: " + err.Error())
+			if kc.topic == configs.EnvKafkaUserCreatedTopic() {
+				// Create Cart by User ID
+				err = kc.cartService.CreateCart(ctx, string(msg.Value))
+				if err != nil {
+					log.Error("Could not create cart: " + err.Error())
+				}
+			} else if kc.topic == configs.EnvKafkaUserDeletedTopic() {
+				// Delete Cart by User ID
+				err = kc.cartService.DeleteCart(ctx, requests.CartIDRequest{UserID: string(msg.Key)})
+				if err != nil {
+					log.Error("Could not delete cart: " + err.Error())
+				}
 			}
 		}
 	}

@@ -15,10 +15,6 @@ WORKDIR /app
 # Copy project files into the image
 COPY ./ ./
 
-# Set up environetment variables
-ENV CART_SERVICE_PORT=3010
-ENV CART_SERVICE_GRPC_PORT=30100
-
 # Get Dependencies
 RUN go mod download
 
