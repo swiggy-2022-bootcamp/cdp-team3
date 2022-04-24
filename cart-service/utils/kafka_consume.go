@@ -12,9 +12,9 @@ import (
 
 // KafkaCartConsumeService is a Kafka Consumer for Cart Service
 type KafkaCartConsumeService struct {
-	brokerPort string
-	topic         string
-	cartService   services.CartService
+	brokerPort  string
+	topic       string
+	cartService services.CartService
 }
 
 // Create a new Kafka Cart Consumer
@@ -24,9 +24,9 @@ func NewKafkaCartConsumeService(
 	cartService services.CartService,
 ) *KafkaCartConsumeService {
 	return &KafkaCartConsumeService{
-		brokerPort: brokerPort,
-		topic:         topic,
-		cartService:   cartService,
+		brokerPort:  brokerPort,
+		topic:       topic,
+		cartService: cartService,
 	}
 }
 

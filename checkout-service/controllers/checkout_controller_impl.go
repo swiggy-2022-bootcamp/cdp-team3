@@ -94,7 +94,7 @@ func (cc *checkoutControllerImpl) GetOrderOverview(c *gin.Context) {
 // @Tags         Checkout API
 // @Accept       json
 // @Produce      json
-// @Param        userIDRequest  body      requests.UserIDRequest     true  "User ID Request DTO."  
+// @Param        userIDRequest  body      requests.UserIDRequest     true  "User ID Request DTO."
 // @Success      200            {object}  responses.MessageResponse  "Cart Cleared message DTO."
 // @Failure      400  {object}  errors.HTTPErrorDTO
 // @Failure      404  {object}  errors.HTTPErrorDTO

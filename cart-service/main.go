@@ -24,7 +24,7 @@ var (
 /// Function with logic for starting GRPC server
 func startGRPCServer(address string, cartService services.CartService) {
 	// Create a listener on TCP port
-	lis, err := net.Listen("tcp", "0.0.0.0:" + address)
+	lis, err := net.Listen("tcp", "0.0.0.0:"+address)
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 		errChanGRPC <- err
