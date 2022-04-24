@@ -40,15 +40,15 @@ func AddTransactionAmountConsumer() {
 					Description:   "Transaction Amount Added from Orders Service through KafKa topic(add_transaction_amount)",
 					CustomerID:    customerId,
 				}
-
+		
 				transactionRepository := repository.NewTransactionRepositoryImpl(configs.DB)
 				transactionService := services.NewTransactionServiceImpl(transactionRepository)
 				_, err := transactionService.AddTransactionAmtToCustomer(newTransaction)
 
 				if err == nil {
-					zap.L().Info("Successfully added transaction to customer from Orders Service" + customerId)
+					zap.L().Info("Successfully added transaction to customer from Orders Service"+customerId)
 				} else {
-					zap.L().Error("Error adding transaction points through kafka" + err.Message)
+					zap.L().Error("Error adding transaction points through kafka"+err.Message)
 				}
 			} else {
 				zap.L().Error("Error adding transaction amount through Kafka topic(add_transaction_amount) due to invalid transaction amount")

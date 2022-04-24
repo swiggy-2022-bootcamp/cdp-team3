@@ -11,13 +11,14 @@ import (
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/configs"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/domain/services"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/dto"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/kafka"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/models"
 	"go.uber.org/zap"
 )
 
-// func init() {
-// 	go kafka.AddTransactionAmountConsumer()
-// }
+func init() {
+	go kafka.AddTransactionAmountConsumer()
+}
 type TransactionController struct {
 	transactionService services.TransactionService
 }

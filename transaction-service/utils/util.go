@@ -18,7 +18,7 @@ func IsAdmin(c *gin.Context) bool {
 }
 
 
-func ProtoConv(transaction models.Transaction) *adminProto.TransactionDetails {
+func ProtoConv(transaction *models.Transaction) *adminProto.TransactionDetails {
 	return &adminProto.TransactionDetails{
 		UserId: transaction.CustomerID,
 		TransactionAmount: float32(transaction.Amount),

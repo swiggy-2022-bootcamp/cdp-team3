@@ -5,7 +5,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/domain/repository"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/errors"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/grpc/admin"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/models"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/utils"
 	"go.uber.org/zap"
 )
 var validate = validator.New()
@@ -44,13 +46,13 @@ func (ts TransactionServiceImpl) AddTransactionAmtToCustomer(transaction *models
 		CustomerID: transaction.CustomerID,
 	}
 
-	// transactionAmountAdmin := utils.ProtoConv(transaction)
-	// grpcResponse, _ := admin.SendTransactionAmount(transactionAmountAdmin)
+	transactionAmountAdmin := utils.ProtoConv(transaction)
+	grpcResponse, _ := admin.SendTransactionAmount(transactionAmountAdmin)
 
-	// if grpcResponse.IsAdded != "Success" {
-	// 	zap.L().Error("Error Updating Transaction Amount for the Customer through Admin GRPC")
-	// 	return nil, errors.NewUnexpectedError("Error Updating Transaction Amount")
-	// }
+	if grpcResponse.IsAdded != "Success" {
+		zap.L().Error("Error Updating Transaction Amount for the Customer through Admin GRPC")
+		return nil, errors.NewUnexpectedError("Error Updating Transaction Amount")
+	}
 
 	newtransaction, err := ts.transactionRepository.AddTransactionAmtToCustomerInDB(transaction)
 	if err != nil {
