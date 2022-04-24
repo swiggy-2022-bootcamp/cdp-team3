@@ -25,7 +25,7 @@ RUN go test ./...
 RUN go build -o /main .
 
 # Expose the application as a port and run it
-EXPOSE ${CART_SERVICE_PORT}
-EXPOSE ${CART_SERVICE_GRPC_PORT}
+EXPOSE ${CHECKOUT_SERVICE_PORT}
+EXPOSE ${CHECKOUT_SERVICE_GRPC_PORT}
 
 CMD ["/main"]
