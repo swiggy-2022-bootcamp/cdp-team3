@@ -1,0 +1,170 @@
+definitions:
+  models.Reward:
+    properties:
+      customerId:
+        type: string
+      rewardId:
+        type: string
+      rewards:
+        type: integer
+    required:
+    - customerId
+    - rewardId
+    - rewards
+    type: object
+  models.SwaggerReward:
+    properties:
+      customerId:
+        type: string
+      rewards:
+        type: integer
+    required:
+    - customerId
+    - rewards
+    type: object
+host: localhost:3008
+info:
+  contact:
+    email: swiggyb3014@datascience.manipal.edu
+    name: Uttej Immadi
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: BuyItNow Rewards Service
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: This request will return 200 OK if server is up..
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+      summary: To check if the service is running or not.
+      tags:
+      - Health
+  /rewards:
+    get:
+      consumes:
+      - application/json
+      description: This request will fetch all the rewards
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Reward'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Fetch all the rewards
+      tags:
+      - Rewards Service
+    post:
+      consumes:
+      - application/json
+      description: Adds Reward Point To The Customer based on the given ID
+      parameters:
+      - description: reward details
+        in: body
+        name: Details
+        required: true
+        schema:
+          $ref: '#/definitions/models.SwaggerReward'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: Adds Reward Point To The Customer
+      tags:
+      - Rewards Service
+  /rewards/{rewardId}:
+    get:
+      description: Get reward details based on Reward ID.
+      parameters:
+      - description: Reward Id
+        in: path
+        name: rewardId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Reward'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Get reward based on reward ID.
+      tags:
+      - Rewards Service
+  /rewards/user/{userId}:
+    get:
+      description: Get rewards details of a customer based on Customer ID.
+      parameters:
+      - description: User Id
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Reward'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Get rewards of a customer based on customer ID.
+      tags:
+      - Rewards Service
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
