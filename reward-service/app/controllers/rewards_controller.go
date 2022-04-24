@@ -71,9 +71,13 @@ func (rc RewardController) AddReward(c *gin.Context) {
 	rewardRecord := dynamoModelConv(reward)
 	protoRecord := protoConv(reward)
 	p, _ := rewardproto.SendRewardPoints(protoRecord)
+
 	if p.IsAdded != "Success" {
+		zap.L().Error("GRPC Method Failed To Add Rewards To User")
+		c.JSON(500, gin.H{"message": "GRPC Method Failed To Add Rewards To User"})
 		return
 	}
+
 	err := rc.rewardService.AddReward(rewardRecord)
 	if err != nil {
 		zap.L().Error(err.Message)
