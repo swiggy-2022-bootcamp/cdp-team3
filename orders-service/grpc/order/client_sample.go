@@ -13,18 +13,6 @@ import (
 
 
 func Client() {
-
-	// fmt.Println("Pokemon Client")
-	// err := godotenv.Load(".env")
-	// if err != nil {
-	// 	log.Fatal("Error loading .env file")
-	// }
-
-	// port := os.Getenv("PORT")
-	// if port == "" {
-	// 	port = defaultPort
-	// }
-
 	cc, err := grpc.Dial(":4004", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("could not connect: %v", err)
@@ -36,6 +24,7 @@ func Client() {
 	newOrder := &ordergrpc.RequestOrder{
 		CustomerId: "1",
 		TotalAmount: 200,
+		ShippingAddressId: "34543654dfgdfnbdfx-dfgdsfb",
 		OrderedProducts: []*ordergrpc.OrderedProduct{
 			{
 				ProductId: "2",

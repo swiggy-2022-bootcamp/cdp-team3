@@ -10,13 +10,15 @@ message ResponseOrder {
 	string status = 3;
 	string customerId = 4;
 	float totalAmount = 5;
-  repeated OrderedProduct orderedProducts = 6;
+	string shippingAddressId = 6;
+  repeated OrderedProduct orderedProducts = 7;
 }
 
 message RequestOrder {
 	string customerId = 1;
 	float totalAmount = 2;
-  repeated OrderedProduct orderedProducts = 3;
+	string shippingAddressId = 3;
+  repeated OrderedProduct orderedProducts = 4;
 }
 
 message OrderedProduct {

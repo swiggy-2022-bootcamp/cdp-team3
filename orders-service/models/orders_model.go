@@ -5,13 +5,14 @@ import (
 )
 
 type Order struct {
-	OrderId         string						 `json:"orderId" dynamodbav:"orderId" validate:"required"`
-	DateTime        time.Time          `json:"dateTime" dynamodbav:"dateTime" validate:"required"`
-	Status          string             `json:"status" dynamodbav:"status" validate:"required"`
-	CustomerId      string             `json:"customerId" dynamodbav:"customerId" validate:"required"`
-	TotalAmount			float64						 `json:"totalAmount" dynamodbav:"totalAmount" validate:"required"`
-	InvoiceId				string						 `json:"invoiceId" dynamodbav:"invoiceId"`
-	OrderedProducts []OrderedProduct   `json:"orderedProducts" dynamodbav:"orderedProducts" validate:"required"`
+	OrderId           string						 `json:"orderId" dynamodbav:"orderId" validate:"required"`
+	DateTime          time.Time          `json:"dateTime" dynamodbav:"dateTime" validate:"required"`
+	Status            string             `json:"status" dynamodbav:"status" validate:"required"`
+	CustomerId        string             `json:"customerId" dynamodbav:"customerId" validate:"required"`
+	TotalAmount			  float64						 `json:"totalAmount" dynamodbav:"totalAmount" validate:"required"`
+	InvoiceId				  string						 `json:"invoiceId" dynamodbav:"invoiceId"`
+	ShippingAddressId string 					   `json:"shippingAddressId" dynamodbav:"shippingAddressId" validate:"required"`
+	OrderedProducts   []OrderedProduct   `json:"orderedProducts" dynamodbav:"orderedProducts" validate:"required"`
 }
 
 type OrderedProduct struct {

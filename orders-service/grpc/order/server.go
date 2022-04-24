@@ -28,14 +28,6 @@ type server struct {
 	order.OrderServiceServer
 }
 
-// func GetOrderData(data *models.Order) *order.RequestOrder {
-// 	return &order.RequestOrder{
-// 		CustomerId: data.CustomerId,
-// 		TotalAmount: data.TotalAmount,
-// 		OrderedProducts: data.OrderedProducts,
-// 	}
-// }
-
 func (s *server) CreateOrder(ctx context.Context, req *order.CreateOrderRequest) (*order.CreateOrderResponse, error) {
 	zap.L().Info("Inside Create Order Protobuf")
 	orderFromClient := req.Order
@@ -51,6 +43,7 @@ func (s *server) CreateOrder(ctx context.Context, req *order.CreateOrderRequest)
 		Status: "PENDING",
 		CustomerId: orderFromClient.CustomerId,
 		TotalAmount: float64(orderFromClient.TotalAmount),
+		ShippingAddressId: orderFromClient.ShippingAddressId,
 		OrderedProducts: orderedProducts,
 	}
 
