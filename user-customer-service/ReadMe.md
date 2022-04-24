@@ -2,10 +2,8 @@
 
 | Http Method |        Enpoint         |                    Description                    |
 | ----------- | :--------------------: | :-----------------------------------------------: |
-| GET         |        /rewards        |         Get List of all the added Rewards         |
-| POST        |        /rewards        |                  Add New Reward                   |
-| GET         |  /rewards/{rewardId}   |          Get Reward details by Reward ID          |
-| GET         | /rewards/user/{userId} | Get all the Rewards for a customer by Customer ID |
+| POST        |        /users          |                    Add New User                   |
+| GET         |  /users/{userId}       |             Get User details by User ID           |
 
 
 
@@ -21,4 +19,4 @@ swag init
 ```
 
 Swagger page
-> http://localhost:3008/swagger/index.html
+> http://localhost:8071/swagger/index.html
