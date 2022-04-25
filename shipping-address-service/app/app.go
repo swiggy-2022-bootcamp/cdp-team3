@@ -106,7 +106,7 @@ default:
 
 func startGRPCServer(port string) {
 	// Create a listener on TCP port
-	lis, err := net.Listen( config.EnvShippingServiceGRPCPort()+ ":" + port)
+	lis, err := net.Listen("tcp:"+config.EnvShippingServiceGRPCPort())
 	if err != nil {
 		fmt.Println("Failed to listen: %v", err)
 		errChanGRPC <- err
