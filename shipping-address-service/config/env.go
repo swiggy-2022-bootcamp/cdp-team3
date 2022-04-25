@@ -27,11 +27,37 @@ func loadEnvFile() {
 		log.Fatalf("Error loading .env file.")
 	}
 }
-func EnvServiceGRPCPort() string {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file.")
-	}
+func EnvShippingServiceGRPCPort() string {
+	loadEnvFile()
 
 	return os.Getenv("SHIPPING_SERVICE_GRPC_PORT")
+}
+func EnvShippingPort() string {
+	loadEnvFile()
+	return os.Getenv("SHIPPING_SERVICE_PORT")
+}
+func EnvShippingHost() string {
+	loadEnvFile()
+
+	return os.Getenv("SHIPPING_HOST")
+}
+func EnvAuthServiceGRPCPort() string {
+	loadEnvFile()
+
+	return os.Getenv("AUTH_SERVICE_GRPC_PORT")
+}
+func EnvAuthHost() string {
+	loadEnvFile()
+
+	return os.Getenv("AUTH_HOST")
+}
+func EnvProductsHost() string {
+	loadEnvFile()
+
+	return os.Getenv("PRODUCTS_HOST")
+}
+func EnvProductsServiceGRPCPort() string {
+	loadEnvFile()
+
+	return os.Getenv("PRODUCT_SERVICE_GRPC_PORT")
 }

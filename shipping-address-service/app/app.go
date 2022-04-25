@@ -86,7 +86,7 @@ if err == nil {
 // go StartRESTServer()
 // // go StartGRPCServer()
 // wg.Wait()
-go startGRPCServer(os.Getenv("GRPC_ADDRESSS_PORT"))
+go startGRPCServer(os.Getenv("SHIPPING_SERVICE_GRPC_PORT"))
 go StartRESTServer()
 // Listen to errors.
 select {
@@ -106,7 +106,7 @@ default:
 
 func startGRPCServer(port string) {
 	// Create a listener on TCP port
-	lis, err := net.Listen("tcp", ":" + port)
+	lis, err := net.Listen( config.EnvShippingServiceGRPCPort()+ ":" + port)
 	if err != nil {
 		fmt.Println("Failed to listen: %v", err)
 		errChanGRPC <- err
@@ -141,7 +141,7 @@ func StartRESTServer(){
 	shippingRoutes.InitRoutes(router)
 
 	//Starting server on port 3003
-    err := server.Run(":3003")
+    err = server.Run(":"+config.EnvShippingPort())
 	fmt.Println("going to start server")
     if err != nil {
 		fmt.Println("Shipping Address Server can not be started.",err)
