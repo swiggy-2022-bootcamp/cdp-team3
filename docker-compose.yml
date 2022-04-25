@@ -31,7 +31,36 @@ services:
       - ORDER_HOST=order
       - ORDER_SERVICE_GRPC_PORT=8013
       - SHIPPING_HOST=shipping
-      - SHIPPING_SERVICE_GRPC_PORT=8014
+      - SHIPPING_SERVICE_GRPC_PORT=8003
+
+  shipping:
+    build: 
+      context: ./shipping-address-service
+      dockerfile: ./Dockerfile
+    ports:
+      - "3003:3003"
+      - "8003:8003"
+    environment:
+      - SHIPPING_HOST=shippping
+      - SHIPPING_SERVICE_GRPC_PORT=8003
+      - SHIPPING_SERVICE_PORT=3003
+      - AUTH_HOST=auth
+      - AUTH_SERVICE_GRPC_PORT=8012
+        
+
+  categories:
+    build: 
+      context: ./categories-service
+      dockerfile: ./Dockerfile
+    ports:
+      - "3002:3002"
+    environment:
+      - CATEGORIES_HOST=categories
+      - CATEGORIES_SERVICE_PORT=3002
+      - AUTH_HOST=auth
+      - AUTH_SERVICE_GRPC_PORT=8012
+      - PRODUCTS_HOST=products
+      - PRODUCT_SERVICE_GRPC_PORT=8018 
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
