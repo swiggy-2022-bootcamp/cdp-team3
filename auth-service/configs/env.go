@@ -36,5 +36,10 @@ func EnvJWTSecretKey() string {
 
 func EnvPORT() string {
 	loadEnv()
-	return os.Getenv("PORT")
+	return os.Getenv("AUTH_PORT")
+}
+
+func EnvGRPCPORT() string {
+	loadEnv()
+	return os.Getenv("AUTH_GRPC_PORT")
 }

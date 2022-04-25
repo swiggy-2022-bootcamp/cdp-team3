@@ -7,6 +7,7 @@ import (
 	"net"
 	"strings"
 
+	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/configs"
 	auth "github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/grpc/auth/proto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/utils"
 	"google.golang.org/grpc"
@@ -42,7 +43,7 @@ func (s *AuthServer) VerifyToken(ctx context.Context, req *auth.VerifyTokenReque
 }
 
 func InitialiseAuthServer() {
-	lis, err := net.Listen("tcp", "0.0.0.0:50051")
+	lis, err := net.Listen("tcp", "0.0.0.0:"+configs.EnvGRPCPORT())
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}

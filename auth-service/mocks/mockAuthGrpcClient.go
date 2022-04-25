@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/configs"
 	auth "github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/grpc/auth/proto"
 	"google.golang.org/grpc"
 )
 
 func main() {
-	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+	conn, err := grpc.Dial(":"+configs.EnvGRPCPORT(), grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Failed to dial: %v", err)
 	}
