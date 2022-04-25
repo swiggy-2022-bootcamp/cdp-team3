@@ -35,7 +35,7 @@ func NewOrderController(orderService services.OrderService) OrderController {
 // @Schemes
 // @Accept json
 // @Produce json
-// @Success	200  {array} 	models.Order
+// @Success	200  {array} 	  models.Order
 // @Failure	400  {number} 	http.StatusBadRequest
 // @Failure	500  {number} 	http.StatusInternalServerError
 // @Security Bearer Token
@@ -73,7 +73,7 @@ func (oc OrderController) GetAllOrders() gin.HandlerFunc {
 // @Schemes
 // @Param status path string true "Order Status"
 // @Produce json
-// @Success	200  {object} models.Order
+// @Success	200  {array} models.Order
 // @Failure	500  {number} http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /orders/status/{status} [GET]
@@ -159,7 +159,7 @@ func (oc OrderController) GetOrderById() gin.HandlerFunc {
 // @Produce json
 // @Param orderId path string true "Order Id"
 // @Param req body models.OrderStatus true "Order Status"
-// @Success	200  {string} 	models.OrderStatus.Status
+// @Success	200  {object} 	models.Order
 // @Failure	400  {number} 	http.StatusBadRequest
 // @Failure	500  {number} 	http.StatusInternalServerError
 // @Security Bearer Token
@@ -208,7 +208,7 @@ func (oc OrderController) UpdateStatusById() gin.HandlerFunc {
 // @Schemes
 // @Produce json
 // @Param orderId path string true "Order Id"
-// @Success	200  {string} 	Deleted Successfully
+// @Success	200  {object} 	models.Order
 // @Failure	400  {number} 	http.StatusBadRequest
 // @Failure	500  {number} 	http.StatusInternalServerError
 // @Security Bearer Token
@@ -247,7 +247,7 @@ func (oc OrderController) DeleteOrderById() gin.HandlerFunc {
 // @Schemes
 // @Param userId path string true "User Id"
 // @Produce json
-// @Success	200  {object} models.Order
+// @Success	200  {array} models.Order
 // @Failure	500  {number} http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /orders/user/{userId} [GET]
@@ -285,7 +285,7 @@ func (oc OrderController) GetOrdersByCustomerId() gin.HandlerFunc {
 // @Schemes
 // @Produce json
 // @Param orderId path string true "Order Id"
-// @Success	201  {string} 	models.OrderInvoice
+// @Success	201  {object} 	models.Order
 // @Failure	400  {number} 	http.StatusBadRequest
 // @Failure	500  {number} 	http.StatusInternalServerError
 // @Security Bearer Token

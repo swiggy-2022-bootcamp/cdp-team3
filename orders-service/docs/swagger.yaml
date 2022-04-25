@@ -5,16 +5,28 @@ definitions:
         type: string
       dateTime:
         type: string
+      invoiceId:
+        type: string
       orderId:
         type: string
       orderedProducts:
         items:
           $ref: '#/definitions/models.OrderedProduct'
         type: array
+      shippingAddressId:
+        type: string
       status:
         type: string
+      totalAmount:
+        type: number
     required:
+    - customerId
     - dateTime
+    - orderId
+    - orderedProducts
+    - shippingAddressId
+    - status
+    - totalAmount
     type: object
   models.OrderStatus:
     properties:
@@ -27,6 +39,9 @@ definitions:
         type: string
       quantity:
         type: integer
+    required:
+    - productId
+    - quantity
     type: object
 host: localhost:3004
 info:
@@ -71,7 +86,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Order'
+            items:
+              $ref: '#/definitions/models.Order'
+            type: array
         "400":
           description: Bad Request
           schema:
@@ -100,7 +117,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/models.Order'
         "400":
           description: Bad Request
           schema:
@@ -160,7 +177,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/models.Order'
         "400":
           description: Bad Request
           schema:
@@ -218,7 +235,7 @@ paths:
         "201":
           description: Created
           schema:
-            type: string
+            $ref: '#/definitions/models.Order'
         "400":
           description: Bad Request
           schema:
@@ -248,7 +265,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Order'
+            items:
+              $ref: '#/definitions/models.Order'
+            type: array
         "500":
           description: Internal Server Error
           schema:
@@ -273,7 +292,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Order'
+            items:
+              $ref: '#/definitions/models.Order'
+            type: array
         "500":
           description: Internal Server Error
           schema:
