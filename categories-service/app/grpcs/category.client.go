@@ -2,7 +2,7 @@ package grpcs
 
 import (
 	"fmt"
-	"github.com/cdp-3/categories-service/config"
+	"github.com/cdp-team3/categories-service/config"
 	protos "github.com/cdp-team3/categories-service/app/grpcs/products"
 	"google.golang.org/grpc"
 )
