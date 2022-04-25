@@ -34,7 +34,7 @@ func EnvRegion() string {
 
 func EnvPORT() string {
 	loadEnvFile()
-	return os.Getenv("PORT")
+	return os.Getenv("ORDER_SERVICE_PORT")
 }
 
 func EnvUpdateStatusTopic() string {

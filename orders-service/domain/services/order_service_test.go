@@ -572,7 +572,7 @@ func TestOrderServiceImpl_UpdateStatusById(t *testing.T) {
 			tc.buildStubs(orderRepository)
 
 			orderServiceImpl := NewOrderServiceImpl(orderRepository)
-			value, err := orderServiceImpl.UpdateStatusById(order_id, *updateOrderStatus)
+			value, err := orderServiceImpl.UpdateStatusById(order_id, updateOrderStatus)
 			tc.checkResponse(t,value, err)
 		})
 	}
