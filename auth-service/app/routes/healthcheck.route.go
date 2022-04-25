@@ -9,8 +9,8 @@ type HealthRoutes struct {
 	healthController controllers.HealthController
 }
 
-func NewHealthRouter(authController controllers.AuthController) AuthRoutes {
-	return AuthRoutes{authController: authController}
+func NewHealthRouter(hc controllers.HealthController) HealthRoutes {
+	return HealthRoutes{healthController: hc}
 }
 
 func (hr HealthRoutes) HealthRoute(router *gin.Engine) {
