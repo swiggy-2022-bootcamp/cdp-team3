@@ -1,8 +1,6 @@
 services:
   cart:
-    build: 
-      context: ./cart-service
-      dockerfile: ./Dockerfile
+    image: dhi13man/swiggy-ipp-ecommerce-cart-service:latest
     ports:
       - "3010:3010"
       - "8010:8010"
@@ -17,9 +15,7 @@ services:
       - KAFKA_BROKER_ADDRESS=broker:9092
 
   orders:
-    build:
-      context: ./orders-service
-      dockerfile: ./Dockerfile
+    image: dhi13man/swiggy-ipp-ecommerce-checkout-service:latest
     ports:
       - "3004:3004"
       - "8004:8004"
