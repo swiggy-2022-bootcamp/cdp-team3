@@ -2,7 +2,7 @@ package services
 
 import (
 	"context"
-	"github.com/cdp-3/categories-service/config"
+	"github.com/cdp-team3/categories-service/config"
 	auth "github.com/cdp-team3/categories-service/app/grpcs/auth"
 //	"github.com/cdp-team3/categories-service/utils/logger"
 	"google.golang.org/grpc"
