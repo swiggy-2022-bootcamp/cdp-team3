@@ -15,7 +15,9 @@ services:
       - KAFKA_BROKER_ADDRESS=broker:9092
 
   orders:
-    image: dhi13man/swiggy-ipp-ecommerce-checkout-service:latest
+    build:
+      context: ./orders-service
+      dockerfile: ./Dockerfile
     ports:
       - "3004:3004"
       - "8004:8004"
@@ -49,9 +51,7 @@ services:
       - KAFKA_BROKER_ADDRESS=broker:9092
 
   checkout:
-    build: 
-      context: ./checkout-service
-      dockerfile: ./Dockerfile
+    image: dhi13man/swiggy-ipp-ecommerce-checkout-service:latest
     ports:
       - "3011:3011"
     environment:
