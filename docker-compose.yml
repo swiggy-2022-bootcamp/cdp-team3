@@ -9,6 +9,8 @@ services:
     depends_on:
       - broker
     environment:
+      - AUTH_HOST=auth
+      - AUTH_CLIENT_GRPC_PORT=8012
       - CART_HOST=cart
       - CART_SERVICE_PORT=3010
       - CART_SERVICE_GRPC_PORT=8010
