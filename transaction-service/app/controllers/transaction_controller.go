@@ -87,7 +87,7 @@ func (tc TransactionController) AddTransactionAmtToCustomer() gin.HandlerFunc {
 // @Schemes
 // @Param customerId path string true "Customer Id"
 // @Produce json
-// @Success	200  {object} models.Transaction
+// @Success	200  {array} models.Transaction
 // @Failure	500  {number} http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /transaction/{customerId} [GET]

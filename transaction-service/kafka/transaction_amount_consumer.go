@@ -34,7 +34,7 @@ func AddTransactionAmountConsumer() {
 			transactionAmount := strArr[1]
 
 			if s, err := strconv.ParseFloat(transactionAmount, 64); err == nil {
-				newTransaction := &models.Transaction{
+        newTransaction := &models.Transaction{
 					TransactionId: uuid.New().String(),
 					Amount:        s,
 					Description:   "Transaction Amount Added from Orders Service through KafKa topic(add_transaction_amount)",
