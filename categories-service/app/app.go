@@ -69,7 +69,7 @@ server.Use(logger.UseLogger(logger.DefaultLoggerFormatter), gin.Recovery())
  categoriesRoutes.InitRoutes(router)
 
 //Starting server on port 3002
-err = server.Run(":3002")
+err = server.Run(":"+config.CATEGORIES_SERVICE_PORT())
 if err != nil {
 	logger.Error(err.Error() + " - Failed to start server")
 } else {

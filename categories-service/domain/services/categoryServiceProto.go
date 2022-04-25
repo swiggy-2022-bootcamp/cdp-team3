@@ -2,7 +2,7 @@ package services
 
 import (
 	"context"
-
+	"github.com/cdp-3/categories-service/config"
 	auth "github.com/cdp-team3/categories-service/app/grpcs/auth"
 //	"github.com/cdp-team3/categories-service/utils/logger"
 	"google.golang.org/grpc"
@@ -11,7 +11,8 @@ import (
 //var logger = utils.NewLoggerService("auth-grpc")
 
 func VerifyToken(token string) (*auth.VerifyTokenResponse, error) {
-	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+	conn, err := grpc.Dial(config.EnvAuthHost() + ":" + config.EnvAuthServiceGRPCPort(), grpc.WithInsecure())
+
 	if err != nil {
 	//	logger.Log("Failed to dial: %v", err)
 		return nil, err

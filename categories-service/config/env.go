@@ -5,6 +5,30 @@ import (
 	"log"
 	"os"
 )
+func EnvCategoriesHost() string {
+	loadEnvFile()
+	return os.Getenv("CATEGORIES_SERVICE_PORT")
+}
+func EnvAuthServiceGRPCPort() string {
+	loadEnvFile()
+
+	return os.Getenv("AUTH_SERVICE_GRPC_PORT")
+}
+func EnvAuthHost() string {
+	loadEnvFile()
+
+	return os.Getenv("AUTH_HOST")
+}
+func EnvProductsHost() string {
+	loadEnvFile()
+
+	return os.Getenv("PRODUCTS_HOST")
+}
+func EnvProductsServiceGRPCPort() string {
+	loadEnvFile()
+
+	return os.Getenv("PRODUCT_SERVICE_GRPC_PORT")
+}
 
 func EnvAccessKey() string {
 	loadEnvFile()
