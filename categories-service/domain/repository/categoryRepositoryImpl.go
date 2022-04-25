@@ -5,6 +5,7 @@ import (
 	"time"
 	"context"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/google/uuid"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	//"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
@@ -50,11 +51,21 @@ func (p CategoryRepositoryImpl) DBHealthCheck() bool {
 // }
 // cd := CategoryDesciption{Name: "testname", Description:"testdesc" ,MetaDescription:"testmetadesc",MetaKeyword:"testmetakey",MetaTitle:"testmetatitle"}
 // c:=Category{CategoryDesciption:cd}
+func toPersistedDynamodbEntitySA(o *models.Category) *models.Category {
+	return &models.Category{
+
+		CategoryId :        uuid.New().String(),
+		CategoryDescription: o.CategoryDescription,
+		
+	}
+}
 func (p CategoryRepositoryImpl) AddCategoryToDB(category *models.Category) *apperrors.AppError {
 	fmt.Println("Inside category repo")
 	fmt.Println("category",category)
+	categoryRecord := toPersistedDynamodbEntitySA(category)
+	fmt.Println(categoryRecord)
 
-	data, err := dynamodbattribute.MarshalMap(category)
+	data, err := dynamodbattribute.MarshalMap(categoryRecord)
 	if err != nil {
 		logger.Error("Marshalling of category failed - " + err.Error())
 		return apperrors.NewUnexpectedError(err.Error())

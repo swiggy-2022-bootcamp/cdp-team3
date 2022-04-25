@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"github.com/cdp-team3/categories-service/app/grpcs"
 	"github.com/cdp-team3/categories-service/app/grpcs/products"
-	"github.com/google/uuid"
+	//"github.com/google/uuid"
 	apperros "github.com/cdp-team3/categories-service/app-errors"
 	"github.com/cdp-team3/categories-service/domain/models"
 	"github.com/cdp-team3/categories-service/domain/services"
@@ -22,14 +22,14 @@ type CategoryHandler struct {
 func NewCategoryHandler(categoryService services.CategoryService) CategoryHandler {
 	return CategoryHandler{categoryService: categoryService}
 }
-func toPersistedDynamodbEntitySA(o models.Category) *models.Category {
-	return &models.Category{
+// func toPersistedDynamodbEntitySA(o models.Category) *models.Category {
+// 	return &models.Category{
 
-		CategoryId :        uuid.New().String(),
-		CategoryDescription: o.CategoryDescription,
+// 		CategoryId :        uuid.New().String(),
+// 		CategoryDescription: o.CategoryDescription,
 		
-	}
-}
+// 	}
+// }
 func (th CategoryHandler) AddCategory() (gin.HandlerFunc){
 	return func(ctx *gin.Context) {
 	//userId := c.Param("userId")
@@ -37,22 +37,22 @@ func (th CategoryHandler) AddCategory() (gin.HandlerFunc){
 
 	if err := ctx.BindJSON(&category); err != nil {
 		ctx.Error(err)
-		err_ := apperros.NewBadRequestError(err.Error())
-		ctx.JSON(err_.Code, gin.H{"message": err_.Message})
+		er := apperros.NewBadRequestError(err.Error())
+		ctx.JSON(er.Code, gin.H{"message": er.Message})
 		return
 	}
 
 	
 	
-	categoryRecord := toPersistedDynamodbEntitySA(category)
-	fmt.Println(categoryRecord)
-	//validate request body
-	// if validationErr := validate.Struct(&categoryRecord); validationErr != nil {
-	// 	c.Error(validationErr)
-	// 	c.JSON(http.StatusBadRequest, gin.H{"message": validationErr.Error()})
-	// 	return
-	// }
-	err := th.categoryService.AddCategory(categoryRecord)
+	// categoryRecord := toPersistedDynamodbEntitySA(category)
+	// fmt.Println(categoryRecord)
+	// validate request body
+	if validationErr := validate.Struct(&category); validationErr != nil {
+		ctx.Error(validationErr)
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": validationErr.Error()})
+		return
+	}
+	err := th.categoryService.AddCategory(&category)
 		if err != nil {
 		ctx.Error(err.Error())
 		ctx.JSON(err.Code, gin.H{"message": err.Message})
@@ -139,7 +139,7 @@ func (th CategoryHandler) DeleteCategory() (gin.HandlerFunc) {
 	return func(ctx *gin.Context){
 		category_id := ctx.Param("category_id")
 	fmt.Println("Inside category id",category_id)
-		client, err := grpcs.GetProductsGrpcClient()
+		client, _ := grpcs.GetProductsGrpcClient()
 		val,err:=client.DeleteCategory(ctx.Request.Context(),&products.CategoryDeleteRequest{CategoryId:category_id})
 		fmt.Println(val)
 		fmt.Println(err)

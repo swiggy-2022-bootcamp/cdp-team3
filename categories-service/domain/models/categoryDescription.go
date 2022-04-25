@@ -1,7 +1,7 @@
 package models
 
 type CategoryDescription struct {
-	Name            string `json:"category_name"               dynamodbav:"category_name,omitempty"`
+	Name            string `json:"category_name"      dynamodbav:"category_name,omitempty" validate:"required"`
 
 	Description     string `json:"description"        dynamodbav:"description,omitempty"`
 	MetaDescription string `json:"meta_description"   dynamodbav:"meta_description,omitempty"`
