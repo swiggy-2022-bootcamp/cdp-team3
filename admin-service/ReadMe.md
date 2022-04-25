@@ -1,11 +1,17 @@
+### Admin Service
+
 ### Endoints
 
-| Http Method |        Enpoint         |                    Description                    |
-| ----------- | :--------------------: | :-----------------------------------------------: |
-| GET         |        /rewards        |         Get List of all the added Rewards         |
-| POST        |        /rewards        |                  Add New Reward                   |
-| GET         |  /rewards/{rewardId}   |          Get Reward details by Reward ID          |
-| GET         | /rewards/user/{userId} | Get all the Rewards for a customer by Customer ID |
+| Http Method |          Enpoint          |              Description              |
+| ----------- | :-----------------------: | :-----------------------------------: |
+| POST        |          /admin           |          To Create an Admin           |
+| GET         |        /admin/user        | To get the details of logged in Admin |
+| POST        |        /customers         |         To create a customer          |
+| GET         |  /customers/:customerId   |  To Get the customer by customer ID   |
+| GET         | /customers/email/:emailId |    To get the customer by email ID    |
+| PUT         |  /customers/:customerId   | To update the customer by customer Id |
+| DELETE      |  /customers/:customerId   | To delete the customer by customer Id |
+
 
 
 
@@ -21,4 +27,4 @@ swag init
 ```
 
 Swagger page
-> http://localhost:3008/swagger/index.html
+> http://localhost:3009/swagger/index.html
