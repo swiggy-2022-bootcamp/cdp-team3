@@ -51,7 +51,10 @@ func (cc *checkoutControllerImpl) GetOrderOverview(c *gin.Context) {
 		c.JSON(http.StatusForbidden, errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "User ID needs to be sent as Authorization."))
 	} else {
 		// Validate Shipping Address
-		shippingOut, err := cc.shippingCheckoutGRPCClient.GetShippingAddress(c.Request.Context(), &shipping_checkout.ShippingAddressRequest{})
+		shippingOut, err := cc.shippingCheckoutGRPCClient.GetShippingAddressForCheckout(
+			c.Request.Context(), 
+			&shipping_checkout.ShippingAddressRequestFromCheckout{UserID: claims.GetUserId()},
+		)
 		if err != nil {
 			log.Error("Error Getting Shipping Address: ", err)
 			c.JSON(http.StatusInternalServerError, errors.NewHTTPErrorDTO(http.StatusInternalServerError, err, "Error Getting Shipping Address"))
@@ -77,9 +80,9 @@ func (cc *checkoutControllerImpl) GetOrderOverview(c *gin.Context) {
 		out, err := cc.orderGRPCClient.CreateOrder(c.Request.Context(), &orderProto.CreateOrderRequest{
 			Order: &orderProto.RequestOrder{
 				CustomerId:      claims.UserId,
-				OrderedProducts: orderedProducts,
 				TotalAmount: amt,
-				ShippingAddressId: shippingOut.GetCountryid(),
+				ShippingAddressId: shippingOut.GetShippingAddressID(),
+				OrderedProducts: orderedProducts,
 			},
 		})
 		if err != nil {
@@ -140,8 +143,8 @@ func (cc *checkoutControllerImpl) HealthCheck(c *gin.Context) {
 }
 
 // Utility function to validate Shipping Address and return boolean if valid
-func validateShippingAddress(address *shipping_checkout.ShippingAddressResponse) bool {
-	return address.GetAddress1() != "" && address.GetPostcode() != 0 && address.GetCity() != "" && address.GetFirstname() != ""
+func validateShippingAddress(address *shipping_checkout.ShippingAddressResponseForCheckout) bool {
+	return address != nil && address.GetShippingAddressID() != "" && address.GetAddress1() != "" && address.GetFirstname() != ""
 }
 
 // Utility function to map Cart Items to Order Products Data Type and calculate total amount for cross service compatibility

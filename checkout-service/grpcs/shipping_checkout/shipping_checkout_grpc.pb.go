@@ -22,7 +22,11 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ShippingClient interface {
-	GetShippingAddress(ctx context.Context, in *ShippingAddressRequest, opts ...grpc.CallOption) (*ShippingAddressResponse, error)
+	GetShippingAddressForCheckout(ctx context.Context, in *ShippingAddressRequestFromCheckout, opts ...grpc.CallOption) (*ShippingAddressResponseForCheckout, error)
+	AddShippingAddress(ctx context.Context, in *ShippingAddressAddRequest, opts ...grpc.CallOption) (*ShippingAddressAddResponse, error)
+	GetShippingAddress(ctx context.Context, in *ShippingAddressGetRequest, opts ...grpc.CallOption) (*ShippingAddressGetResponse, error)
+	DeleteShippingAddress(ctx context.Context, in *ShippingAddressDeleteRequest, opts ...grpc.CallOption) (*ShippingAddressDeleteResponse, error)
+	UpdateShippingAddress(ctx context.Context, in *ShippingAddressUpdateRequest, opts ...grpc.CallOption) (*ShippingAddressUpdateResponse, error)
 }
 
 type shippingClient struct {
@@ -33,9 +37,45 @@ func NewShippingClient(cc grpc.ClientConnInterface) ShippingClient {
 	return &shippingClient{cc}
 }
 
-func (c *shippingClient) GetShippingAddress(ctx context.Context, in *ShippingAddressRequest, opts ...grpc.CallOption) (*ShippingAddressResponse, error) {
-	out := new(ShippingAddressResponse)
+func (c *shippingClient) GetShippingAddressForCheckout(ctx context.Context, in *ShippingAddressRequestFromCheckout, opts ...grpc.CallOption) (*ShippingAddressResponseForCheckout, error) {
+	out := new(ShippingAddressResponseForCheckout)
+	err := c.cc.Invoke(ctx, "/shipping_checkout.Shipping/GetShippingAddressForCheckout", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shippingClient) AddShippingAddress(ctx context.Context, in *ShippingAddressAddRequest, opts ...grpc.CallOption) (*ShippingAddressAddResponse, error) {
+	out := new(ShippingAddressAddResponse)
+	err := c.cc.Invoke(ctx, "/shipping_checkout.Shipping/AddShippingAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shippingClient) GetShippingAddress(ctx context.Context, in *ShippingAddressGetRequest, opts ...grpc.CallOption) (*ShippingAddressGetResponse, error) {
+	out := new(ShippingAddressGetResponse)
 	err := c.cc.Invoke(ctx, "/shipping_checkout.Shipping/GetShippingAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shippingClient) DeleteShippingAddress(ctx context.Context, in *ShippingAddressDeleteRequest, opts ...grpc.CallOption) (*ShippingAddressDeleteResponse, error) {
+	out := new(ShippingAddressDeleteResponse)
+	err := c.cc.Invoke(ctx, "/shipping_checkout.Shipping/DeleteShippingAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shippingClient) UpdateShippingAddress(ctx context.Context, in *ShippingAddressUpdateRequest, opts ...grpc.CallOption) (*ShippingAddressUpdateResponse, error) {
+	out := new(ShippingAddressUpdateResponse)
+	err := c.cc.Invoke(ctx, "/shipping_checkout.Shipping/UpdateShippingAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +86,11 @@ func (c *shippingClient) GetShippingAddress(ctx context.Context, in *ShippingAdd
 // All implementations must embed UnimplementedShippingServer
 // for forward compatibility
 type ShippingServer interface {
-	GetShippingAddress(context.Context, *ShippingAddressRequest) (*ShippingAddressResponse, error)
+	GetShippingAddressForCheckout(context.Context, *ShippingAddressRequestFromCheckout) (*ShippingAddressResponseForCheckout, error)
+	AddShippingAddress(context.Context, *ShippingAddressAddRequest) (*ShippingAddressAddResponse, error)
+	GetShippingAddress(context.Context, *ShippingAddressGetRequest) (*ShippingAddressGetResponse, error)
+	DeleteShippingAddress(context.Context, *ShippingAddressDeleteRequest) (*ShippingAddressDeleteResponse, error)
+	UpdateShippingAddress(context.Context, *ShippingAddressUpdateRequest) (*ShippingAddressUpdateResponse, error)
 	mustEmbedUnimplementedShippingServer()
 }
 
@@ -54,8 +98,20 @@ type ShippingServer interface {
 type UnimplementedShippingServer struct {
 }
 
-func (UnimplementedShippingServer) GetShippingAddress(context.Context, *ShippingAddressRequest) (*ShippingAddressResponse, error) {
+func (UnimplementedShippingServer) GetShippingAddressForCheckout(context.Context, *ShippingAddressRequestFromCheckout) (*ShippingAddressResponseForCheckout, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetShippingAddressForCheckout not implemented")
+}
+func (UnimplementedShippingServer) AddShippingAddress(context.Context, *ShippingAddressAddRequest) (*ShippingAddressAddResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddShippingAddress not implemented")
+}
+func (UnimplementedShippingServer) GetShippingAddress(context.Context, *ShippingAddressGetRequest) (*ShippingAddressGetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetShippingAddress not implemented")
+}
+func (UnimplementedShippingServer) DeleteShippingAddress(context.Context, *ShippingAddressDeleteRequest) (*ShippingAddressDeleteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteShippingAddress not implemented")
+}
+func (UnimplementedShippingServer) UpdateShippingAddress(context.Context, *ShippingAddressUpdateRequest) (*ShippingAddressUpdateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateShippingAddress not implemented")
 }
 func (UnimplementedShippingServer) mustEmbedUnimplementedShippingServer() {}
 
@@ -70,8 +126,44 @@ func RegisterShippingServer(s grpc.ServiceRegistrar, srv ShippingServer) {
 	s.RegisterService(&Shipping_ServiceDesc, srv)
 }
 
+func _Shipping_GetShippingAddressForCheckout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ShippingAddressRequestFromCheckout)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShippingServer).GetShippingAddressForCheckout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/shipping_checkout.Shipping/GetShippingAddressForCheckout",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShippingServer).GetShippingAddressForCheckout(ctx, req.(*ShippingAddressRequestFromCheckout))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Shipping_AddShippingAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ShippingAddressAddRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShippingServer).AddShippingAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/shipping_checkout.Shipping/AddShippingAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShippingServer).AddShippingAddress(ctx, req.(*ShippingAddressAddRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Shipping_GetShippingAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ShippingAddressRequest)
+	in := new(ShippingAddressGetRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -83,7 +175,43 @@ func _Shipping_GetShippingAddress_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: "/shipping_checkout.Shipping/GetShippingAddress",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShippingServer).GetShippingAddress(ctx, req.(*ShippingAddressRequest))
+		return srv.(ShippingServer).GetShippingAddress(ctx, req.(*ShippingAddressGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Shipping_DeleteShippingAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ShippingAddressDeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShippingServer).DeleteShippingAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/shipping_checkout.Shipping/DeleteShippingAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShippingServer).DeleteShippingAddress(ctx, req.(*ShippingAddressDeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Shipping_UpdateShippingAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ShippingAddressUpdateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShippingServer).UpdateShippingAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/shipping_checkout.Shipping/UpdateShippingAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShippingServer).UpdateShippingAddress(ctx, req.(*ShippingAddressUpdateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -96,8 +224,24 @@ var Shipping_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ShippingServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "GetShippingAddressForCheckout",
+			Handler:    _Shipping_GetShippingAddressForCheckout_Handler,
+		},
+		{
+			MethodName: "AddShippingAddress",
+			Handler:    _Shipping_AddShippingAddress_Handler,
+		},
+		{
 			MethodName: "GetShippingAddress",
 			Handler:    _Shipping_GetShippingAddress_Handler,
+		},
+		{
+			MethodName: "DeleteShippingAddress",
+			Handler:    _Shipping_DeleteShippingAddress_Handler,
+		},
+		{
+			MethodName: "UpdateShippingAddress",
+			Handler:    _Shipping_UpdateShippingAddress_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

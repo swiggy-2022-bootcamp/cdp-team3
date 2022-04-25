@@ -2,7 +2,43 @@ syntax = "proto3";
 package shipping_checkout;
 option go_package ="/grpcs/shipping_checkout";
 
-message ShippingAddressResponse {
+message ShippingAddressResponseForCheckout {
+     string shippingAddressID = 1;
+    string firstname = 2;
+    string lastname  = 3;
+    string city      = 4;
+    string address1  = 5;
+    string address2  = 6;
+    uint32 countryid = 7;
+    uint32 postcode  = 8;
+}
+
+message ShippingAddressGetResponse {
+     string shippingAddressID = 1;
+    string firstname = 2;
+    string lastname  = 3;
+    string city      = 4;
+    string address1  = 5;
+    string address2  = 6;
+    uint32 countryid = 7;
+    uint32 postcode  = 8;
+    string userid    =9;
+    string default  =10;
+}
+message ShippingAddressResponseForUser {
+   string shippingAddressID = 1;
+    string firstname = 2;
+    string lastname  = 3;
+    string city      = 4;
+    string address1  = 5;
+    string address2  = 6;
+    uint32 countryid = 7;
+    uint32 postcode  = 8;
+    string userid    = 9;
+    string default    =10;
+}
+
+message ShippingAddressAddRequest {
     string firstname = 1;
     string lastname  = 2;
     string city      = 3;
@@ -10,12 +46,52 @@ message ShippingAddressResponse {
     string address2  = 5;
     uint32 countryid = 6;
     uint32 postcode  = 7;
+    string userid    = 8;
+    string default   = 9;
 }
 
-message ShippingAddressRequest {
+message ShippingAddressUpdateRequest {
+    string shippingAddressID = 1;
+    string firstname = 2;
+    string lastname  = 3;
+    string city      = 4;
+    string address1  = 5;
+    string address2  = 6;
+    uint32 countryid = 7;
+    uint32 postcode  = 8;
+    string userid    = 9;
+    string default    =10;
+}
+
+message ShippingAddressAddResponse {
     string shippingAddressID = 1;
 }
 
+message ShippingAddressDeleteResponse {
+    bool confirm = 1;
+}
+
+message ShippingAddressUpdateResponse {
+    bool confirm = 1;
+}
+
+message ShippingAddressGetRequest {
+    string shippingAddressID = 1;
+}
+
+message ShippingAddressDeleteRequest {
+    string shippingAddressID = 1;
+}
+message ShippingAddressRequestFromCheckout {
+    string userID = 1;
+}
+
 service Shipping {
-    rpc GetShippingAddress (ShippingAddressRequest) returns (ShippingAddressResponse);
-} 
+     rpc GetShippingAddressForCheckout (ShippingAddressRequestFromCheckout) returns (ShippingAddressResponseForCheckout);
+
+    rpc AddShippingAddress (ShippingAddressAddRequest) returns (ShippingAddressAddResponse);
+    rpc GetShippingAddress (ShippingAddressGetRequest) returns (ShippingAddressGetResponse);
+   
+    rpc DeleteShippingAddress (ShippingAddressDeleteRequest) returns (ShippingAddressDeleteResponse);
+    rpc UpdateShippingAddress (ShippingAddressUpdateRequest) returns (ShippingAddressUpdateResponse);
+}
