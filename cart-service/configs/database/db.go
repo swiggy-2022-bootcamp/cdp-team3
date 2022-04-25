@@ -12,6 +12,8 @@ import (
 	"github.com/swiggy-ipp/cart-service/configs"
 )
 
+// Base Code taken from [aws-go-sdk-v2](https://github.com/aws/aws-sdk-go-v2/tree/main/example/service/dynamodb)
+
 // GetDynamoDBClient returns a DynamoDB client
 func GetDynamoDBClient() *dynamodb.Client {
 	// Using the SDK's default configuration, loading additional config

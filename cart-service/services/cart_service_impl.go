@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"errors"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/swiggy-ipp/cart-service/dto/requests"
@@ -97,7 +98,10 @@ func (cs *cartServiceImpl) GetCartItems(
 	}
 	if err != nil {
 		return nil, err
+	} else if cart == nil {
+		return nil, errors.New("Cart not found")
 	}
+
 	// Calculate the total price of the cart
 	totalPrice := 0.0
 	for _, item := range cart.Items {

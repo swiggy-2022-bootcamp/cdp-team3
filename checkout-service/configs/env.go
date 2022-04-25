@@ -54,22 +54,6 @@ func EnvShippingHost() string {
 	return os.Getenv("SHIPPING_HOST")
 }
 
-func EnvKafkaBrokerPort() string {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf(errorMessage)
-	}
-	return os.Getenv("KAFKA_BROKER_PORT")
-}
-
-func EnvKafkaUserDeletedTopic() string {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf(errorMessage)
-	}
-	return os.Getenv("KAFKA_TOPIC")
-}
-
 func EnvServicePort() string {
 	err := godotenv.Load()
 	if err != nil {
