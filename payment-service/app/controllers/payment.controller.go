@@ -59,7 +59,7 @@ func (pc PaymentController) Pay() gin.HandlerFunc {
 			return
 		}
 
-		// TODO: Add Order Update GRPC call
+		// TODO: Add Order Update Kafka call
 
 		c.JSON(http.StatusOK, dto.ResponseDTO{
 			Message: res,
