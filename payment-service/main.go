@@ -1,17 +1,8 @@
 package main
 
 import (
-	_ "github.com/swiggy-2022-bootcamp/cdp-team3/payment-service/docs"
-
-	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/payment-service/configs"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/payment-service/routes"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/payment-service/utils"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/payment-service/app"
 )
-
-var logger = utils.NewLoggerService("main")
 
 // @title           Swagger Auth Service API
 // @version         1.0
@@ -31,15 +22,5 @@ var logger = utils.NewLoggerService("main")
 // @in cookie
 // @name Authorization
 func main() {
-	router := gin.Default()
-
-	configs.ConnectDB()
-	logger.Log("Connected to DB")
-
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
-	routes.PaymentRoutes(router)
-	routes.HealthCheckRoutes(router)
-
-	router.Run("localhost:" + configs.EnvPORT())
+	app.Start()
 }
