@@ -53,7 +53,7 @@ func (s ShippingRepositoryImpl) InsertShippingAddressToDB(shippingAddress *model
 		return  "",apperrors.NewUnexpectedError(err.Error())
 	}
 	fmt.Println("Inside repo",shippingAddress)
-    fmt.Println("\n")
+    
 	fmt.Println(shippingAddress)
 	fmt.Println(av)
 	input := &dynamodb.PutItemInput{

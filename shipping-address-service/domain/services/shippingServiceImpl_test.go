@@ -122,7 +122,7 @@ func TestShippingServiceImpl_AddShippingAddress(t *testing.T) {
 				repository.EXPECT().
 				InsertShippingAddressToDB(shippingAddress).
 					Times(1).
-					Return(nil)
+					Return("id",nil)
 			},
 			checkResponse: func(t *testing.T,err interface{}) {
 				assert.Nil(t,err)
@@ -134,7 +134,7 @@ func TestShippingServiceImpl_AddShippingAddress(t *testing.T) {
 				repository.EXPECT().
 				    InsertShippingAddressToDB(shippingAddress).
 					Times(1).
-					Return(app_erros.NewUnexpectedError(""))
+					Return("",app_erros.NewUnexpectedError(""))
 
 			},
 			checkResponse: func(t *testing.T,err interface{}) {
@@ -147,7 +147,7 @@ func TestShippingServiceImpl_AddShippingAddress(t *testing.T) {
 				repository.EXPECT().
 				InsertShippingAddressToDB(shippingAddress).
 					Times(1).
-					Return(app_erros.NewUnexpectedError(""))
+					Return("",app_erros.NewUnexpectedError(""))
 			},
 			checkResponse: func(t *testing.T, err interface{}) {
 				assert.NotNil(t,err)
@@ -168,7 +168,7 @@ func TestShippingServiceImpl_AddShippingAddress(t *testing.T) {
 			tc.buildStubs(shippingRepository)
 
 			shippingServiceImpl := NewShippingServiceImpl(shippingRepository)
-			err := shippingServiceImpl.InsertShippingAddress(shippingAddress)
+			_,err := shippingServiceImpl.InsertShippingAddress(shippingAddress)
 			tc.checkResponse(t, err)
 		})
 	}
