@@ -1,0 +1,24 @@
+
+syntax = "proto3";
+package products;
+option go_package ="/grpcs/products";
+
+message CategoryDeleteRequest {
+    string category_id = 1;
+}
+message CategoriesDeleteRequest {
+    
+  repeated string categories_id  = 1;
+} 
+message DeleteCategoriesResponse{
+    bool res = 1;
+} 
+message DeleteCategoryResponse {
+    bool res = 1;
+} 
+service Products {
+    
+    rpc DeleteCategories(CategoriesDeleteRequest) returns (DeleteCategoriesResponse);
+    rpc DeleteCategory(CategoryDeleteRequest) returns (DeleteCategoryResponse);
+   
+}
