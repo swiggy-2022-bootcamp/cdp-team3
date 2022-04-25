@@ -202,5 +202,6 @@ func convertShippingAddressDTOtoShippingAddressModel(saDto ShippingAddressRecord
 		Address2:  saDto.Address2,
 		PostCode:  saDto.PostCode,
 		CountryID: saDto.CountryID,
+
 	}
 }

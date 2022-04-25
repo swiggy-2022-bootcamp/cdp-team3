@@ -79,12 +79,43 @@ func (mr *MockShippingRepositoryMockRecorder) FindShippingAddressByIdFromDB(arg0
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindShippingAddressByIdFromDB", reflect.TypeOf((*MockShippingRepository)(nil).FindShippingAddressByIdFromDB), arg0)
 }
 
+// GetDefaultShippingAddressOfUserByIdFromDB mocks base method.
+func (m *MockShippingRepository) GetDefaultShippingAddressOfUserByIdFromDB(arg0 string) (*models.ShippingAddress, *app_erros.AppError) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDefaultShippingAddressOfUserByIdFromDB", arg0)
+	ret0, _ := ret[0].(*models.ShippingAddress)
+	ret1, _ := ret[1].(*app_erros.AppError)
+	return ret0, ret1
+}
+
+// GetDefaultShippingAddressOfUserByIdFromDB indicates an expected call of GetDefaultShippingAddressOfUserByIdFromDB.
+func (mr *MockShippingRepositoryMockRecorder) GetDefaultShippingAddressOfUserByIdFromDB(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDefaultShippingAddressOfUserByIdFromDB", reflect.TypeOf((*MockShippingRepository)(nil).GetDefaultShippingAddressOfUserByIdFromDB), arg0)
+}
+
+// HandleSetExistingShippingAddressToDefaultByIdToDB mocks base method.
+func (m *MockShippingRepository) HandleSetExistingShippingAddressToDefaultByIdToDB(arg0 string) (bool, *app_erros.AppError) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "HandleSetExistingShippingAddressToDefaultByIdToDB", arg0)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(*app_erros.AppError)
+	return ret0, ret1
+}
+
+// HandleSetExistingShippingAddressToDefaultByIdToDB indicates an expected call of HandleSetExistingShippingAddressToDefaultByIdToDB.
+func (mr *MockShippingRepositoryMockRecorder) HandleSetExistingShippingAddressToDefaultByIdToDB(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HandleSetExistingShippingAddressToDefaultByIdToDB", reflect.TypeOf((*MockShippingRepository)(nil).HandleSetExistingShippingAddressToDefaultByIdToDB), arg0)
+}
+
 // InsertShippingAddressToDB mocks base method.
-func (m *MockShippingRepository) InsertShippingAddressToDB(arg0 *models.ShippingAddress) *app_erros.AppError {
+func (m *MockShippingRepository) InsertShippingAddressToDB(arg0 *models.ShippingAddress) (string, *app_erros.AppError) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InsertShippingAddressToDB", arg0)
-	ret0, _ := ret[0].(*app_erros.AppError)
-	return ret0
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(*app_erros.AppError)
+	return ret0, ret1
 }
 
 // InsertShippingAddressToDB indicates an expected call of InsertShippingAddressToDB.

@@ -124,9 +124,13 @@ func (s ShippingRepositoryImpl) UpdateShippingAddressByIdFromDB(id string,shippi
 			}, ":s6": {
 				N: aws.String(strconv.FormatUint(uint64(shippingAddress.PostCode), 10)),
 			},
-			//  ":s7": {
-			// 	S: aws.String((t)),
+			// ":s7": {
+			// 	S: aws.String(shippingAddress.UserID),
 			// },
+			// ":s8": {
+			// 	S: aws.String(shippingAddress.DefaultAddress),
+			// },
+			
 		},
 		Key: map[string]*dynamodb.AttributeValue{
 			"id": {

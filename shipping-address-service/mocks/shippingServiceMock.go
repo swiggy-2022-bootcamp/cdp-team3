@@ -65,12 +65,43 @@ func (mr *MockShippingServiceMockRecorder) FindShippingAddressById(arg0 interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindShippingAddressById", reflect.TypeOf((*MockShippingService)(nil).FindShippingAddressById), arg0)
 }
 
+// GetDefaultShippingAddressOfUserById mocks base method.
+func (m *MockShippingService) GetDefaultShippingAddressOfUserById(arg0 string) (*models.ShippingAddress, *app_erros.AppError) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDefaultShippingAddressOfUserById", arg0)
+	ret0, _ := ret[0].(*models.ShippingAddress)
+	ret1, _ := ret[1].(*app_erros.AppError)
+	return ret0, ret1
+}
+
+// GetDefaultShippingAddressOfUserById indicates an expected call of GetDefaultShippingAddressOfUserById.
+func (mr *MockShippingServiceMockRecorder) GetDefaultShippingAddressOfUserById(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDefaultShippingAddressOfUserById", reflect.TypeOf((*MockShippingService)(nil).GetDefaultShippingAddressOfUserById), arg0)
+}
+
+// HandleSetExistingShippingAddressToDefaultById mocks base method.
+func (m *MockShippingService) HandleSetExistingShippingAddressToDefaultById(arg0 string) (bool, *app_erros.AppError) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "HandleSetExistingShippingAddressToDefaultById", arg0)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(*app_erros.AppError)
+	return ret0, ret1
+}
+
+// HandleSetExistingShippingAddressToDefaultById indicates an expected call of HandleSetExistingShippingAddressToDefaultById.
+func (mr *MockShippingServiceMockRecorder) HandleSetExistingShippingAddressToDefaultById(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HandleSetExistingShippingAddressToDefaultById", reflect.TypeOf((*MockShippingService)(nil).HandleSetExistingShippingAddressToDefaultById), arg0)
+}
+
 // InsertShippingAddress mocks base method.
-func (m *MockShippingService) InsertShippingAddress(arg0 *models.ShippingAddress) *app_erros.AppError {
+func (m *MockShippingService) InsertShippingAddress(arg0 *models.ShippingAddress) (string, *app_erros.AppError) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InsertShippingAddress", arg0)
-	ret0, _ := ret[0].(*app_erros.AppError)
-	return ret0
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(*app_erros.AppError)
+	return ret0, ret1
 }
 
 // InsertShippingAddress indicates an expected call of InsertShippingAddress.
