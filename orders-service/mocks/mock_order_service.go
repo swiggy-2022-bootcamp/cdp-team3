@@ -126,7 +126,7 @@ func (mr *MockOrderServiceMockRecorder) GetOrdersByStatus(arg0 interface{}) *gom
 }
 
 // UpdateStatusById mocks base method.
-func (m *MockOrderService) UpdateStatusById(arg0 string, arg1 models.OrderStatus) (*models.Order, *errors.AppError) {
+func (m *MockOrderService) UpdateStatusById(arg0 string, arg1 *models.OrderStatus) (*models.Order, *errors.AppError) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateStatusById", arg0, arg1)
 	ret0, _ := ret[0].(*models.Order)

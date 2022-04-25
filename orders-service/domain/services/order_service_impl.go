@@ -49,11 +49,11 @@ func(os OrderServiceImpl) GetOrderById(orderId string) (*models.Order, *errors.A
 	return result,nil
 }
 
-func (os OrderServiceImpl) UpdateStatusById(orderId string, orderStatus models.OrderStatus) (*models.Order, *errors.AppError) {
+func (os OrderServiceImpl) UpdateStatusById(orderId string, orderStatus *models.OrderStatus) (*models.Order, *errors.AppError) {
 	zap.L().Info("Inside UpdateStatusById Service")
 
 	//use the validator library to validate required fields
-	if validationErr := validate.Struct(&orderStatus); validationErr != nil {
+	if validationErr := validate.Struct(orderStatus); validationErr != nil {
 		zap.L().Error("Invalid Request")
 		return nil, errors.NewBadRequestError("Invalid Request "+validationErr.Error())
 	}

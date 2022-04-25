@@ -171,7 +171,7 @@ func (oc OrderController) UpdateStatusById() gin.HandlerFunc {
 		defer cancel()
 		orderId := c.Param("orderId")
 
-		var orderStatus models.OrderStatus
+		orderStatus :=  &models.OrderStatus{}
 		if err := c.BindJSON(&orderStatus); err != nil {
 			zap.L().Error("Invalid Request")
 			c.JSON(http.StatusBadRequest, dto.ResponseDTO{
