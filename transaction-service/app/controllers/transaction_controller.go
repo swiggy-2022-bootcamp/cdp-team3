@@ -11,22 +11,17 @@ import (
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/configs"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/domain/services"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/dto"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/kafka"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/models"
 	"go.uber.org/zap"
 )
 
-func init() {
-	go kafka.AddTransactionAmountConsumer()
-}
 type TransactionController struct {
 	transactionService services.TransactionService
 }
 
 func NewTransactionController(transactionService services.TransactionService) TransactionController {
-	return TransactionController{transactionService : transactionService}
+	return TransactionController{transactionService: transactionService}
 }
-
 
 var validate = validator.New()
 
@@ -51,13 +46,13 @@ func (tc TransactionController) AddTransactionAmtToCustomer() gin.HandlerFunc {
 		defer cancel()
 
 		customerId := c.Param("customerId")
-		transactionFromClient := &models.Transaction {
+		transactionFromClient := &models.Transaction{
 			CustomerID: customerId,
 		}
 
 		//validate the request body
 		if err := c.BindJSON(&transactionFromClient); err != nil {
-			zap.L().Error("Error validating the request body"+err.Error())
+			zap.L().Error("Error validating the request body" + err.Error())
 			c.JSON(http.StatusBadRequest, dto.ResponseDTO{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
 		}
@@ -71,11 +66,11 @@ func (tc TransactionController) AddTransactionAmtToCustomer() gin.HandlerFunc {
 			})
 			return
 		}
-		zap.L().Info("Successfully added transaction to customer"+customerId)
+		zap.L().Info("Successfully added transaction to customer" + customerId)
 		c.JSON(http.StatusCreated, dto.ResponseDTO{
-			Status: http.StatusCreated, 
-			Message: "success", 
-			Data: map[string]interface{}{"transaction": transaction},
+			Status:  http.StatusCreated,
+			Message: "success",
+			Data:    map[string]interface{}{"transaction": transaction},
 		})
 	}
 }
@@ -120,16 +115,16 @@ func (tc TransactionController) GetTransactionByCustomerId() gin.HandlerFunc {
 
 		zap.L().Info("Fetched all transaction for customer " + customerId + "successfully")
 
-		var totalTransactionAmount float64;
+		var totalTransactionAmount float64
 		for _, trans := range transactionList {
 			totalTransactionAmount += trans.Amount
 		}
 		c.JSON(http.StatusOK, dto.ResponseDTO{
 			Status:  http.StatusOK,
 			Message: "success",
-			Data:    map[string]interface{}{
+			Data: map[string]interface{}{
 				"transactions": transactionList,
-				"totalAmount": totalTransactionAmount,
+				"totalAmount":  totalTransactionAmount,
 			},
 		})
 	}
