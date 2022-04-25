@@ -2,13 +2,16 @@ definitions:
   models.Transaction:
     properties:
       amount:
+        type: number
+      customer_id:
         type: string
       description:
         type: string
-      id:
+      transaction_id:
         type: string
     required:
     - amount
+    - customer_id
     type: object
 host: localhost:3005
 info:
@@ -41,6 +44,10 @@ paths:
           description: Bad Request
           schema:
             type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
       summary: To check if the service is running or not.
       tags:
       - Health
@@ -60,7 +67,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Transaction'
+            items:
+              $ref: '#/definitions/models.Transaction'
+            type: array
         "500":
           description: Internal Server Error
           schema:

@@ -11,13 +11,14 @@ import (
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/configs"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/domain/services"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/dto"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/kafka"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/models"
 	"go.uber.org/zap"
 )
 
-// func init() {
-// 	go kafka.AddTransactionAmountConsumer()
-// }
+func init() {
+	go kafka.AddTransactionAmountConsumer()
+}
 type TransactionController struct {
 	transactionService services.TransactionService
 }
@@ -86,7 +87,7 @@ func (tc TransactionController) AddTransactionAmtToCustomer() gin.HandlerFunc {
 // @Schemes
 // @Param customerId path string true "Customer Id"
 // @Produce json
-// @Success	200  {object} models.Transaction
+// @Success	200  {array} models.Transaction
 // @Failure	500  {number} http.StatusInternalServerError
 // @Security Bearer Token
 // @Router /transaction/{customerId} [GET]

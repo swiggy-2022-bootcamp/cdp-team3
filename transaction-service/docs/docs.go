@@ -50,6 +50,12 @@ const docTemplate = `{
                         "schema": {
                             "type": "number"
                         }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "number"
+                        }
                     }
                 }
             }
@@ -82,7 +88,10 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Transaction"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Transaction"
+                            }
                         }
                     },
                     "500": {
@@ -155,16 +164,20 @@ const docTemplate = `{
         "models.Transaction": {
             "type": "object",
             "required": [
-                "amount"
+                "amount",
+                "customer_id"
             ],
             "properties": {
                 "amount": {
+                    "type": "number"
+                },
+                "customer_id": {
                     "type": "string"
                 },
                 "description": {
                     "type": "string"
                 },
-                "id": {
+                "transaction_id": {
                     "type": "string"
                 }
             }
