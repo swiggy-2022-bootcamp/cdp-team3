@@ -1,8 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Admin can get their details and create, read, update and delete customers.",
-        "title": "BuyItNow Admin Services",
+        "title": "BuyItNow Admin Service",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "Uttej Immadi",
@@ -18,7 +17,7 @@
     "paths": {
         "/": {
             "get": {
-                "description": "When a request is made to the / endpoint, if the service is running, it returns \"Okay\"",
+                "description": "This request will return 200 OK if server is up..",
                 "consumes": [
                     "application/json"
                 ],
@@ -28,12 +27,88 @@
                 "tags": [
                     "Health"
                 ],
-                "summary": "Checks whether the service is up \u0026 running",
+                "summary": "To check if the service is running or not.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin": {
+            "post": {
+                "description": "We can create an admin user using this function",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Service - Admin Operations"
+                ],
+                "summary": "Adds Admin User",
+                "parameters": [
+                    {
+                        "description": "admin details",
+                        "name": "Details",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SwaggerAdmin"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "type": "String"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/user": {
+            "get": {
+                "description": "Gets the details of the Admin User that is currently logged in",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Service - Admin Operations"
+                ],
+                "summary": "Gets the details of the Admin User",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Admin"
                         }
                     },
                     "400": {
@@ -52,54 +127,13 @@
             }
         },
         "/customers": {
-            "post": {
-                "description": "creates a customer account when the admin is verified",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "creates a customer account",
-                "parameters": [
-                    {
-                        "description": "customer details",
-                        "name": "Customer",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Customer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "String"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "number"
-                        }
-                    }
-                }
-            }
-        },
-        "/customers/email/{email}": {
             "get": {
-                "description": "fetches the details of a customer based on the given email",
+                "security": [
+                    {
+                        "Bearer Token": []
+                    }
+                ],
+                "description": "This request will fetch all the customers",
                 "consumes": [
                     "application/json"
                 ],
@@ -107,67 +141,17 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Admin"
+                    "Admin Service - Customer Operations"
                 ],
-                "summary": "fetches a customer account by email",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "customer email",
-                        "name": "CustomerEmail",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
+                "summary": "Fetch all the customers",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "String"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "number"
-                        }
-                    }
-                }
-            }
-        },
-        "/customers/{id}": {
-            "get": {
-                "description": "fetches the details of a customer based on the given ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "fetches a customer account by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "customer id",
-                        "name": "CustomerID",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "String"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Customer"
+                            }
                         }
                     },
                     "400": {
@@ -184,8 +168,13 @@
                     }
                 }
             },
-            "put": {
-                "description": "Updates The Customer Details",
+            "post": {
+                "security": [
+                    {
+                        "Bearer Token": []
+                    }
+                ],
+                "description": "creates a customer account when the admin is verified",
                 "consumes": [
                     "application/json"
                 ],
@@ -193,7 +182,140 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Admin"
+                    "Admin Service - Customer Operations"
+                ],
+                "summary": "creates a customer account",
+                "parameters": [
+                    {
+                        "description": "customer details",
+                        "name": "Customer",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SwaggerCustomer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }
+        },
+        "/customers/email/{emailId}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer Token": []
+                    }
+                ],
+                "description": "fetches the details of a customer based on the given email",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Service - Customer Operations"
+                ],
+                "summary": "fetches a customer account by email",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "customer email",
+                        "name": "emailId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Customer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }
+        },
+        "/customers/{customerId}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer Token": []
+                    }
+                ],
+                "description": "Gets the customer details based on customer ID.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Service - Customer Operations"
+                ],
+                "summary": "Get Customer based on customer ID.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Customer Id",
+                        "name": "customerId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Customer"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Updates The Customer Details using given id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Service - Customer Operations"
                 ],
                 "summary": "Updates a customer account",
                 "parameters": [
@@ -203,13 +325,22 @@
                         "name": "CustomerID",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "customer id",
+                        "name": "Details",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Customer"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "String"
+                            "$ref": "#/definitions/models.Customer"
                         }
                     },
                     "400": {
@@ -227,6 +358,11 @@
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "Bearer Token": []
+                    }
+                ],
                 "description": "deletes The Customer Details based on the given ID",
                 "consumes": [
                     "application/json"
@@ -235,55 +371,18 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Admin"
+                    "Admin Service - Customer Operations"
                 ],
                 "summary": "deletes a customer account",
                 "parameters": [
                     {
-                        "description": "customer details",
-                        "name": "Customer",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Customer"
-                        }
+                        "type": "string",
+                        "description": "Customer Id",
+                        "name": "customerId",
+                        "in": "path",
+                        "required": true
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "String"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "number"
-                        }
-                    }
-                }
-            }
-        },
-        "/user": {
-            "get": {
-                "description": "When a request is made, it returns the admin details",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Gets the details of the admin that is logged in",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -308,25 +407,144 @@
         }
     },
     "definitions": {
+        "models.Address": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "default": {
+                    "type": "integer"
+                },
+                "house_number": {
+                    "type": "string"
+                },
+                "pincode": {
+                    "type": "string"
+                },
+                "street": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Admin": {
+            "type": "object",
+            "properties": {
+                "adminId": {
+                    "type": "string"
+                },
+                "date_added": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "firstname": {
+                    "type": "string"
+                },
+                "isAdmin": {
+                    "type": "boolean"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "telephone": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Customer": {
             "type": "object",
             "properties": {
-                "_id": {
-                    "type": "string"
+                "address": {
+                    "$ref": "#/definitions/models.Address"
                 },
                 "approved": {
                     "type": "string"
                 },
-                "cart": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
                 "confirmpassword": {
                     "type": "string"
                 },
+                "customerId": {
+                    "type": "string"
+                },
                 "dateAdded": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "firstname": {
+                    "type": "string"
+                },
+                "isAdmin": {
+                    "type": "boolean"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "rewards": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "telephone": {
+                    "type": "string"
+                },
+                "transaction_points": {
+                    "type": "number"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.SwaggerAdmin": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "firstname": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "telephone": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.SwaggerCustomer": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "$ref": "#/definitions/models.Address"
+                },
+                "confirmpassword": {
                     "type": "string"
                 },
                 "email": {
@@ -341,16 +559,10 @@
                 "password": {
                     "type": "string"
                 },
-                "rewards": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                },
                 "telephone": {
                     "type": "string"
                 },
-                "userGroup": {
+                "username": {
                     "type": "string"
                 }
             }

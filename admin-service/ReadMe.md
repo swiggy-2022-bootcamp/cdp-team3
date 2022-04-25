@@ -1,17 +1,11 @@
-### Admin Service
-
 ### Endoints
 
-| Http Method |         Enpoint         |
-| ----------- | :---------------------: |
-| GET         |          /user          |
-| POST        |       /customers        |
-| GET         |     /customers/:id      |
-| GET         | /customers/email/:email |
-| PUT         |     /customers/:id      |
-| DELETE      |     /customers/:id      |
-
-
+| Http Method |        Enpoint         |                    Description                    |
+| ----------- | :--------------------: | :-----------------------------------------------: |
+| GET         |        /rewards        |         Get List of all the added Rewards         |
+| POST        |        /rewards        |                  Add New Reward                   |
+| GET         |  /rewards/{rewardId}   |          Get Reward details by Reward ID          |
+| GET         | /rewards/user/{userId} | Get all the Rewards for a customer by Customer ID |
 
 
 
@@ -26,10 +20,5 @@ Generate swagger docs
 swag init
 ```
 
-Docker Image Pushed To
-```sh
-immadiuttej/admin-service
-```
-
 Swagger page
-> http://localhost:3009/swagger/index.html
+> http://localhost:3008/swagger/index.html
