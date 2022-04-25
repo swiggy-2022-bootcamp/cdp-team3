@@ -16,7 +16,7 @@ import (
 
 func AddTransactionAmountConsumer() {
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{"localhost:" + configs.EnvAddTransactionAmountBrokerAddress()},
+		Brokers: []string{configs.EnvAddTransactionAmountBrokerAddress()},
 		Topic:   configs.EnvAddTransactionAmountTopic(),
 	})
 

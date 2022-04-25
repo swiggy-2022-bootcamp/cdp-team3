@@ -40,7 +40,7 @@ services:
       context: ./transaction-service
       dockerfile: ./Dockerfile
     ports:
-      - "3005": "3005"
+      - "3005:3005"
     depends_on:
       - broker
     environment:

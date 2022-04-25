@@ -10,7 +10,7 @@ import (
 
 func  AddTransactionAmountProducer(customerId string, transactionAmount float64 ) {
 	w := kafka.NewWriter(kafka.WriterConfig{
-		Brokers:  []string{"localhost:"+configs.EnvAddTransactionAmountBrokerAddress()},
+		Brokers:  []string{configs.EnvBrokerAddress()},
 		Topic:   configs.EnvAddTransactionAmountTopic(),
 		Balancer: &kafka.LeastBytes{},
 	})

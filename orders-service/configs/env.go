@@ -14,12 +14,12 @@ func EnvAccessKey() string {
 
 func EnvGrpcOrderServerPORT() string {
 	loadEnvFile()
-	return os.Getenv("GRPC_ORDER_SERVER_PORT")
+	return os.Getenv("ORDER_SERVICE_GRPC_PORT")
 }
 
 func EnvGrpcAuthClientPORT() string {
 	loadEnvFile()
-	return os.Getenv("GRPC_AUTH_CLIENT_PORT")
+	return os.Getenv("AUTH_CLIENT_GRPC_PORT")
 }
 
 func EnvSecretKey() string {
@@ -42,14 +42,9 @@ func EnvUpdateStatusTopic() string {
 	return os.Getenv("UPDATE_STATUS_TOPIC")
 }
 
-func EnvUpdateStatusBrokerAddress() string {
+func EnvBrokerAddress() string {
 	loadEnvFile()
-	return os.Getenv("UPDATE_STATUS_BROKER_ADDRESS")
-}
-
-func EnvAddTransactionAmountBrokerAddress() string {
-	loadEnvFile()
-	return os.Getenv("ADD_TRANSACTION_AMOUNT_BROKER_ADDRESS")
+	return os.Getenv("KAFKA_BROKER_ADDRESS")
 }
 
 func EnvAddTransactionAmountTopic() string {

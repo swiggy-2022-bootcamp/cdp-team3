@@ -13,7 +13,7 @@ import (
 
 func UpdateOrderStatusConsumer() {
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers: []string{"localhost:"+configs.EnvUpdateStatusBrokerAddress()},
+		Brokers: []string{configs.EnvBrokerAddress()},
 		Topic:   configs.EnvUpdateStatusTopic(),
 	})
 

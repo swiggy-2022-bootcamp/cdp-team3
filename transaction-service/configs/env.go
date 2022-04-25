@@ -24,22 +24,22 @@ func EnvRegion() string {
 
 func EnvPORT() string {
 	loadEnvFile()
-	return os.Getenv("PORT")
+	return os.Getenv("TRANSACTION_SERVICE_PORT")
 }
 
 func EnvGrpcAuthClientPORT() string {
 	loadEnvFile()
-	return os.Getenv("GRPC_AUTH_CLIENT_PORT")
+	return os.Getenv("AUTH_CLIENT_GRPC_PORT")
 }
 
 func EnvGrpcAdminClientPORT() string {
 	loadEnvFile()
-	return os.Getenv("GRPC_ADMIN_CLIENT_PORT")
+	return os.Getenv("ADMIN_CLIENT_GRPC_PORT")
 }
 
 func EnvAddTransactionAmountBrokerAddress() string {
 	loadEnvFile()
-	return os.Getenv("ADD_TRANSACTION_AMOUNT_BROKER_ADDRESS")
+	return os.Getenv("KAFKA_BROKER_ADDRESS")
 }
 
 func EnvAddTransactionAmountTopic() string {
