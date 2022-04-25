@@ -64,9 +64,7 @@ services:
       - SHIPPING_SERVICE_GRPC_PORT=8003
 
   shipping:
-    build: 
-      context: ./shipping-address-service
-      dockerfile: ./Dockerfile
+    image: chahat7/shipping
     ports:
       - "3003:3003"
       - "8003:8003"
