@@ -1,21 +1,14 @@
 package controllers
 
 import (
-	"context"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	_ "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/configs"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/domain/services"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/dto"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/models"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/utils"
 )
 
@@ -47,55 +40,52 @@ func NewAuthController(authService services.AuthService) *AuthController {
 // @Failure	404  {number} 	http.StatusNotFound
 // @Failure	500  {number} 	http.StatusInternalServerError
 // @Router /auth/login [POST]
-func Login() gin.HandlerFunc {
+func (ac AuthController) Login() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		ctx, cancel := context.WithTimeout(context.Background(), requestTimeout)
-		defer cancel()
-
 		var user dto.LoginDto
-		var foundUser models.User
 
 		if err := c.BindJSON(&user); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		input := &dynamodb.GetItemInput{
-			TableName: aws.String(models.UserTableName),
-			Key: map[string]*dynamodb.AttributeValue{
-				"email": {
-					S: aws.String(user.Email),
-				},
-			},
-		}
-
-		result, err := configs.DB.GetItemWithContext(ctx, input)
-		if err != nil {
-			logger.Log(err)
-			c.JSON(http.StatusNotFound, gin.H{"error": "User with this email doesn't exists "})
-			return
-		}
-		err = dynamodbattribute.UnmarshalMap(result.Item, &foundUser)
+		foundUser, err := ac.authService.GetUserByEmail(user.Email)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.AbortWithStatusJSON(err.Code, dto.ResponseDTO{
+				Message: err.Message,
+				Data:    nil,
+				Status:  err.Code,
+			})
 			return
 		}
 
-		isValidPassword, msg := utils.VerifyPassword(user.Password, foundUser.Password)
+		isValidPassword, err := utils.VerifyPassword(user.Password, foundUser.Password)
 
 		if !isValidPassword {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": msg})
+			c.AbortWithStatusJSON(err.Code, dto.ResponseDTO{
+				Message: err.Message,
+				Data:    nil,
+				Status:  err.Code,
+			})
 			return
 		}
 		token, err := utils.CreateToken(foundUser.Id, foundUser.Email, foundUser.Name, foundUser.IsAdmin)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.AbortWithStatusJSON(err.Code, dto.ResponseDTO{
+				Message: err.Message,
+				Data:    nil,
+				Status:  err.Code,
+			})
 			return
 		}
 		token = "Bearer " + token
 		c.SetCookie("token", token, 3600, "/", "", false, true)
-		c.JSON(200, gin.H{"message": "logged in"})
+		c.JSON(http.StatusOK, dto.ResponseDTO{
+			Message: "logged in",
+			Data:    nil,
+			Status:  http.StatusOK,
+		})
 	}
 }
 
@@ -109,10 +99,14 @@ func Login() gin.HandlerFunc {
 // @Success	200  {string} 	message
 // @Failure	500  {number} 	http.StatusInternalServerError
 // @Router /auth/logout [POST]
-func Logout() gin.HandlerFunc {
+func (AuthController) Logout() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.SetCookie("token", "", -1, "/", "", false, true)
-		c.JSON(200, gin.H{"message": "logged out"})
+		c.JSON(200, dto.ResponseDTO{
+			Message: "logged out",
+			Data:    nil,
+			Status:  http.StatusOK,
+		})
 	}
 }
 
@@ -126,25 +120,40 @@ func Logout() gin.HandlerFunc {
 // @Success	200  {object} utils.SignedDetails
 // @Failure	401  {number} http.StatusUnauthorized
 // @Router /auth/verify-token [POST]
-func VerifyToken() gin.HandlerFunc {
+func (AuthController) VerifyToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token, err := c.Cookie("token")
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "token not found"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, dto.ResponseDTO{
+				Message: "token not found",
+				Data:    nil,
+				Status:  http.StatusUnauthorized,
+			})
 			return
 		}
 		token = strings.TrimPrefix(token, "Bearer ")
 		isValid, _ := utils.ValidateToken(token)
 		if isValid != true {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "token not valid"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, dto.ResponseDTO{
+				Message: "Invalid token",
+				Data:    nil,
+				Status:  http.StatusUnauthorized,
+			})
 			return
 		}
-		claims, err := utils.GetClaimsFromToken(token)
-		if err != nil {
-			fmt.Println("error", err)
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "token not valid"})
+		claims, err_ := utils.GetClaimsFromToken(token)
+		if err_ != nil {
+			c.AbortWithStatusJSON(err_.Code, dto.ResponseDTO{
+				Message: err_.Message,
+				Data:    nil,
+				Status:  err_.Code,
+			})
 			return
 		}
-		c.JSON(200, gin.H{"message": "token valid", "claims": claims})
+		c.JSON(http.StatusOK, dto.ResponseDTO{
+			Message: "token verified",
+			Data:    claims,
+			Status:  http.StatusOK,
+		})
 	}
 }

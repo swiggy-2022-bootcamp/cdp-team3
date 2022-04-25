@@ -15,7 +15,7 @@ func NewAuthRouter(authController controllers.AuthController) AuthRoutes {
 
 func (ar AuthRoutes) AuthRoute(router *gin.Engine) {
 	public := router.Group("/auth")
-	public.POST("/login", controllers.Login())
-	public.POST("/logout", controllers.Logout())
-	public.POST("/verify-token", controllers.VerifyToken())
+	public.POST("/login", ar.authController.Login())
+	public.POST("/logout", ar.authController.Logout())
+	public.POST("/verify-token", ar.authController.VerifyToken())
 }

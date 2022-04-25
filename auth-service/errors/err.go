@@ -61,3 +61,10 @@ func NewInternalServerError(message string) *AppError {
 		Code:    http.StatusInternalServerError,
 	}
 }
+
+func NewUnauthorisedError(message string) *AppError {
+	return &AppError{
+		Message: message,
+		Code:    http.StatusUnauthorized,
+	}
+}

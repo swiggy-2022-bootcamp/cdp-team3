@@ -13,8 +13,8 @@ func NewHealthRouter(authController controllers.AuthController) AuthRoutes {
 	return AuthRoutes{authController: authController}
 }
 
-func (HealthRoutes) HealthRoute(router *gin.Engine) {
+func (hr HealthRoutes) HealthRoute(router *gin.Engine) {
 	public := router.Group("")
-	public.GET("/", controllers.HealthCheck())
-	public.GET("/deep", controllers.DeepHealthCheck())
+	public.GET("/", hr.healthController.HealthCheck())
+	public.GET("/deep", hr.healthController.DeepHealthCheck())
 }

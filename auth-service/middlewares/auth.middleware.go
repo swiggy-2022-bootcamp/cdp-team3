@@ -23,8 +23,8 @@ func AuthenticateJWT() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		claims, err := utils.GetClaimsFromToken(tokenString)
-		if err != nil {
+		claims, err_ := utils.GetClaimsFromToken(tokenString)
+		if err_ != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid auth token"})
 			c.Abort()
 			return

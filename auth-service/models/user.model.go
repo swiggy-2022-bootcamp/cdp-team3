@@ -1,12 +1,6 @@
 package models
 
-import (
-	"fmt"
-
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/configs"
-)
+import "time"
 
 type User struct {
 	Id       string `json:"id"`
@@ -16,66 +10,45 @@ type User struct {
 	IsAdmin  bool   `json:"is_admin"`
 }
 
+type Address struct {
+	HouseNumber string `json:"house_number"`
+	Street      string `json:"street"`
+	City        string `json:"city"`
+	Country     string `json:"country"`
+	Pincode     string `json:"pincode"`
+	Default     int    `json:"default"`
+}
+
+type Admin struct {
+	AdminId   string    `json:"adminId"`
+	Firstname string    `json:"firstname"`
+	Lastname  string    `json:"lastname"`
+	Username  string    `json:"username"`
+	Email     string    `json:"email"`
+	Password  string    `json:"password"`
+	Telephone string    `json:"telephone"`
+	Status    string    `json:"status"`
+	DateAdded time.Time `json:"date_added"`
+	IsAdmin   bool      `json:"isAdmin"`
+}
+
+type Customer struct {
+	CustomerId      string    `json:"customerId"`
+	Firstname       string    `json:"firstname"`
+	Lastname        string    `json:"lastname"`
+	Username        string    `json:"username"`
+	Password        string    `json:"password"`
+	ConfirmPassword string    `json:"confirmpassword"`
+	Email           string    `json:"email"`
+	Telephone       string    `json:"telephone"`
+	Address         Address   `json:"address"`
+	Status          string    `json:"status"`
+	Approved        string    `json:"approved"`
+	DateAdded       time.Time `json:"dateAdded"`
+	Rewards         string    `json:"rewards"`
+	IsAdmin         bool      `json:"isAdmin"`
+}
+
 var UserTableName = "users"
-
-func CreateTable() {
-	tableInput := &dynamodb.CreateTableInput{
-		AttributeDefinitions: []*dynamodb.AttributeDefinition{
-			{
-				AttributeName: aws.String("email"),
-				AttributeType: aws.String("S"),
-			},
-		},
-		KeySchema: []*dynamodb.KeySchemaElement{
-			{
-				AttributeName: aws.String("email"),
-				KeyType:       aws.String("HASH"),
-			},
-		},
-		ProvisionedThroughput: &dynamodb.ProvisionedThroughput{
-			ReadCapacityUnits:  aws.Int64(1),
-			WriteCapacityUnits: aws.Int64(1),
-		},
-		TableName: aws.String(UserTableName),
-	}
-
-	_, err := configs.DB.CreateTable(tableInput)
-	if err != nil {
-		fmt.Println("Error creating table:", err)
-	}
-
-}
-
-func CreateUser(user User) (User, error) {
-	result, err := configs.DB.PutItem(&dynamodb.PutItemInput{
-		Item: map[string]*dynamodb.AttributeValue{
-			"id": {
-				S: aws.String(user.Id),
-			},
-			"name": {
-				S: aws.String(user.Name),
-			},
-			"email": {
-				S: aws.String(user.Email),
-			},
-			"password": {
-				S: aws.String(user.Password),
-			},
-			"is_admin": {
-				BOOL: aws.Bool(user.IsAdmin),
-			},
-		},
-		TableName: aws.String(UserTableName),
-	})
-
-	fmt.Println(result)
-
-	if err != nil {
-		return User{}, err
-	}
-	return user, nil
-}
-
-func main() {
-	CreateTable()
-}
+var AdminTableName = "Admins"
+var CustomerTableName = "Customers"

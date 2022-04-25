@@ -1,13 +1,13 @@
 package utils
 
 import (
-	"errors"
 	"log"
 
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/configs"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/auth-service/errors"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -25,7 +25,7 @@ type SignedDetails struct {
 	jwt.StandardClaims
 }
 
-func CreateToken(id string, emailId, name string, isAdmin bool) (signedToken string, err error) {
+func CreateToken(id string, emailId, name string, isAdmin bool) (string, *errors.AppError) {
 	claims := &SignedDetails{
 		UserId:  id,
 		Name:    name,
@@ -39,14 +39,13 @@ func CreateToken(id string, emailId, name string, isAdmin bool) (signedToken str
 	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(SECRET_KEY))
 
 	if err != nil {
-		log.Panic(err)
-		return
+		return "", errors.NewBadRequestError("Error while creating token")
 	}
 
-	return token, err
+	return token, nil
 }
 
-func ValidateToken(tokenReceived string) (bool, error) {
+func ValidateToken(tokenReceived string) (bool, *errors.AppError) {
 	token, err := jwt.ParseWithClaims(
 		tokenReceived,
 		&SignedDetails{},
@@ -56,24 +55,24 @@ func ValidateToken(tokenReceived string) (bool, error) {
 	)
 
 	if err != nil {
-		return false, err
+		return false, errors.NewUnexpectedError("Error while validating token")
 	}
 
 	claims, ok := token.Claims.(*SignedDetails)
 	if !ok {
-		err_ := errors.New("Token is invalid")
+		err_ := errors.NewBadRequestError("Error while validating token")
 		return false, err_
 	}
 
 	if claims.ExpiresAt < time.Now().Local().Unix() {
-		err_ := errors.New("Your session has expired. Please re-login")
+		err_ := errors.NewBadRequestError("Your session has expired. Please re-login")
 		return false, err_
 	}
 
 	return true, nil
 }
 
-func GetClaimsFromToken(tokenReceived string) (SignedDetails, error) {
+func GetClaimsFromToken(tokenReceived string) (SignedDetails, *errors.AppError) {
 	var claims SignedDetails
 	token, err := jwt.ParseWithClaims(
 		tokenReceived,
@@ -84,14 +83,14 @@ func GetClaimsFromToken(tokenReceived string) (SignedDetails, error) {
 	)
 
 	if err != nil {
-		return claims, err
+		return claims, errors.NewExpectationFailed("Error while validating token")
 	}
 
 	if token.Valid {
 		return claims, nil
 	}
 
-	return claims, errors.New("Token is invalid")
+	return claims, errors.NewBadRequestError("Token is invalid")
 }
 
 func HashPassword(password string) string {
@@ -102,14 +101,11 @@ func HashPassword(password string) string {
 	return string(bytes)
 }
 
-func VerifyPassword(userPassword string, providedPassword string) (bool, string) {
+func VerifyPassword(userPassword string, providedPassword string) (bool, *errors.AppError) {
 	err := bcrypt.CompareHashAndPassword([]byte(providedPassword), []byte(userPassword))
-	check := true
-	msg := ""
 
 	if err != nil {
-		msg = "Wrong password"
-		check = false
+		return false, errors.NewUnauthorisedError("Invalid password")
 	}
-	return check, msg
+	return true, nil
 }

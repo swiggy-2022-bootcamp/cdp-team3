@@ -20,7 +20,7 @@ type HealthController struct {
 // @Success	200  {object} 	utils.HealthCheckResponse
 // @Failure 500  {number} 	http.StatusInternalServerError
 // @Router / [GET]
-func HealthCheck() gin.HandlerFunc {
+func (HealthController) HealthCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		response := utils.HealthCheck()
 		c.JSON(200, response)
@@ -37,7 +37,7 @@ func HealthCheck() gin.HandlerFunc {
 // @Success	200  {object} 	utils.HealthCheckResponse
 // @Failure 500  {number} 	http.StatusInternalServerError
 // @Router /deep [GET]
-func DeepHealthCheck() gin.HandlerFunc {
+func (HealthController) DeepHealthCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		response := utils.DeepHealthCheck()
 		c.JSON(200, response)
