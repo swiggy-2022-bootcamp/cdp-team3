@@ -1,0 +1,6 @@
+projectKey=ShippingService
+serverUrl=http://localhost:9000
+serverVersion=9.4.0.54424
+dashboardUrl=http://localhost:9000/dashboard?id=ShippingService
+ceTaskId=AYBdOd88zRUT5ozAmRU6
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYBdOd88zRUT5ozAmRU6
