@@ -26,7 +26,7 @@ services:
     depends_on:
       - broker
     environment:
-      - ORDER_HOST=order
+      - ORDER_HOST=orders
       - ORDER_SERVICE_PORT=3004
       - ORDER_SERVICE_GRPC_PORT=8004
       - AUTH_HOST=auth
@@ -66,7 +66,7 @@ services:
       - CHECKOUT_HOST=checkout
       - CHECKOUT_SERVICE_PORT=3011
       - CHECKOUT_SERVICE_GRPC_PORT=8011
-      - ORDER_HOST=order
+      - ORDER_HOST=orders
       - ORDER_SERVICE_GRPC_PORT=8013
       - SHIPPING_HOST=shipping
       - SHIPPING_SERVICE_GRPC_PORT=8003
