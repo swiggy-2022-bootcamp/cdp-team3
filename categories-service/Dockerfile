@@ -1,25 +1,31 @@
-FROM golang:1.18-alpine
+# syntax=docker/dockerfile:1
 
-# Set destination for COPY
+# Base Image for Golang project. Alpine has smaller footprint than Ubuntu.
+FROM golang:1.18-alpine3.15
+
+# Set necessary environment variables needed for our image
+ENV GO111MODULE=on \
+    CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64
+
+# Create a directly called /app and change directory into it
 WORKDIR /app
 
-# Download Go modules
-COPY go.mod .
-COPY go.sum .
+# Copy project files into the image
+COPY ./ ./
+
+# Get Dependencies
 RUN go mod download
 
-# Copy the source code.
-COPY  . .
+# Run tests
+RUN go test ./...
 
-# Build
-RUN go build ./main.go
+# Build the Golang Application  
+RUN go build -o /main .
 
-# This is for documentation purposes only.
-# To actually open the port, runtime parameters
-# must be supplied to the docker command.
-EXPOSE 3002
+# Expose the application as a port and run it
+EXPOSE ${CATEGORIES_SERVICE_PORT}
 
-WORKDIR /
 
-# Run
-ENTRYPOINT ["/app/main"]
+CMD ["/main"]
