@@ -78,9 +78,7 @@ services:
       - AUTH_SERVICE_GRPC_PORT=8012
 
   categories:
-    build: 
-      context: ./categories-service
-      dockerfile: ./Dockerfile
+    image: chahat7/category
     ports:
       - "3002:3002"
     environment:

@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"
-	"github.com/cdp-team3/categories-service/app/grpcs"
-	"github.com/cdp-team3/categories-service/app/grpcs/products"
+	//"github.com/cdp-team3/categories-service/app/grpcs"
+	//"github.com/cdp-team3/categories-service/app/grpcs/products"
 	//"github.com/google/uuid"
 	apperros "github.com/cdp-team3/categories-service/app-errors"
 	"github.com/cdp-team3/categories-service/domain/models"
@@ -115,10 +115,10 @@ func (th CategoryHandler) DeleteCategories() (gin.HandlerFunc){
 			return
 		}
 		fmt.Println("clist",categoryList)
-		client, _ := grpcs.GetProductsGrpcClient()
-		val,er:=client.DeleteCategories(ctx.Request.Context(),&products.CategoriesDeleteRequest{CategoriesId:categoryList})
-		fmt.Println(val)
-		fmt.Println(er)
+		// client, _ := grpcs.GetProductsGrpcClient()
+		// val,er:=client.DeleteCategories(ctx.Request.Context(),&products.CategoriesDeleteRequest{CategoriesId:categoryList})
+		// fmt.Println(val)
+		// fmt.Println(er)
 		// if err != nil {
 		// 	logger.Error("Error while deleting categories: ", err)
 		// 	ctx.JSON(http.StatusInternalServerError, app_errors.NewHTTPErrorDTO(http.StatusInternalServerError, err, "Error Getting Shipping Address"))
@@ -139,10 +139,10 @@ func (th CategoryHandler) DeleteCategory() (gin.HandlerFunc) {
 	return func(ctx *gin.Context){
 		category_id := ctx.Param("category_id")
 	fmt.Println("Inside category id",category_id)
-		client, _ := grpcs.GetProductsGrpcClient()
-		val,err:=client.DeleteCategory(ctx.Request.Context(),&products.CategoryDeleteRequest{CategoryId:category_id})
-		fmt.Println(val)
-		fmt.Println(err)
+		// client, _ := grpcs.GetProductsGrpcClient()
+		// val,err:=client.DeleteCategory(ctx.Request.Context(),&products.CategoryDeleteRequest{CategoryId:category_id})
+		// fmt.Println(val)
+		// fmt.Println(err)
 		// if err != nil {
 		// 	logger.Error("Error while deleting categories: ", err)
 		// 	ctx.JSON(http.StatusInternalServerError, app_errors.NewHTTPErrorDTO(http.StatusInternalServerError, err, "Error Getting Shipping Address"))
