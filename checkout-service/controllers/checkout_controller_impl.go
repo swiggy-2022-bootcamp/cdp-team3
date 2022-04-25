@@ -79,6 +79,7 @@ func (cc *checkoutControllerImpl) GetOrderOverview(c *gin.Context) {
 				CustomerId:      claims.UserId,
 				OrderedProducts: orderedProducts,
 				TotalAmount: amt,
+				ShippingAddressId: shippingOut.GetCountryid(),
 			},
 		})
 		if err != nil {

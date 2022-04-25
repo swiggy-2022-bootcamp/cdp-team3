@@ -11,6 +11,8 @@ import (
 	"github.com/swiggy-ipp/cart-service/services"
 )
 
+const unauthorizedErrorMessage string = "You are not authorized to perform this action."
+
 // Implementation of the CartController interface
 type cartControllerImpl struct {
 	cartService services.CartService
@@ -40,7 +42,7 @@ func (cc *cartControllerImpl) CreateCartItem(c *gin.Context) {
 	if err := c.ShouldBindJSON(&cartItemDTO); err != nil {
 		c.JSON(http.StatusBadRequest, errors.NewHTTPErrorDTO(http.StatusBadRequest, err))
 	} else if claims.GetUserId() == "" {
-		c.JSON(http.StatusForbidden, errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "You are not authorized to perform this action."))
+		c.JSON(http.StatusForbidden, errors.NewHTTPErrorDTO(http.StatusForbidden, nil, unauthorizedErrorMessage))
 	} else {
 		// Create Cart Item
 		err := cc.cartService.CreateCartItem(c.Request.Context(), &cartItemDTO, claims.GetUserId())
@@ -91,7 +93,7 @@ func (cc *cartControllerImpl) GetCartItems(c *gin.Context) {
 		} else {
 			c.JSON(
 				http.StatusForbidden,
-				errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "You are not authorized to perform this action."),
+				errors.NewHTTPErrorDTO(http.StatusForbidden, nil, unauthorizedErrorMessage),
 			)
 		}
 	}
@@ -116,7 +118,7 @@ func (cc *cartControllerImpl) UpdateCartItem(c *gin.Context) {
 	if err := c.ShouldBindJSON(&cartItemDTO); err != nil {
 		c.JSON(http.StatusBadRequest, errors.NewHTTPErrorDTO(http.StatusBadRequest, err))
 	} else if claims.GetUserId() == "" {
-		c.JSON(http.StatusForbidden, errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "You are not authorized to perform this action."))
+		c.JSON(http.StatusForbidden, errors.NewHTTPErrorDTO(http.StatusForbidden, nil, unauthorizedErrorMessage))
 	} else {
 		// Create Cart Item
 		err := cc.cartService.UpdateCartItem(c.Request.Context(), &cartItemDTO, claims.GetUserId())
@@ -147,7 +149,7 @@ func (cc *cartControllerImpl) DeleteCartItem(c *gin.Context) {
 	if err := c.ShouldBindJSON(&cartItemDTO); err != nil {
 		c.JSON(http.StatusBadRequest, errors.NewHTTPErrorDTO(http.StatusBadRequest, err))
 	} else if claims.GetUserId() == "" {
-		c.JSON(http.StatusForbidden, errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "You are not authorized to perform this action."))
+		c.JSON(http.StatusForbidden, errors.NewHTTPErrorDTO(http.StatusForbidden, nil, unauthorizedErrorMessage))
 	} else {
 		// Get Cart Item Product ID from URL
 		productID := c.Param("productID")
@@ -202,7 +204,7 @@ func (cc *cartControllerImpl) EmptyCart(c *gin.Context) {
 		} else {
 			c.JSON(
 				http.StatusForbidden,
-				errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "You are not authorized to perform this action."),
+				errors.NewHTTPErrorDTO(http.StatusForbidden, nil, unauthorizedErrorMessage),
 			)
 		}
 	}

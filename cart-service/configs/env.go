@@ -7,10 +7,12 @@ import (
 	"github.com/joho/godotenv"
 )
 
+const errorMessage string = "Error loading .env file."
+
 func EnvKafkaBrokerAddress() string {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file.")
+		log.Fatalf(errorMessage)
 	}
 	return os.Getenv("KAFKA_BROKER_ADDRESS")
 }
@@ -18,7 +20,7 @@ func EnvKafkaBrokerAddress() string {
 func EnvKafkaUserCreatedTopic() string {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file.")
+		log.Fatalf(errorMessage)
 	}
 	return os.Getenv("KAFKA_USER_CREATED_TOPIC")
 }
@@ -26,7 +28,7 @@ func EnvKafkaUserCreatedTopic() string {
 func EnvKafkaUserDeletedTopic() string {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file.")
+		log.Fatalf(errorMessage)
 	}
 	return os.Getenv("KAFKA_USER_DELETED_TOPIC")
 }
@@ -34,7 +36,7 @@ func EnvKafkaUserDeletedTopic() string {
 func EnvRegion() string {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file.")
+		log.Fatalf(errorMessage)
 	}
 
 	region := os.Getenv("AWS_REGION")
@@ -47,7 +49,7 @@ func EnvRegion() string {
 func EnvAccessKey() string {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file.")
+		log.Fatalf(errorMessage)
 	}
 
 	return os.Getenv("AWS_ACCESS_KEY_ID")
@@ -56,7 +58,7 @@ func EnvAccessKey() string {
 func EnvSecretKey() string {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file.")
+		log.Fatalf(errorMessage)
 	}
 
 	return os.Getenv("AWS_SECRET_ACCESS_KEY")
@@ -65,7 +67,7 @@ func EnvSecretKey() string {
 func EnvCartHost() string {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file.")
+		log.Fatalf(errorMessage)
 	}
 
 	return os.Getenv("CART_HOST")
@@ -74,7 +76,7 @@ func EnvCartHost() string {
 func EnvServicePort() string {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file.")
+		log.Fatalf(errorMessage)
 	}
 
 	return os.Getenv("CART_SERVICE_PORT")
@@ -83,7 +85,7 @@ func EnvServicePort() string {
 func EnvCartServiceGRPCPort() string {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file.")
+		log.Fatalf(errorMessage)
 	}
 
 	return os.Getenv("CART_SERVICE_GRPC_PORT")

@@ -24,6 +24,8 @@ var (
 	OrderCheckoutGRPCChannel chan order_checkout.OrderServiceClient = make(chan order_checkout.OrderServiceClient)
 )
 
+const didNotConnectErrorMessage string = "Did not connect: %v"
+
 /// Function with logic for becoming GRPC Client
 func BecomeGRPCClient() {
 	// For Cart Checkout
@@ -32,7 +34,7 @@ func BecomeGRPCClient() {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
-		log.Fatalf("Did not connect: %v", err)
+		log.Fatalf(didNotConnectErrorMessage, err)
 		ErrChanGRPC <- err
 	} else {
 		CartCheckoutGRPCChannel <- cart_checkout.NewCartCheckoutServiceClient(conn)
@@ -43,7 +45,7 @@ func BecomeGRPCClient() {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
-		log.Fatalf("Did not connect: %v", err)
+		log.Fatalf(didNotConnectErrorMessage, err)
 		ErrChanGRPC <- err
 	} else {
 		ShippingCheckoutGRPCChannel <- shipping_checkout.NewShippingClient(conn)
@@ -54,7 +56,7 @@ func BecomeGRPCClient() {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
-		log.Fatalf("Did not connect: %v", err)
+		log.Fatalf(didNotConnectErrorMessage, err)
 		ErrChanGRPC <- err
 	} else {
 		OrderCheckoutGRPCChannel <- order_checkout.NewOrderServiceClient(conn)
