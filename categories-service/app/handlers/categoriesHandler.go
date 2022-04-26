@@ -93,8 +93,8 @@ func (th CategoryHandler) GetAllCategory() (gin.HandlerFunc){
 
 func (th CategoryHandler) GetCategory()  (gin.HandlerFunc){
 	return func(ctx *gin.Context) {
-	category_id := ctx.Param("category_id")
-	category, err := th.categoryService.GetCategory(category_id)
+	id := ctx.Param("category_id")
+	category, err := th.categoryService.GetCategory(id)
 	if err != nil {
 		ctx.Error(err.Error())
 		ctx.JSON(err.Code, gin.H{"message": err.Message})
@@ -137,8 +137,8 @@ func (th CategoryHandler) DeleteCategories() (gin.HandlerFunc){
 }
 func (th CategoryHandler) DeleteCategory() (gin.HandlerFunc) {
 	return func(ctx *gin.Context){
-		category_id := ctx.Param("category_id")
-	fmt.Println("Inside category id",category_id)
+		id := ctx.Param("category_id")
+	fmt.Println("Inside category id",id)
 		// client, _ := grpcs.GetProductsGrpcClient()
 		// val,err:=client.DeleteCategory(ctx.Request.Context(),&products.CategoryDeleteRequest{CategoryId:category_id})
 		// fmt.Println(val)
@@ -151,7 +151,7 @@ func (th CategoryHandler) DeleteCategory() (gin.HandlerFunc) {
 		// 	//ctx.JSON(http.StatusBadRequest, app_errors.NewHTTPErrorDTO(http.StatusBadRequest, nil, "Shipping Address is not valid."))
 		// 	return
 		// }
-	 _,err_ := th.categoryService.DeleteCategoryByID(category_id)
+	 _,err_ := th.categoryService.DeleteCategoryByID(id)
 	if err_ != nil {
 		ctx.Error(err_.Error())
 		ctx.JSON(err_.Code, gin.H{"message": err_.Message})
@@ -162,7 +162,7 @@ func (th CategoryHandler) DeleteCategory() (gin.HandlerFunc) {
 }
 func (th CategoryHandler) UpdateCategory() (gin.HandlerFunc) {
 	return func(ctx *gin.Context){
-	category_id := ctx.Param("category_id")
+	id := ctx.Param("category_id")
 	var category *models.Category
       //  defer cancel()
 	    // validate the request body
@@ -170,7 +170,7 @@ func (th CategoryHandler) UpdateCategory() (gin.HandlerFunc) {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
             return
         }
-	res, err := th.categoryService.UpdateCategoryByID(category_id,category)
+	res, err := th.categoryService.UpdateCategoryByID(id,category)
 	if err != nil {
 		ctx.Error(err.Error())
 		ctx.JSON(err.Code, gin.H{"message": err.Message})

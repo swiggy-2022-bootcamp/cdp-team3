@@ -44,10 +44,10 @@ func (t CategoryServiceImpl) GetAllCategory() ([]models.Category,*apperros.AppEr
 	return result,nil
 }
 
-func (p CategoryServiceImpl) GetCategory(category_id string) (*models.Category, *apperros.AppError) {
+func (p CategoryServiceImpl) GetCategory(id string) (*models.Category, *apperros.AppError) {
 
 	
-	category, err := p.categoryRepository.GetCategoryFromDB(category_id)
+	category, err := p.categoryRepository.GetCategoryFromDB(id)
 	if err != nil {
 		fmt.Println(err)
 		logger.Error(err)
@@ -66,14 +66,14 @@ func (p CategoryServiceImpl) DeleteCategories(categories []string) (bool,*apperr
 	}
 	return res,nil
 }
-func (p CategoryServiceImpl) DeleteCategoryByID(category_id string) (bool,*apperros.AppError) {
+func (p CategoryServiceImpl) DeleteCategoryByID(id string) (bool,*apperros.AppError) {
 
 
      
 	// if res == true{
 	//	return false,apperrors.NewConflictRequestError(err.Error())
 	// } else{
-		res,err := p.categoryRepository.DeleteCategoryByIDFromDB(category_id)
+		res,err := p.categoryRepository.DeleteCategoryByIDFromDB(id)
 		if err != nil {
 			fmt.Println(err)
 			logger.Error(err)
@@ -83,10 +83,10 @@ func (p CategoryServiceImpl) DeleteCategoryByID(category_id string) (bool,*apper
 	// }
 	
 }
-func (p CategoryServiceImpl) UpdateCategoryByID(category_id string,category *models.Category) (bool,*apperros.AppError) {
+func (p CategoryServiceImpl) UpdateCategoryByID(id string,category *models.Category) (bool,*apperros.AppError) {
 
 
-	 _,err := p.categoryRepository.UpdateCategoryByIdFromDB(category_id,category)
+	 _,err := p.categoryRepository.UpdateCategoryByIdFromDB(id,category)
 	if err != nil {
 		fmt.Println(err)
 		logger.Error(err)
