@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package admin;
+
+option go_package = "./admin";
+
+service TransactionAmount{
+  rpc SendTransactionAmount (TransactionDetails) returns (SuccessMessage);
+}
+
+message TransactionDetails{
+  string UserId  = 1;
+  float TransactionAmount   = 2;
+}
+
+message SuccessMessage{
+  string IsAdded  = 1;
+}

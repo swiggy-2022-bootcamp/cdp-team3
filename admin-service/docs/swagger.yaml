@@ -1,0 +1,375 @@
+definitions:
+  models.Address:
+    properties:
+      city:
+        type: string
+      country:
+        type: string
+      default:
+        type: integer
+      house_number:
+        type: string
+      pincode:
+        type: string
+      street:
+        type: string
+    type: object
+  models.Admin:
+    properties:
+      adminId:
+        type: string
+      date_added:
+        type: string
+      email:
+        type: string
+      firstname:
+        type: string
+      isAdmin:
+        type: boolean
+      lastname:
+        type: string
+      password:
+        type: string
+      status:
+        type: string
+      telephone:
+        type: string
+      username:
+        type: string
+    type: object
+  models.Customer:
+    properties:
+      address:
+        $ref: '#/definitions/models.Address'
+      approved:
+        type: string
+      confirmpassword:
+        type: string
+      customerId:
+        type: string
+      dateAdded:
+        type: string
+      email:
+        type: string
+      firstname:
+        type: string
+      isAdmin:
+        type: boolean
+      lastname:
+        type: string
+      password:
+        type: string
+      rewards:
+        type: integer
+      status:
+        type: string
+      telephone:
+        type: string
+      transaction_points:
+        type: number
+      username:
+        type: string
+    type: object
+  models.SwaggerAdmin:
+    properties:
+      email:
+        type: string
+      firstname:
+        type: string
+      lastname:
+        type: string
+      password:
+        type: string
+      telephone:
+        type: string
+      username:
+        type: string
+    type: object
+  models.SwaggerCustomer:
+    properties:
+      address:
+        $ref: '#/definitions/models.Address'
+      confirmpassword:
+        type: string
+      email:
+        type: string
+      firstname:
+        type: string
+      lastname:
+        type: string
+      password:
+        type: string
+      telephone:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:3009
+info:
+  contact:
+    email: swiggyb3014@datascience.manipal.edu
+    name: Uttej Immadi
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: BuyItNow Admin Service
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: This request will return 200 OK if server is up..
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+      summary: To check if the service is running or not.
+      tags:
+      - Health
+  /admin:
+    post:
+      consumes:
+      - application/json
+      description: We can create an admin user using this function
+      parameters:
+      - description: admin details
+        in: body
+        name: Details
+        required: true
+        schema:
+          $ref: '#/definitions/models.SwaggerAdmin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: Adds Admin User
+      tags:
+      - Admin Service - Admin Operations
+  /admin/user:
+    get:
+      consumes:
+      - application/json
+      description: Gets the details of the Admin User that is currently logged in
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Admin'
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: Gets the details of the Admin User
+      tags:
+      - Admin Service - Admin Operations
+  /customers:
+    get:
+      consumes:
+      - application/json
+      description: This request will fetch all the customers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Customer'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Fetch all the customers
+      tags:
+      - Admin Service - Customer Operations
+    post:
+      consumes:
+      - application/json
+      description: creates a customer account when the admin is verified
+      parameters:
+      - description: customer details
+        in: body
+        name: Customer
+        required: true
+        schema:
+          $ref: '#/definitions/models.SwaggerCustomer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: creates a customer account
+      tags:
+      - Admin Service - Customer Operations
+  /customers/{customerId}:
+    delete:
+      consumes:
+      - application/json
+      description: deletes The Customer Details based on the given ID
+      parameters:
+      - description: Customer Id
+        in: path
+        name: customerId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: String
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: deletes a customer account
+      tags:
+      - Admin Service - Customer Operations
+    get:
+      description: Gets the customer details based on customer ID.
+      parameters:
+      - description: Customer Id
+        in: path
+        name: customerId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Customer'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Get Customer based on customer ID.
+      tags:
+      - Admin Service - Customer Operations
+    put:
+      consumes:
+      - application/json
+      description: Updates The Customer Details using given id
+      parameters:
+      - description: customer id
+        in: path
+        name: CustomerID
+        required: true
+        type: string
+      - description: customer id
+        in: body
+        name: Details
+        required: true
+        schema:
+          $ref: '#/definitions/models.Customer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Customer'
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      summary: Updates a customer account
+      tags:
+      - Admin Service - Customer Operations
+  /customers/email/{emailId}:
+    get:
+      consumes:
+      - application/json
+      description: fetches the details of a customer based on the given email
+      parameters:
+      - description: customer email
+        in: path
+        name: emailId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Customer'
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: fetches a customer account by email
+      tags:
+      - Admin Service - Customer Operations
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

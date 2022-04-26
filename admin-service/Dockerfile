@@ -1,40 +1,32 @@
-FROM golang:alpine AS builder
+# syntax=docker/dockerfile:1
 
-# Set necessary environmet variables needed for our image
+# Base Image for Golang project. Alpine has smaller footprint than Ubuntu.
+FROM golang:1.18-alpine3.15
+
+# Set necessary environment variables needed for our image
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
     GOOS=linux \
     GOARCH=amd64
 
-# Move to working directory /build
-WORKDIR /build
+# Create a directly called /app and change directory into it
+WORKDIR /app
 
-# Copy and download dependency using go mod
-COPY go.mod .
-COPY go.sum .
+# Copy project files into the image
+COPY ./ ./
+
+# Get Dependencies
 RUN go mod download
 
-# Copy the code into the container
-COPY . .
-
-# Run test
+# Run tests
 RUN go test ./...
 
-# Build the application
-RUN go build -o main .
+# Build the Golang Application  
+RUN go build -o /main .
 
-# Move to /dist directory as the place for resulting binary folder
-WORKDIR /dist
-
-# Copy binary from build to main folder
-RUN cp /build/main .
-
-############################
-# STEP 2 build a small image
-############################
-FROM scratch
-
-COPY --from=builder /dist/main /
+EXPOSE ${ADMIN_SERVICE_PORT}
+EXPOSE ${GRPC_REWARD_SERVER_PORT}
+EXPOSE ${GRPC_TRANSACTION_SERVER_PORT}
 
 # Command to run the executable
-ENTRYPOINT ["/main"]
+CMD ["/main"]
