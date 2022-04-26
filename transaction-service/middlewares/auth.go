@@ -6,8 +6,8 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	authproto "github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/grpc/auth/proto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/grpc/auth"
+	authproto "github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/grpc/auth/proto"
 )
 
 type SignedDetails struct {
