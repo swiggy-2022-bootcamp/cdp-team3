@@ -135,6 +135,7 @@ func (oc OrderController) GetOrderById() gin.HandlerFunc {
 				Status:  http.StatusUnauthorized,
 				Message: errors.MsgOrderNotCreatedByYou,
 			})
+			return
 		}
 
 		zap.L().Info("Fetched order successfully")
@@ -344,12 +345,13 @@ func (oc OrderController) GetOrderStatusById() gin.HandlerFunc {
 
 		isValidCustomer := utils.CheckLoggedInUserWithOrderCustomerId(c, orderId)
 
-		if !isValidCustomer {
+		if !utils.IsAdmin(c) && !utils.CheckLoggedInUserWithOrderCustomerId(c, order.CustomerId) { {
 			zap.L().Error(errors.MsgOrderNotCreatedByYou)
 			c.JSON(http.StatusUnauthorized, dto.ResponseDTO{
 				Status:  http.StatusUnauthorized,
 				Message: errors.MsgOrderNotCreatedByYou,
 			})
+			return
 		}
 
 		zap.L().Info("Fetched order status successfully")
