@@ -240,7 +240,7 @@ func (categoryRepo CategoryRepositoryImpl) UpdateCategoryByIdFromDB(categoryId s
 	prevCategoryInput := &dynamodb.GetItemInput{
 		TableName: aws.String("Category"),
 		Key: map[string]*dynamodb.AttributeValue{
-			"id": {
+			"category_id": {
 				S: aws.String(category.CategoryId),
 			},
 		},
