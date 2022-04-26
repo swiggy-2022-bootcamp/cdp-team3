@@ -46,7 +46,7 @@ func (ar AdminRepositoryImpl) GetSelfFromDB(adminId string) (*models.Admin, *err
 	admin := &models.Admin{}
 
 	query := &dynamodb.GetItemInput{
-		TableName: aws.String(customerCollection),
+		TableName: aws.String(adminCollection),
 		Key: map[string]*dynamodb.AttributeValue{
 			"adminId": {
 				S: aws.String(adminId),

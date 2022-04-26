@@ -47,9 +47,13 @@ func (cs *cartServiceImpl) CreateCart(ctx context.Context, userID string) error 
 // CreateCartItem creates a new Cart Item
 func (cs *cartServiceImpl) CreateCartItem(
 	ctx context.Context,
-	cartItemRequest *requests.CartItemRequest,
+	cartItemRequest requests.CartItemRequest,
 	userID string,
 ) error {
+	if cartItemRequest.Quantity == 0 {
+		cartItemRequest.Quantity = 1
+	}
+
 	// Attempt to fetch the Cart from DB
 	cart, err := cs.cartRepository.ReadByUserID(ctx, userID)
 	if err != nil {
@@ -119,9 +123,12 @@ func (cs *cartServiceImpl) GetCartItems(
 // UpdateCartItem updates a Cart Item
 func (cs *cartServiceImpl) UpdateCartItem(
 	ctx context.Context,
-	cartItemRequest *requests.CartItemRequest,
+	cartItemRequest requests.CartItemRequest,
 	userID string,
 ) error {
+	if cartItemRequest.Quantity == 0 {
+		cartItemRequest.Quantity = 1
+	}
 	// Attempt to fetch the Cart from DB
 	cart, err := cs.cartRepository.ReadByUserID(ctx, userID)
 	if err != nil {

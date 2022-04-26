@@ -9,11 +9,12 @@ import (
 type OrderRoutes struct {
 	ordersController controllers.OrderController
 }
+
 func NewOrderRoutes(ordersController controllers.OrderController) OrderRoutes {
 	return OrderRoutes{ordersController: ordersController}
 }
 
-func (or OrderRoutes)OrdersRoute(router *gin.Engine) {
+func (or OrderRoutes) OrdersRoute(router *gin.Engine) {
 
 	router.Use(middlewares.AuthenticateJWT())
 
@@ -24,13 +25,13 @@ func (or OrderRoutes)OrdersRoute(router *gin.Engine) {
 		adminRoutes.GET("/status/:status", or.ordersController.GetOrdersByStatus())
 		adminRoutes.PUT("/:orderId", or.ordersController.UpdateStatusById())
 		adminRoutes.DELETE("/:orderId", or.ordersController.DeleteOrderById())
-	
+
 		adminRoutes.GET("/user/:userId", or.ordersController.GetOrdersByCustomerId())
 		adminRoutes.POST("/invoice/:orderId", or.ordersController.GenerateInvoiceById())
 	}
 
 	//Should be available to front store only if the order is placed by the customer
-	router.GET("/:orderId", or.ordersController.GetOrderById())
+	router.GET("/orders/:orderId", or.ordersController.GetOrderById())
 
 	//Front Store Route
 	router.GET("/orders/:orderId/order_status", or.ordersController.GetOrderStatusById())

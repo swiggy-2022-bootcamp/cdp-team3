@@ -102,7 +102,7 @@ func TestCreateCartItem(t *testing.T) {
 	cs := NewCartService(repo)
 
 	// Assert
-	if err := cs.CreateCartItem(ctx, &mockCartItemRequest, mockUserID); err != nil {
+	if err := cs.CreateCartItem(ctx, mockCartItemRequest, mockUserID); err != nil {
 		t.Errorf("CreateCartItem() error = %v", err)
 	}
 }
@@ -154,7 +154,7 @@ func TestUpdateCartItem(t *testing.T) {
 	cs := NewCartService(repo)
 
 	// Assert
-	if err := cs.UpdateCartItem(ctx, &mockCartItemRequest, mockUserID); err != nil {
+	if err := cs.UpdateCartItem(ctx, mockCartItemRequest, mockUserID); err != nil {
 		t.Errorf("UpdateCartItem() error = %v", err)
 	}
 }
