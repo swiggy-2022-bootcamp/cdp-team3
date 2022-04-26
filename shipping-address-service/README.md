@@ -4,7 +4,7 @@ Contains the Shipping Address Microservice for the final Swiggy I++ E-Commerce A
 
 ## Project Structure
 
-| ![Folder Structure]() |
+| ![Folder Structure](shippingfolder.png) |
 | --- |
 
 ## Relevant REST APIs (:3003)

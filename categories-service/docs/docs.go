@@ -32,21 +32,14 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Health"
+                    ""
                 ],
                 "summary": "To check if the service is running or not.",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "number"
+                            "type": "string"
                         }
                     }
                 }
