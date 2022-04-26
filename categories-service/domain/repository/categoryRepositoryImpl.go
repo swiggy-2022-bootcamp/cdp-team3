@@ -177,11 +177,11 @@ func (categoryRepo CategoryRepositoryImpl) DeleteCategoryByIDFromDB(categoryId s
 	//delete the category
 	input := &dynamodb.DeleteItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
-			"id": {
-				N: aws.String(categoryId),
+			"category_id": {
+				S: aws.String(categoryId),
 			},
 		},
-		TableName: aws.String("Category"),
+		TableName: aws.String(categoryCollection),
 	}
 
 	_, err := categoryRepo.categoryDB.DeleteItemWithContext(ctx, input)
@@ -218,8 +218,8 @@ func (categoryRepo CategoryRepositoryImpl) DeleteCategoriesFromDB(categoryIds []
 		for _,categoryId := range categoryIds{
 		input := &dynamodb.DeleteItemInput{
 			Key: map[string]*dynamodb.AttributeValue{
-				"id": {
-					N: aws.String(categoryId),
+				"category_id": {
+					S: aws.String(categoryId),
 				},
 			},
 			TableName: aws.String(categoryCollection),
