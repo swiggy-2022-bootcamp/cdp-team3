@@ -38,6 +38,7 @@ FROM scratch
 COPY --from=builder /dist/main /
 COPY --from=builder /build/.env /
 
+EXPOSE ${PAYMENT_PORT}
 
 # Command to run the executable
 ENTRYPOINT ["/main"]
