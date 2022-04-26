@@ -36,7 +36,7 @@ func NewCartController(cartService services.CartService) CartController {
 // @Router       /cart [post]
 func (cc *cartControllerImpl) CreateCartItem(c *gin.Context) {
 	// Get User Claims
-	claims := c.MustGet("claims").(*proto.VerifyTokenResponse)
+	claims := c.MustGet("user_details").(*proto.VerifyTokenResponse)
 	// Get Cart Item Request DTO Object
 	cartItemDTO := requests.CartItemRequest{}
 	if err := c.ShouldBindJSON(&cartItemDTO); err != nil {
@@ -80,7 +80,7 @@ func (cc *cartControllerImpl) GetCartItems(c *gin.Context) {
 		)
 	} else {
 		// Get User Claims
-		claims := c.MustGet("claims").(*proto.VerifyTokenResponse)
+		claims := c.MustGet("user_details").(*proto.VerifyTokenResponse)
 		if (cartID != "" && claims.GetIsAdmin()) || (userID != "" && userID == claims.GetUserId()) {
 			res, err := cc.cartService.GetCartItems(c.Request.Context(), cartID, userID)
 			if err != nil {
@@ -112,7 +112,7 @@ func (cc *cartControllerImpl) GetCartItems(c *gin.Context) {
 // @Router       /cart [put]
 func (cc *cartControllerImpl) UpdateCartItem(c *gin.Context) {
 	// Get User Claims
-	claims := c.MustGet("claims").(*proto.VerifyTokenResponse)
+	claims := c.MustGet("user_details").(*proto.VerifyTokenResponse)
 	// Get Cart Item Request DTO Object
 	cartItemDTO := requests.CartItemRequest{}
 	if err := c.ShouldBindJSON(&cartItemDTO); err != nil {
@@ -143,7 +143,7 @@ func (cc *cartControllerImpl) UpdateCartItem(c *gin.Context) {
 // @Router       /cart/{productID} [delete]
 func (cc *cartControllerImpl) DeleteCartItem(c *gin.Context) {
 	// Get User Claims
-	claims := c.MustGet("claims").(*proto.VerifyTokenResponse)
+	claims := c.MustGet("user_details").(*proto.VerifyTokenResponse)
 	// Get Cart Item Request DTO Object
 	cartItemDTO := requests.CartItemRequest{}
 	if err := c.ShouldBindJSON(&cartItemDTO); err != nil {
@@ -191,7 +191,7 @@ func (cc *cartControllerImpl) EmptyCart(c *gin.Context) {
 		)
 	} else {
 		// Get User Claims
-		claims := c.MustGet("claims").(*proto.VerifyTokenResponse)
+		claims := c.MustGet("user_details").(*proto.VerifyTokenResponse)
 		if (cartIDRequest.CartID != "" && claims.GetIsAdmin()) || (cartIDRequest.UserID != "" && cartIDRequest.UserID == claims.GetUserId()) {
 			err := cc.cartService.EmptyCart(c.Request.Context(), cartIDRequest)
 			if err != nil {

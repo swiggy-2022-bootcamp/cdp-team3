@@ -6,6 +6,10 @@ services:
       - "8009:8009"
       - "8019:8019"
     environment:
+      - ADMIN_HOST=admin
+      - ADMIN_SERVICE_PORT=3009
+      - TRANSACTION_SERVICE_GRPC_PORT=8019
+      - REWARD_SERVICE_GRPC_PORT=8009
       - AUTH_HOST=auth
       - AUTH_SERVICE_GRPC_PORT=8012
       - SHIPPING_HOST=shippping
@@ -119,9 +123,11 @@ services:
     ports:
       - "3008:3008"
     environment:
+      - REWARDS_HOST=rewards
+      - REWARD_SERVICE_PORT=3008
       - AUTH_HOST=auth
       - AUTH_SERVICE_GRPC_PORT=8012
-      - ADMIIN HOST=admin
+      - ADMIN_HOST=admin
       - ADMIN_SERVICE_GRPC_PORT=8009
 
   shipping:
