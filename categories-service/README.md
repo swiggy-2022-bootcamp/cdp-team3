@@ -13,7 +13,7 @@ Contains the Categories Microservice for the final Swiggy I++ E-Commerce Applica
 - [x] Swagger Documentation - http://localhost:3002/categories-service/api/swagger/index.html
 - [x] Effective Use of GRPC for inter-service communication.
 - [x] Sonarqube to calculate code coverage.
-- [x]Implemented REST endpoints using DynamoDB.
+- [x] Implemented REST endpoints using DynamoDB.
 - [x] Maintained the code repository
 - [x] Builds the application using CI/CD pipeline
 - [x] Data models properly showcased
