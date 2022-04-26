@@ -10,7 +10,10 @@ import (
 )
 
 func VerifyToken(token string) (*auth.VerifyTokenResponse, error) {
-	conn, err := grpc.Dial(configs.EnvAuthHost() + ":" + configs.EnvAuthServiceGRPCPort(), grpc.WithInsecure())
+	conn, err := grpc.Dial(
+		configs.EnvAuthHost() + ":" + configs.EnvAuthServiceGRPCPort(), 
+		grpc.WithInsecure(),
+	)
 	if err != nil {
 		log.Errorf("Failed to dial: %v", err)
 		return nil, err

@@ -22,7 +22,7 @@ func IsAdmin(c *gin.Context) bool {
 
 
 func ClearCart(customerId string) {
-	checkoutURL := "http://localhost:"+configs.EnvCheckOutPORT()+"/checkout_service/success"
+	checkoutURL := configs.EnvCheckout ":"+configs.EnvCheckOutPORT()+"/checkout_service/success"
 	requestBody := strings.NewReader(`
 		{
 			"userId": "`+customerId+`" 

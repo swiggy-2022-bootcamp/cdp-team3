@@ -9,6 +9,24 @@ import (
 
 const errorMessage string = "Error loading .env file: %v"
 
+func EnvAuthHost() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf(errorMessage, err)
+	}
+
+	return os.Getenv("AUTH_HOST")
+}
+
+func EnvAuthServiceGRPCPort() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf(errorMessage, err)
+	}
+
+	return os.Getenv("AUTH_SERVICE_GRPC_PORT")
+}
+
 func EnvKafkaBrokerAddress() string {
 	err := godotenv.Load()
 	if err != nil {

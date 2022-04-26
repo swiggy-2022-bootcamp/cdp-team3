@@ -4,12 +4,16 @@ import (
 	"context"
 
 	log "github.com/sirupsen/logrus"
+	"github.com/swiggy-ipp/cart-service/configs"
 	auth "github.com/swiggy-ipp/cart-service/grpcs/auth/proto"
 	"google.golang.org/grpc"
 )
 
 func VerifyToken(token string) (*auth.VerifyTokenResponse, error) {
-	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+	conn, err := grpc.Dial(
+		configs.EnvAuthHost() + ":" + configs.EnvAuthServiceGRPCPort(), 
+		grpc.WithInsecure(),
+	)
 	if err != nil {
 		log.Errorf("Failed to dial: %v", err)
 		return nil, err
