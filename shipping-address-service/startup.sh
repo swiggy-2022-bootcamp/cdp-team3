@@ -1,1 +1,1 @@
-docker-compose up --build -d
+docker build -t cdp_team3_shipping_address_image:latest .

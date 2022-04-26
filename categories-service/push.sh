@@ -1,0 +1,1 @@
+docker push cdp_team3_categories_service_image:latest cdp_team3/cdp_team3_categories_service_image

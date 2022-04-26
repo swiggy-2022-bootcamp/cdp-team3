@@ -52,24 +52,28 @@ pipeline {
 
         stage('Run #1') {
              steps {
-                 echo 'Running the application'
+                 echo 'Building the latest docker image'
                  sh 'cd shipping-service && chmod +x startup.sh && ./startup.sh'
              }
         }
-
-
+        stage('Run #1.1') {
+             steps {
+                 echo 'Pushing image to dockerhub'
+                 sh 'cd shipping-service && chmod +x push.sh && ./push.sh'
+             }
+        }
         stage('Build #2') {
-                    steps {
-                        echo 'Compiling and building'
-                        sh 'cd categories-service && go build'
-                    }
-                }
+            steps {
+                echo 'Compiling and building'
+                sh 'cd categories-service && go build'
+            }
+        }
 
         stage('Test #2') {
             steps {
                 withEnv(["PATH+GO=${GOPATH}/bin"]){
                     echo 'Running vetting'
-                    sh 'cd auth && go vet .'
+                    sh 'cd categories-service && go vet .'
                     echo 'Running test'
                     sh 'cd categories-service && go test ./...'
                 }
@@ -88,10 +92,24 @@ pipeline {
 
         stage('Run #2') {
              steps {
-                 echo 'Running the application'
+                 echo 'Building the latest docker image'
                  sh 'cd categories-service && chmod +x startup.sh && ./startup.sh'
              }
         }
+        stage('Run #2.1') {
+             steps {
+                 echo 'Pushing image to dockerhub'
+                 sh 'cd categories-service && chmod +x push.sh && ./push.sh'
+             }
+        }
+        
+         stage('Run #') {
+             steps {
+                 echo 'Running docker compose'
+                 sh 'docker compose up -d'
+             }
+        }
+
 
     }
 }
