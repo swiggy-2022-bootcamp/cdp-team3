@@ -60,7 +60,7 @@ services:
       - KAFKA_BROKER_ADDRESS=broker:9092
 
   categories:
-    image: chahat7/category_image
+    image: chahat7/category_image1
     ports:
       - "3002:3002"
     environment:
