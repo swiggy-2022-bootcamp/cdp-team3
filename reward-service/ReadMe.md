@@ -11,6 +11,15 @@
 | GET         |  /rewards/{rewardId}   |          Get Reward details by Reward ID          |
 | GET         | /rewards/user/{userId} | Get all the Rewards for a customer by Customer ID |
 
+## Technologies Used
+- Golang
+- Gin Gonic
+- gRPC
+- DynamoDB
+- Kafka
+- Docker & Docker Compose
+- Jenkins
+- Swagger UI
 
 ## Checklist
 - [x] Completed Microservice Architecture
