@@ -14,17 +14,17 @@ func EnvAccessKey() string {
 
 func EnvGrpcRewardServerPORT() string {
 	loadEnvFile()
-	return os.Getenv("GRPC_REWARD_SERVER_PORT")
+	return os.Getenv("REWARDS_SERVICE_GRPC_PORT")
 }
 
 func EnvGrpcTransactionServerPORT() string {
 	loadEnvFile()
-	return os.Getenv("GRPC_TRANSACTION_SERVER_PORT")
+	return os.Getenv("TRANSACTION_SERVICE_GRPC_PORT")
 }
 
 func EnvGrpcAuthClientPORT() string {
 	loadEnvFile()
-	return os.Getenv("GRPC_AUTH_CLIENT_PORT")
+	return os.Getenv("AUTH_SERVICE_GRPC_PORT")
 }
 
 func EnvAdminHost() string {
@@ -69,7 +69,7 @@ func EnvAddUserDeletionTopic() string {
 
 func EnvShippingAddressPort() string {
 	loadEnvFile()
-	return os.Getenv("GRPC_SHIPPING_SERVER_PORT")
+	return os.Getenv("SHIPPING_SERVICE_GRPC_PORT")
 }
 
 func EnvUserBrokerAddress() string {
