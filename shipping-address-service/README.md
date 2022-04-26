@@ -2,6 +2,24 @@
 
 Contains the Shipping Address Microservice for the final Swiggy I++ E-Commerce Application project created to showcase the skills learnt throughout the programme.
 
+## Checklist
+- [x] Completed Microservice Architecture
+- [x] Written test cases for service layer,handler layer and grpcs calls. 
+- [x] Dockerized the application
+- [x] Swagger Documentation - http://localhost:3003/shiping/api/swagger/index.html
+- [x] Effective Use of GRPC for inter-service communication.
+- [x] Sonarqube to calculate code coverage.
+- [x]Implemented REST endpoints using DynamoDB.
+- [x] Maintained the code repository
+- [x] Builds the application using CI/CD pipeline
+- [x] Data models properly showcased
+- [x] Kafka Implementation
+- [x] Mock Testing using mockgen and testify
+- [x] Logger - Logging in a separate file
+## Microservice Flow
+
+| ![Micro Service Flow](shipflow.png) |
+| --- |
 ## Project Structure
 
 | ![Folder Structure](shippingfolder.png) |
@@ -20,8 +38,8 @@ Contains the Shipping Address Microservice for the final Swiggy I++ E-Commerce A
 | POST       | /shipping-service/api//shippingaddress/existing/:id    | Set Shipping Address to default Shipping Address.  |
 | GET        | /shipping-service/api/shippingaddress/existing/:userId | Gets Default Shipping Address of User              |
 
-| ![Shipping Address Service REST Swagger]() |
-| ---------- |
+<!-- | ![Shipping Address Service REST Swagger]() |
+| ---------- | -->
 
 ## GRPC Connections
 
