@@ -107,8 +107,8 @@ func (cc *checkoutControllerImpl) GetOrderOverview(c *gin.Context) {
 // @Router       /confirm/success [post]
 func (cc *checkoutControllerImpl) OrderCompleteWebhook(c *gin.Context) {
 	// Get User ID from Request
-	userIDRequest := &requests.UserIDRequest{}
-	if err := c.ShouldBindJSON(userIDRequest); err != nil {
+	var userIDRequest requests.UserIDRequest
+	if err := c.ShouldBindJSON(&userIDRequest); err != nil {
 		c.JSON(http.StatusBadRequest, errors.NewHTTPErrorDTO(http.StatusBadRequest, err, "User ID Request DTO is not valid."))
 	} else {
 		// Make GRPC Call

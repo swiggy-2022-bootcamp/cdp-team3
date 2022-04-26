@@ -38,7 +38,7 @@ func (cc *cartControllerImpl) CreateCartItem(c *gin.Context) {
 	// Get User Claims
 	claims := c.MustGet("user_details").(*proto.VerifyTokenResponse)
 	// Get Cart Item Request DTO Object
-	cartItemDTO := requests.CartItemRequest{}
+	var cartItemDTO requests.CartItemRequest
 	if err := c.ShouldBindJSON(&cartItemDTO); err != nil {
 		c.JSON(http.StatusBadRequest, errors.NewHTTPErrorDTO(http.StatusBadRequest, err))
 	} else if claims.GetUserId() == "" {
@@ -114,7 +114,7 @@ func (cc *cartControllerImpl) UpdateCartItem(c *gin.Context) {
 	// Get User Claims
 	claims := c.MustGet("user_details").(*proto.VerifyTokenResponse)
 	// Get Cart Item Request DTO Object
-	cartItemDTO := requests.CartItemRequest{}
+	var cartItemDTO requests.CartItemRequest
 	if err := c.ShouldBindJSON(&cartItemDTO); err != nil {
 		c.JSON(http.StatusBadRequest, errors.NewHTTPErrorDTO(http.StatusBadRequest, err))
 	} else if claims.GetUserId() == "" {
@@ -145,7 +145,7 @@ func (cc *cartControllerImpl) DeleteCartItem(c *gin.Context) {
 	// Get User Claims
 	claims := c.MustGet("user_details").(*proto.VerifyTokenResponse)
 	// Get Cart Item Request DTO Object
-	cartItemDTO := requests.CartItemRequest{}
+	var cartItemDTO requests.CartItemRequest
 	if err := c.ShouldBindJSON(&cartItemDTO); err != nil {
 		c.JSON(http.StatusBadRequest, errors.NewHTTPErrorDTO(http.StatusBadRequest, err))
 	} else if claims.GetUserId() == "" {
