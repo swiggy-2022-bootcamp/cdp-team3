@@ -21,6 +21,7 @@ func ConnectDB() *dynamodb.DynamoDB {
 	_, err := client.ListTables(&dynamodb.ListTablesInput{})
 	if err != nil {
 		fmt.Println("Connection to dynamoDB failed.", err)
+		return nil
 	}
 	fmt.Println("Connected to DynamoDB")
 	return client
