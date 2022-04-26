@@ -50,8 +50,7 @@ func SendTransactionAmount(transaction *admin.TransactionDetails) (*admin.Succes
 }
 
 func InitialiseTransactionsServer() {
-	port := configs.EnvGrpcTransactionServerPORT()
-	lis, err := net.Listen("tcp", ":"+port)
+	lis, err := net.Listen("tcp", configs.EnvAdminHost()+":"+configs.EnvGrpcTransactionServerPORT())
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}

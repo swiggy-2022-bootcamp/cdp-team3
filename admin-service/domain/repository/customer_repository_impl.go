@@ -227,7 +227,7 @@ func (cr CustomerRepositoryImpl) UpdateCustomerByIdFromDB(customerId string, cus
 
 func DeleteShippingAddress(request *ShippingAddressDeleteRequest) bool {
 
-	conn, err := grpc.Dial(":"+configs.EnvShippingAddressPort(), grpc.WithInsecure())
+	conn, err := grpc.Dial(configs.EnvShippingHost()+":"+configs.EnvShippingAddressPort(), grpc.WithInsecure())
 	if err != nil {
 		fmt.Printf("Error while making connection, %v\n", err)
 		return false
