@@ -7,6 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/payment-service/domain/services"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/payment-service/dto"
+	order "github.com/swiggy-2022-bootcamp/cdp-team3/payment-service/grpc/order"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/payment-service/kafka"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/payment-service/utils"
 )
 
@@ -48,7 +50,26 @@ func (pc PaymentController) Pay() gin.HandlerFunc {
 		}
 
 		// TODO: Add Order Validation GRPC call
-		// TODO: Add Mode of Payment Validation GRPC call
+
+		status, err := order.GetOrderStatus(pr.OrderId)
+
+		if status == "COMPLETED" {
+			c.AbortWithStatusJSON(http.StatusBadRequest, dto.ResponseDTO{
+				Message: "Order is already Paid",
+				Status:  http.StatusBadRequest,
+			})
+			return
+		}
+
+		if err != nil {
+			logger.Log(err)
+			c.AbortWithStatusJSON(http.StatusBadRequest, dto.ResponseDTO{
+				Message: err.Message,
+				Status:  http.StatusBadRequest,
+			})
+			return
+		}
+
 		res, err := pc.paymentService.Pay(pr)
 		if err != nil {
 			logger.Log(err)
@@ -56,10 +77,11 @@ func (pc PaymentController) Pay() gin.HandlerFunc {
 				Message: err.Message,
 				Status:  err.Code,
 			})
+			kafka.UpdateOrderStatusProducer(pr.OrderId, "FAILED")
 			return
 		}
 
-		// TODO: Add Order Update Kafka call
+		kafka.UpdateOrderStatusProducer(pr.OrderId, "COMPLETED")
 
 		c.JSON(http.StatusOK, dto.ResponseDTO{
 			Message: res,

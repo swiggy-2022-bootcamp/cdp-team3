@@ -48,3 +48,13 @@ func EnvAuthGRPCPort() string {
 	loadEnv()
 	return os.Getenv("AUTH_GRPC_PORT")
 }
+
+func EnvOrderServiceGRPCPort() string {
+	loadEnv()
+	return os.Getenv("ORDER_SERVICE_GRPC_PORT")
+}
+
+func EnvBrokerAddress() string {
+	loadEnv()
+	return os.Getenv("BROKER")
+}

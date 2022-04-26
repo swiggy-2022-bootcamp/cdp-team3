@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/swiggy-2022-bootcamp/cdp-team3/payment-service/configs"
 	auth "github.com/swiggy-2022-bootcamp/cdp-team3/payment-service/grpc/auth/proto"
@@ -12,7 +13,8 @@ import (
 var logger = utils.NewLoggerService("auth-grpc")
 
 func VerifyToken(token string) (*auth.VerifyTokenResponse, error) {
-	var addr = configs.EnvAuthHost() + ":" + configs.EnvPORT()
+	var addr = configs.EnvAuthHost() + ":" + configs.EnvAuthGRPCPort()
+	fmt.Println(addr)
 	conn, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {
 		logger.Log("Failed to dial: %v", err)
