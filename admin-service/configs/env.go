@@ -27,6 +27,21 @@ func EnvGrpcAuthClientPORT() string {
 	return os.Getenv("GRPC_AUTH_CLIENT_PORT")
 }
 
+func EnvAdminHost() string {
+	loadEnvFile()
+	return os.Getenv("ADMIN_HOST")
+}
+
+func EnvAuthHost() string {
+	loadEnvFile()
+	return os.Getenv("AUTH_HOST")
+}
+
+func EnvShippingHost() string {
+	loadEnvFile()
+	return os.Getenv("SHIPPING_HOST")
+}
+
 func EnvSecretKey() string {
 	loadEnvFile()
 	return os.Getenv("AWS_SECRET_ACCESS_KEY")
@@ -37,7 +52,7 @@ func EnvRegion() string {
 	return os.Getenv("REGION")
 }
 
-func EnvPORT() string {
+func EnvAdminServicePORT() string {
 	loadEnvFile()
 	return os.Getenv("ADMIN_SERVICE_PORT")
 }

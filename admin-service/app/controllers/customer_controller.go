@@ -354,7 +354,7 @@ func HealthCheck() gin.HandlerFunc {
 func GetShippingAddressId(request ShippingAddressRequest) string {
 	// Set up connection with the grpc server
 
-	conn, err := grpc.Dial(":"+configs.EnvShippingAddressPort(), grpc.WithInsecure())
+	conn, err := grpc.Dial(configs.EnvShippingHost()+":"+configs.EnvShippingAddressPort(), grpc.WithInsecure())
 	if err != nil {
 		fmt.Printf("Error while making connection, %v\n", err)
 		return ""

@@ -51,8 +51,7 @@ func (s *RewardPoints) SendRewardPoints(ctx context.Context, req *rewards.Reward
 }
 
 func InitialiseRewardsServer() {
-	port := configs.EnvGrpcRewardServerPORT()
-	lis, err := net.Listen("tcp", ":"+port)
+	lis, err := net.Listen("tcp", configs.EnvAdminHost()+":"+configs.EnvGrpcRewardServerPORT())
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}

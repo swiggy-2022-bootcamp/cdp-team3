@@ -10,10 +10,9 @@ import (
 )
 
 func VerifyToken(token string) (*auth.VerifyTokenResponse, error) {
-	port := configs.EnvGrpcAuthClientPORT()
-	conn, err := grpc.Dial(":"+port, grpc.WithInsecure())
+	conn, err := grpc.Dial(configs.EnvAuthHost()+":"+configs.EnvGrpcAuthClientPORT(), grpc.WithInsecure())
 	if err != nil {
-		zap.L().Error("Failed to dial:" + port + " " + err.Error())
+		zap.L().Error("Failed to dial:" + configs.EnvGrpcAuthClientPORT() + " " + err.Error())
 		return nil, err
 	}
 	defer conn.Close()

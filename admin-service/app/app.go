@@ -59,7 +59,7 @@ func Start() {
 	go rewardGrpc.InitialiseRewardsServer()
 
 	router := StartRestServer()
-	router.Run(":" + configs.EnvPORT())
+	router.Run(configs.EnvAdminHost() + ":" + configs.EnvAdminServicePORT())
 }
 
 func StartRestServer() *gin.Engine {
