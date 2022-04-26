@@ -14,12 +14,12 @@ func EnvAccessKey() string {
 
 func EnvGrpcRewardClientPORT() string {
 	loadEnvFile()
-	return os.Getenv("GRPC_REWARD_CLIENT_PORT")
+	return os.Getenv("REWARD_SERVICE_GRPC_PORT")
 }
 
 func EnvGrpcAuthClientPORT() string {
 	loadEnvFile()
-	return os.Getenv("GRPC_AUTH_CLIENT_PORT")
+	return os.Getenv("AUTH_SERVICE_GRPC_PORT")
 }
 
 func EnvSecretKey() string {
