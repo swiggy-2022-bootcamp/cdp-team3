@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -15,7 +16,6 @@ import (
 	rewardproto "github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/grpc/reward"
 	rewardprotof "github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/grpc/reward/proto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/models"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/rewards-service/utils"
 	"go.uber.org/zap"
 )
 
@@ -67,9 +67,9 @@ func (rc RewardController) AddReward(c *gin.Context) {
 		c.JSON(err_.Code, gin.H{"message": err_.Message})
 		return
 	}
-
 	rewardRecord := dynamoModelConv(reward)
 	protoRecord := protoConv(reward)
+	fmt.Println(protoRecord)
 	p, _ := rewardproto.SendRewardPoints(protoRecord)
 
 	if p.IsAdded != "Success" {
@@ -156,13 +156,13 @@ func (rc RewardController) GetRewardById() gin.HandlerFunc {
 			return
 		}
 
-		if !utils.IsAdmin(c) {
-			zap.L().Error("Unauthorized Request")
-			c.JSON(http.StatusUnauthorized, dto.ResponseDTO{
-				Status:  http.StatusUnauthorized,
-				Message: "Unauthorized Request",
-			})
-		}
+		// if !utils.IsAdmin(c) {
+		// 	zap.L().Error("Unauthorized Request")
+		// 	c.JSON(http.StatusUnauthorized, dto.ResponseDTO{
+		// 		Status:  http.StatusUnauthorized,
+		// 		Message: "Unauthorized Request",
+		// 	})
+		// }
 
 		zap.L().Info("Fetched reward successfully")
 		c.JSON(http.StatusOK, dto.ResponseDTO{
