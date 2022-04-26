@@ -46,13 +46,13 @@ func NewCheckoutController(
 // @Router       /confirm [post]
 func (cc *checkoutControllerImpl) GetOrderOverview(c *gin.Context) {
 	// Get User Claims
-	claims := c.MustGet("claims").(*authProto.VerifyTokenResponse)
+	claims := c.MustGet("user_details").(*authProto.VerifyTokenResponse)
 	if claims.GetUserId() == "" {
 		c.JSON(http.StatusForbidden, errors.NewHTTPErrorDTO(http.StatusForbidden, nil, "User ID needs to be sent as Authorization."))
 	} else {
 		// Validate Shipping Address
 		shippingOut, err := cc.shippingCheckoutGRPCClient.GetShippingAddressForCheckout(
-			c.Request.Context(), 
+			c.Request.Context(),
 			&shipping_checkout.ShippingAddressRequestFromCheckout{UserID: claims.GetUserId()},
 		)
 		if err != nil {
@@ -79,10 +79,10 @@ func (cc *checkoutControllerImpl) GetOrderOverview(c *gin.Context) {
 		orderedProducts, amt := mapCartItemsToOrderedProducts(cartOut.CartItems)
 		out, err := cc.orderGRPCClient.CreateOrder(c.Request.Context(), &orderProto.CreateOrderRequest{
 			Order: &orderProto.RequestOrder{
-				CustomerId:      claims.UserId,
-				TotalAmount: amt,
+				CustomerId:        claims.UserId,
+				TotalAmount:       amt,
 				ShippingAddressId: shippingOut.GetShippingAddressID(),
-				OrderedProducts: orderedProducts,
+				OrderedProducts:   orderedProducts,
 			},
 		})
 		if err != nil {
