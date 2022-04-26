@@ -6,8 +6,8 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/grpc/auth"
-	authproto "github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/grpc/auth/proto"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/admin-service/grpc/auth"
+	authProto "github.com/swiggy-2022-bootcamp/cdp-team3/admin-service/grpc/auth/proto"
 )
 
 type SignedDetails struct {
@@ -45,7 +45,7 @@ func OnlyAdmin() gin.HandlerFunc {
 	fmt.Println("Inside only admin")
 	return func(c *gin.Context) {
 		fmt.Println("Inside only admin function")
-		var userDetails = c.MustGet("user_details").(*authproto.VerifyTokenResponse)
+		var userDetails = c.MustGet("user_details").(*authProto.VerifyTokenResponse)
 		fmt.Println("Userdetails in only admin", userDetails)
 		if !userDetails.IsAdmin {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Only admin can perform this action"})

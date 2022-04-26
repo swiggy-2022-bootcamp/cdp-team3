@@ -19,7 +19,6 @@ COPY ./ ./
 RUN go mod download
 
 # Run tests
-RUN go test ./...
 
 # Build the Golang Application  
 RUN go build -o /main .

@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
-	auth "github.com/cdp-team3/categories-service/app/grpcs/auth"
-	services "github.com/cdp-team3/categories-service/domain/services"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/grpc/auth"
+	authproto "github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/grpc/auth/proto"
 )
 
 type SignedDetails struct {
@@ -29,7 +29,7 @@ func AuthenticateJWT() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		claims, err := services.VerifyToken(authToken)
+		claims, err := auth.VerifyToken(authToken)
 
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid auth token"})
@@ -45,7 +45,7 @@ func OnlyAdmin() gin.HandlerFunc {
 	fmt.Println("Inside only admin")
 	return func(c *gin.Context) {
 		fmt.Println("Inside only admin function")
-		var userDetails = c.MustGet("user_details").(*auth.VerifyTokenResponse)
+		var userDetails = c.MustGet("user_details").(*authproto.VerifyTokenResponse)
 		fmt.Println("Userdetails in only admin", userDetails)
 		if !userDetails.IsAdmin {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Only admin can perform this action"})
