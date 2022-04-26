@@ -60,7 +60,7 @@ services:
       - KAFKA_BROKER_ADDRESS=broker:9092
 
   categories:
-    image: chahat7/category
+    image: chahat7/category_image
     ports:
       - "3002:3002"
     environment:
@@ -131,7 +131,7 @@ services:
       - ADMIN_SERVICE_GRPC_PORT=8009
 
   shipping:
-    image: chahat7/shipping
+    image: chahat7/shipping_image
     ports:
       - "3003:3003"
       - "8003:8003"
