@@ -343,9 +343,7 @@ func (oc OrderController) GetOrderStatusById() gin.HandlerFunc {
 			return
 		}
 
-		isValidCustomer := utils.CheckLoggedInUserWithOrderCustomerId(c, orderId)
-
-		if !utils.IsAdmin(c) && !utils.CheckLoggedInUserWithOrderCustomerId(c, order.CustomerId) { {
+		if !utils.IsAdmin(c) && !utils.CheckLoggedInUserWithOrderCustomerId(c, order.CustomerId) {
 			zap.L().Error(errors.MsgOrderNotCreatedByYou)
 			c.JSON(http.StatusUnauthorized, dto.ResponseDTO{
 				Status:  http.StatusUnauthorized,
