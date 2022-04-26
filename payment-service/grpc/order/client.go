@@ -13,7 +13,8 @@ import (
 )
 
 func GetOrderStatus(orderId string) (string, *errors.AppError) {
-	cc, err := grpc.Dial(":"+configs.EnvOrderServiceGRPCPort(), grpc.WithInsecure())
+	var addr = configs.EnvOrderHost() + ":" + configs.EnvOrderServiceGRPCPort()
+	cc, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("could not connect: %v", err)
 	}
