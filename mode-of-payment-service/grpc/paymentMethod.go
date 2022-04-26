@@ -10,6 +10,7 @@ import (
 )
 
 type Server struct {
+	UnimplementedAddPaymentMethodServiceServer
 }
 
 func (s *Server) AddPaymentMethod(ctx context.Context, in *PaymentMethod) (*PaymentMethod, error) {
