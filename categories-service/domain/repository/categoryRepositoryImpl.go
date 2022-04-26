@@ -154,26 +154,26 @@ func (categoryRepo CategoryRepositoryImpl) DeleteCategoryByIDFromDB(categoryId s
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	//check if category is associated with products
-	var queryInput = &dynamodb.QueryInput{
-		TableName: aws.String("ProductCategoryRelation"),
-		KeyConditions: map[string]*dynamodb.Condition{
-			"category_id": {
-				ComparisonOperator: aws.String("EQ"),
-				AttributeValueList: []*dynamodb.AttributeValue{
-					{
-						S: aws.String(categoryId),
-					},
-				},
-			},
-		},
-	}
-	var resp, err = categoryRepo.categoryDB.Query(queryInput)
-	if err != nil {
-		return false,apperrors.NewUnexpectedError(err.Error())
-	}
-	if resp != nil {
-		return false, apperrors.NewUnexpectedError(err.Error())
-	}
+	// var queryInput = &dynamodb.QueryInput{
+	// 	TableName: aws.String("ProductCategoryRelation"),
+	// 	KeyConditions: map[string]*dynamodb.Condition{
+	// 		"category_id": {
+	// 			ComparisonOperator: aws.String("EQ"),
+	// 			AttributeValueList: []*dynamodb.AttributeValue{
+	// 				{
+	// 					S: aws.String(categoryId),
+	// 				},
+	// 			},
+	// 		},
+	// 	},
+	// }
+	// var resp, err = categoryRepo.categoryDB.Query(queryInput)
+	// if err != nil {
+	// 	return false,apperrors.NewUnexpectedError(err.Error())
+	// }
+	// if resp != nil {
+	// 	return false, apperrors.NewUnexpectedError(err.Error())
+	// }
 	//delete the category
 	input := &dynamodb.DeleteItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
@@ -184,7 +184,7 @@ func (categoryRepo CategoryRepositoryImpl) DeleteCategoryByIDFromDB(categoryId s
 		TableName: aws.String("Category"),
 	}
 
-	_, err = categoryRepo.categoryDB.DeleteItemWithContext(ctx, input)
+	_, err := categoryRepo.categoryDB.DeleteItemWithContext(ctx, input)
 	if err != nil {
 		return false, apperrors.NewUnexpectedError(err.Error())
 	}
@@ -193,28 +193,29 @@ func (categoryRepo CategoryRepositoryImpl) DeleteCategoryByIDFromDB(categoryId s
 func (categoryRepo CategoryRepositoryImpl) DeleteCategoriesFromDB(categoryIds []string) (bool,*apperrors.AppError) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	for _, categoryId := range categoryIds {
-		var queryInput = &dynamodb.QueryInput{
-			TableName: aws.String("ProductCategoryRelation"),
-			KeyConditions: map[string]*dynamodb.Condition{
-				"category_id": {
-					ComparisonOperator: aws.String("EQ"),
-					AttributeValueList: []*dynamodb.AttributeValue{
-						{
-							S: aws.String(categoryId),
-						},
-					},
-				},
-			},
-		}
-		var resp, err = categoryRepo.categoryDB.Query(queryInput)
-		if err != nil {
-			return false,apperrors.NewUnexpectedError(err.Error())
-		}
-		if resp != nil {
-			return false, apperrors.NewUnexpectedError(err.Error())
-		}
+	// for _, categoryId := range categoryIds {
+	// 	var queryInput = &dynamodb.QueryInput{
+	// 		TableName: aws.String("ProductCategoryRelation"),
+	// 		KeyConditions: map[string]*dynamodb.Condition{
+	// 			"category_id": {
+	// 				ComparisonOperator: aws.String("EQ"),
+	// 				AttributeValueList: []*dynamodb.AttributeValue{
+	// 					{
+	// 						S: aws.String(categoryId),
+	// 					},
+	// 				},
+	// 			},
+	// 		},
+	// 	}
+	// 	var resp, err = categoryRepo.categoryDB.Query(queryInput)
+	// 	if err != nil {
+	// 		return false,apperrors.NewUnexpectedError(err.Error())
+	// 	}
+	// 	if resp != nil {
+	// 		return false, apperrors.NewUnexpectedError(err.Error())
+	// 	}
 		//delete the category
+		for _,categoryId := range categoryIds{
 		input := &dynamodb.DeleteItemInput{
 			Key: map[string]*dynamodb.AttributeValue{
 				"id": {
@@ -224,11 +225,12 @@ func (categoryRepo CategoryRepositoryImpl) DeleteCategoriesFromDB(categoryIds []
 			TableName: aws.String(categoryCollection),
 		}
 
-		_, err = categoryRepo.categoryDB.DeleteItemWithContext(ctx, input)
+		_, err := categoryRepo.categoryDB.DeleteItemWithContext(ctx, input)
 		if err != nil {
 			return false, apperrors.NewUnexpectedError(err.Error())
 		}
 	}
+	//}
 	return true, nil
 }
 
