@@ -4,7 +4,7 @@ Contains the Categories Microservice for the final Swiggy I++ E-Commerce Applica
 
 ## Project Structure
 
-| ![Folder Structure](categoriesfolder.png) |
+| ![Folder Structure](categoryfolder.png) |
 | --- |
 
 ## Relevant REST APIs (:3002)
