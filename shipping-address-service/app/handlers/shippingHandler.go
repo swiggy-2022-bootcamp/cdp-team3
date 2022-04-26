@@ -71,7 +71,7 @@ func (th ShippingHandler) AddNewShippingAddress() gin.HandlerFunc {
 		return
 	}
 	fmt.Println("Id",id)
-	ctx.JSON(http.StatusOK, gin.H{"message": "Shipping Address added successfully"})
+	ctx.JSON(http.StatusOK ,gin.H{"Shipping Id": id})
 }
 }
 
