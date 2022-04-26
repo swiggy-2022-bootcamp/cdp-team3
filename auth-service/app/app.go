@@ -31,7 +31,7 @@ func Start() {
 	go auth.InitialiseAuthServer()
 
 	router := InitialiseRestServer()
-	router.Run(":" + configs.EnvPORT())
+	router.Run(configs.EnvAuthHost() + ":" + configs.EnvPORT())
 }
 
 func InitialiseRestServer() *gin.Engine {

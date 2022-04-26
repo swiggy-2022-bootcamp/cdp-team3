@@ -28,7 +28,7 @@ func Start() {
 	paymentRoutes = routes.NewPaymentRouter(paymentController)
 
 	router := InitialiseRestServer()
-	router.Run(":" + configs.EnvPORT())
+	router.Run(configs.EnvPaymentHost() + ":" + configs.EnvPORT())
 }
 
 func InitialiseRestServer() *gin.Engine {

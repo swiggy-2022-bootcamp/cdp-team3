@@ -44,9 +44,19 @@ func EnvAuthHost() string {
 	return os.Getenv("AUTH_HOST")
 }
 
+func EnvPaymentHost() string {
+	loadEnv()
+	return os.Getenv("PAYMENT_HOST")
+}
+
 func EnvAuthGRPCPort() string {
 	loadEnv()
 	return os.Getenv("AUTH_GRPC_PORT")
+}
+
+func EnvOrderHost() string {
+	loadEnv()
+	return os.Getenv("ORDER_HOST")
 }
 
 func EnvOrderServiceGRPCPort() string {
@@ -56,5 +66,5 @@ func EnvOrderServiceGRPCPort() string {
 
 func EnvBrokerAddress() string {
 	loadEnv()
-	return os.Getenv("BROKER")
+	return os.Getenv("KAFKA_BROKER_ADDRESS")
 }

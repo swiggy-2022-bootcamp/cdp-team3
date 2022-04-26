@@ -39,6 +39,11 @@ func EnvPORT() string {
 	return os.Getenv("AUTH_PORT")
 }
 
+func EnvAuthHost() string {
+	loadEnv()
+	return os.Getenv("AUTH_HOST")
+}
+
 func EnvGRPCPORT() string {
 	loadEnv()
 	return os.Getenv("AUTH_GRPC_PORT")

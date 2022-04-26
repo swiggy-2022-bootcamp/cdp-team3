@@ -43,7 +43,7 @@ func (s *AuthServer) VerifyToken(ctx context.Context, req *auth.VerifyTokenReque
 }
 
 func InitialiseAuthServer() {
-	lis, err := net.Listen("tcp", "0.0.0.0:"+configs.EnvGRPCPORT())
+	lis, err := net.Listen("tcp", configs.EnvAuthHost()+":"+configs.EnvGRPCPORT())
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}

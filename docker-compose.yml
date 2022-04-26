@@ -85,8 +85,8 @@ services:
       - AUTH_HOST=auth
       - AUTH_SERVICE_GRPC_PORT=8012
       - PRODUCTS_HOST=products
-      - PRODUCT_SERVICE_GRPC_PORT=8018 
-      
+      - PRODUCT_SERVICE_GRPC_PORT=8018
+
   rewards:
     image: immadiuttej/reward-service
     ports:
@@ -96,7 +96,7 @@ services:
       - AUTH_SERVICE_GRPC_PORT=8012
       - ADMIIN HOST=admin
       - ADMIN_SERVICE_GRPC_PORT=8009
-      
+
   admin:
     image: immadiuttej/admin-service
     ports:
@@ -110,6 +110,29 @@ services:
       - SHIPPING_SERVICE_GRPC_PORT=8003
       - KAFKA_BROKER_ADDRESS=broker:9092
 
+  auth:
+    image: rishabh3321/auth-service
+    ports:
+      - "3012:3012"
+      - "8012:8012"
+    environment:
+      - AUTH_HOST=auth
+      - AUTH_PORT=3012
+      - AUTH_SERVICE_GRPC_PORT=8012
+
+  payment:
+    image: rishabh3321/payment-service
+    ports:
+      - "3013:3013"
+    environment:
+      - AUTH_HOST=auth
+      - AUTH_SERVICE_GRPC_PORT=8012
+      - PAYMENT_HOST=payment
+      - PAYMENT_PORT=3013
+      - ORDER_HOST=orders
+      - ORDER_SERVICE_GRPC_PORT=8013
+      - KAFKA_BROKER_ADDRESS=broker:9092
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
     container_name: zookeeper
@@ -121,14 +144,14 @@ services:
     image: confluentinc/cp-kafka:7.0.1
     container_name: broker
     ports:
-    # To learn about configuring Kafka for access across networks see
-    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
+      # To learn about configuring Kafka for access across networks see
+      # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
       - "9092:9092"
     depends_on:
       - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092,PLAINTEXT_INTERNAL://broker:29092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
