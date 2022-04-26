@@ -57,9 +57,9 @@ func (cs *cartServiceImpl) CreateCartItem(
 	}
 
 	// Check if the item already exists in the cart
-	for _, item := range cart.Items {
+	for i, item := range cart.Items {
 		if item.ProductID == cartItemRequest.ProductID {
-			item.Quantity += cartItemRequest.Quantity
+			cart.Items[i].Quantity += cartItemRequest.Quantity
 			err = cs.cartRepository.UpdateCartItems(ctx, cart)
 			if err != nil {
 				return err
@@ -69,6 +69,7 @@ func (cs *cartServiceImpl) CreateCartItem(
 	}
 
 	// Create Cart Item
+	log.Infof("Creating Cart Item %v", cartItemRequest)
 	cartItem := models.CartItem{
 		ProductID: cartItemRequest.ProductID,
 		Quantity:  cartItemRequest.Quantity,
