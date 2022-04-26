@@ -14,6 +14,16 @@
 | DELETE      |  /customers/:customerId   | To delete the customer by customer Id |
 
 
+## Technologies Used
+- Golang
+- Gin Gonic
+- gRPC
+- DynamoDB
+- Kafka
+- Docker & Docker Compose
+- Jenkins
+- Swagger UI
+
 ## Checklist
 - [x] Completed Microservice Architecture
 - [x] Written test cases for service layer. 
