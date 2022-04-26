@@ -43,7 +43,7 @@ services:
       - AUTH_HOST=auth
       - AUTH_CLIENT_GRPC_PORT=8012
       - ADMIN_HOST=admin
-      - ADMIN_CLIENT_GRPC_PORT=9009
+      - ADMIN_CLIENT_GRPC_PORT=8019
       - KAFKA_BROKER_ADDRESS=broker:9092
 
   checkout:
@@ -86,6 +86,29 @@ services:
       - AUTH_SERVICE_GRPC_PORT=8012
       - PRODUCTS_HOST=products
       - PRODUCT_SERVICE_GRPC_PORT=8018 
+      
+  rewards:
+    image: immadiuttej/reward-service
+    ports:
+      - "3008:3008"
+    environment:
+      - AUTH_HOST=auth
+      - AUTH_SERVICE_GRPC_PORT=8012
+      - ADMIIN HOST=admin
+      - ADMIN_SERVICE_GRPC_PORT=8009
+      
+  admin:
+    image: immadiuttej/admin-service
+    ports:
+      - "3009:3009"
+      - "8009:8009"
+      - "8019:8019"
+    environment:
+      - AUTH_HOST=auth
+      - AUTH_SERVICE_GRPC_PORT=8012
+      - SHIPPING_HOST=shippping
+      - SHIPPING_SERVICE_GRPC_PORT=8003
+      - KAFKA_BROKER_ADDRESS=broker:9092
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
