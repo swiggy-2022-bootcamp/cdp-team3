@@ -11,20 +11,20 @@ import (
 	authProto "github.com/swiggy-ipp/checkout-service/grpcs/auth/proto"
 	"github.com/swiggy-ipp/checkout-service/grpcs/cart_checkout"
 	orderProto "github.com/swiggy-ipp/checkout-service/grpcs/order/proto"
-	"github.com/swiggy-ipp/checkout-service/grpcs/shipping_checkout"
+	"github.com/swiggy-ipp/checkout-service/grpcs/shipping"
 )
 
 // Implementation of the CheckoutController interface
 type checkoutControllerImpl struct {
 	cartCheckoutGRPCClient     cart_checkout.CartCheckoutServiceClient
-	shippingCheckoutGRPCClient shipping_checkout.ShippingClient
+	shippingCheckoutGRPCClient shipping.ShippingClient
 	orderGRPCClient            orderProto.OrderServiceClient
 }
 
 // Create a new Cart Controller
 func NewCheckoutController(
 	cartCheckoutGRPCClient cart_checkout.CartCheckoutServiceClient,
-	shippingCheckoutGRPCClient shipping_checkout.ShippingClient,
+	shippingCheckoutGRPCClient shipping.ShippingClient,
 	orderGRPCClient orderProto.OrderServiceClient,
 ) CheckoutController {
 	return &checkoutControllerImpl{
@@ -53,7 +53,7 @@ func (cc *checkoutControllerImpl) GetOrderOverview(c *gin.Context) {
 		// Validate Shipping Address
 		shippingOut, err := cc.shippingCheckoutGRPCClient.GetShippingAddressForCheckout(
 			c.Request.Context(),
-			&shipping_checkout.ShippingAddressRequestFromCheckout{UserID: claims.GetUserId()},
+			&shipping.ShippingAddressRequestFromCheckout{UserID: claims.GetUserId()},
 		)
 		if err != nil {
 			log.Error("Error Getting Shipping Address: ", err)
@@ -143,7 +143,7 @@ func (cc *checkoutControllerImpl) HealthCheck(c *gin.Context) {
 }
 
 // Utility function to validate Shipping Address and return boolean if valid
-func validateShippingAddress(address *shipping_checkout.ShippingAddressResponseForCheckout) bool {
+func validateShippingAddress(address *shipping.ShippingAddressResponseForCheckout) bool {
 	return address != nil && address.GetShippingAddressID() != "" && address.GetAddress1() != "" && address.GetFirstname() != ""
 }
 

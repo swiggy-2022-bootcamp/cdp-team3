@@ -72,7 +72,7 @@ func (cs *cartServiceImpl) CreateCartItem(
 	cartItem := models.CartItem{
 		ProductID: cartItemRequest.ProductID,
 		Quantity:  cartItemRequest.Quantity,
-		Price: float64(rand.Intn(10-1) + 1) * 100.0,
+		Price:     float64(rand.Intn(10-1)+1) * 100.0,
 	}
 	cart.Items = append(cart.Items, cartItem)
 	err = cs.cartRepository.UpdateCartItems(ctx, cart)

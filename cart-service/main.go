@@ -51,7 +51,7 @@ func main() {
 	cartController := controllers.NewCartController(cartService) // Controller
 
 	// Set up GRPC
-	go startGRPCServer(configs.EnvCartHost() + ":" + configs.EnvCartServiceGRPCPort(), cartService)
+	go startGRPCServer(configs.EnvCartHost()+":"+configs.EnvCartServiceGRPCPort(), cartService)
 
 	// Set up Kafka listeners
 	kafkaCartCreateListener := utils.NewKafkaCartConsumeService(

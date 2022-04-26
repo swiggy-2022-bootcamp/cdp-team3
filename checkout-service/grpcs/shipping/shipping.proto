@@ -1,6 +1,5 @@
 syntax = "proto3";
-package shipping_checkout;
-option go_package ="/grpcs/shipping_checkout";
+option go_package ="/grpcs/shipping";
 
 message ShippingAddressResponseForCheckout {
      string shippingAddressID = 1;

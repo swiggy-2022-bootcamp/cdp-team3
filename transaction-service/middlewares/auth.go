@@ -1,13 +1,13 @@
 package middlewares
 
 import (
+	"fmt"
 	"net/http"
 
+	auth "github.com/cdp-team3/categories-service/app/grpcs/auth"
+	services "github.com/cdp-team3/categories-service/domain/services"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/dto"
-	auth "github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/grpc/auth"
-	"go.uber.org/zap"
 )
 
 type SignedDetails struct {
@@ -19,27 +19,20 @@ type SignedDetails struct {
 }
 
 func AuthenticateJWT() gin.HandlerFunc {
+	fmt.Println("Inside Authentiicate")
 	return func(c *gin.Context) {
+		fmt.Println("Inside Authentiicate function")
 		authToken, err := c.Cookie("token")
 		if err != nil {
-			zap.L().Error("Error in getting cookie:" +err.Error())
-			c.JSON(http.StatusUnauthorized, dto.ResponseDTO{
-				Status: http.StatusUnauthorized, 
-				Message: "Auth token not found", 
-				Data: map[string]interface{}{"data": err.Error()},
-			})
+			fmt.Println("Error in getting cookie: ", err)
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Auth token not found"})
 			c.Abort()
 			return
 		}
-	
-		claims, err := auth.VerifyToken(authToken)
+		claims, err := services.VerifyToken(authToken)
 
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, dto.ResponseDTO{
-				Status: http.StatusUnauthorized, 
-				Message: "Invalid auth token", 
-				Data: map[string]interface{}{"data": err.Error()},
-			})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid auth token"})
 			c.Abort()
 			return
 		}
@@ -49,13 +42,13 @@ func AuthenticateJWT() gin.HandlerFunc {
 }
 
 func OnlyAdmin() gin.HandlerFunc {
+	fmt.Println("Inside only admin")
 	return func(c *gin.Context) {
-		var userDetails SignedDetails = c.MustGet("user_details").(SignedDetails)
+		fmt.Println("Inside only admin function")
+		var userDetails = c.MustGet("user_details").(*auth.VerifyTokenResponse)
+		fmt.Println("Userdetails in only admin", userDetails)
 		if !userDetails.IsAdmin {
-			c.JSON(http.StatusUnauthorized, dto.ResponseDTO{
-				Status: http.StatusUnauthorized, 
-				Message: "Only admin can perform this action", 
-			})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Only admin can perform this action"})
 			c.Abort()
 			return
 		} else {
