@@ -3,12 +3,26 @@ package models
 import "time"
 
 type Address struct {
-	HouseNumber string `json:"house_number"`
-	Street      string `json:"street"`
-	City        string `json:"city"`
-	Country     string `json:"country"`
-	Pincode     string `json:"pincode"`
-	Default     int    `json:"default"`
+	ShippingAddressId string `json:"shippingAddressId"`
+	Address1          string `json:"address1"`
+	Address2          string `json:"address2"`
+	City              string `json:"city"`
+	CountryID         uint32 `json:"countryid"`
+	PostCode          uint32 `json:"postcode"`
+	Default           string `json:"default"`
+}
+
+type ShippingAddress struct {
+	ShippingAddressId string `json:"shippingAddressId"`
+	Address1          string `json:"house_number"`
+	Address2          string `json:"street"`
+	City              string `json:"city"`
+	Countryid         int    `json:"countryId"`
+	Postcode          int    `json:"postcode"`
+	Default           int    `json:"default"`
+	Firstname         string `json:"firstname"`
+	Lastname          string `json:"lastname"`
+	UserId            string `json:"userId"`
 }
 
 type Admin struct {

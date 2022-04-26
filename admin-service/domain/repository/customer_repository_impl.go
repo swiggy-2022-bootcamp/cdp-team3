@@ -1,14 +1,33 @@
 package repository
 
 import (
+	"context"
+	"fmt"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/admin-service/configs"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/admin-service/errors"
+	shipping "github.com/swiggy-2022-bootcamp/cdp-team3/admin-service/grpc/shipping/proto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/admin-service/models"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
 )
+
+type GrpcFunction interface {
+	DeleteShippingAddress(ShippingAddressDeleteRequest) string
+}
+
+func DeleteShippingProtoConv(customer *models.Customer) *ShippingAddressDeleteRequest {
+	return &ShippingAddressDeleteRequest{
+		ShippingAddressId: customer.Address.ShippingAddressId,
+	}
+}
+
+type ShippingAddressDeleteRequest struct {
+	ShippingAddressId string `json:shippingaddressid`
+}
 
 var customerCollection = "Customers"
 
@@ -150,6 +169,13 @@ func (cr CustomerRepositoryImpl) DeleteCustomerByIdFromDB(customerId string) (bo
 		zap.L().Error("User with Id Doesn't Exist")
 		return false, errors.UserAlreadyExists("User with Id Doesn't Exist")
 	}
+	deleteId := DeleteShippingProtoConv(fetchedCustomer)
+	fmt.Println(deleteId)
+	Deleted := DeleteShippingAddress(deleteId)
+	if !Deleted {
+		zap.L().Error("GRPC Call With Shipping Service Failed")
+		return false, errors.NewUnexpectedError("GRPC Call With Shipping Service Failed")
+	}
 	_, err := configs.DB.DeleteItem(&dynamodb.DeleteItemInput{
 		TableName: aws.String(customerCollection),
 		Key: map[string]*dynamodb.AttributeValue{
@@ -197,4 +223,24 @@ func (cr CustomerRepositoryImpl) UpdateCustomerByIdFromDB(customerId string, cus
 	}
 
 	return customer, nil
+}
+
+func DeleteShippingAddress(request *ShippingAddressDeleteRequest) bool {
+
+	conn, err := grpc.Dial(":"+configs.EnvShippingAddressPort(), grpc.WithInsecure())
+	if err != nil {
+		fmt.Printf("Error while making connection, %v\n", err)
+		return false
+	}
+
+	c := shipping.NewShippingClient(conn)
+
+	_, err1 := c.DeleteShippingAddress(
+		context.Background(),
+		&shipping.ShippingAddressDeleteRequest{
+			ShippingAddressID: request.ShippingAddressId,
+		},
+	)
+
+	return err1 == nil
 }

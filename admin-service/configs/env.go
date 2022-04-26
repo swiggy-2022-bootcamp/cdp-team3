@@ -52,7 +52,12 @@ func EnvAddUserDeletionTopic() string {
 	return os.Getenv("USER_DELETION_TOPIC")
 }
 
-func EnvAddUserBrokerAddress() string {
+func EnvShippingAddressPort() string {
+	loadEnvFile()
+	return os.Getenv("GRPC_SHIPPING_SERVER_PORT")
+}
+
+func EnvUserBrokerAddress() string {
 	loadEnvFile()
 	return os.Getenv("KAFKA_BROKER_ADDRESS")
 }

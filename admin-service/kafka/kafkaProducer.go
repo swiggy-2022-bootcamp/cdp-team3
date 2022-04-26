@@ -10,7 +10,7 @@ import (
 
 func UserCreationProducer(customerId string) {
 	w := kafka.NewWriter(kafka.WriterConfig{
-		Brokers:  []string{configs.EnvAddUserBrokerAddress()},
+		Brokers:  []string{configs.EnvUserBrokerAddress()},
 		Topic:    configs.EnvAddUserAdditionTopic(),
 		Balancer: &kafka.LeastBytes{},
 	})
@@ -32,7 +32,7 @@ func UserCreationProducer(customerId string) {
 
 func UserDeletionProducer(customerId string) {
 	w := kafka.NewWriter(kafka.WriterConfig{
-		Brokers:  []string{"localhost:" + configs.EnvAddUserBrokerAddress()},
+		Brokers:  []string{configs.EnvUserBrokerAddress()},
 		Topic:    configs.EnvAddUserDeletionTopic(),
 		Balancer: &kafka.LeastBytes{},
 	})

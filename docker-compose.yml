@@ -1,19 +1,113 @@
 services:
+  cart:
+    image: dhi13man/swiggy-ipp-ecommerce-cart-service:latest
+    ports:
+      - "3010:3010"
+      - "8010:8010"
+    depends_on:
+      - broker
+    environment:
+      - AUTH_HOST=auth
+      - AUTH_CLIENT_GRPC_PORT=8012
+      - CART_HOST=cart
+      - CART_SERVICE_PORT=3010
+      - CART_SERVICE_GRPC_PORT=8010
+      - KAFKA_BROKER_ADDRESS=broker:9092
+
+  orders:
+    image: jaithunmahira/order-service-dock:latest
+    ports:
+      - "3004:3004"
+      - "8004:8004"
+    depends_on:
+      - broker
+    environment:
+      - ORDER_HOST=orders
+      - ORDER_SERVICE_PORT=3004
+      - ORDER_SERVICE_GRPC_PORT=8004
+      - AUTH_HOST=auth
+      - AUTH_CLIENT_GRPC_PORT=8012
+      - CHECKOUT_SERVICE_PORT=3011
+      - CHECKOUT_HOST=checkout
+      - KAFKA_BROKER_ADDRESS=broker:9092
+
+  transaction:
+    image: jaithunmahira/transaction-service-dock:latest
+    ports:
+      - "3005:3005"
+    depends_on:
+      - broker
+    environment:
+      - TRANSACTION_HOST=transaction
+      - TRANSACTION_SERVICE_PORT=3005
+      - AUTH_HOST=auth
+      - AUTH_CLIENT_GRPC_PORT=8012
+      - ADMIN_HOST=admin
+      - ADMIN_CLIENT_GRPC_PORT=8019
+      - KAFKA_BROKER_ADDRESS=broker:9092
+
+  checkout:
+    image: dhi13man/swiggy-ipp-ecommerce-checkout-service:latest
+    ports:
+      - "3011:3011"
+    environment:
+      - AUTH_HOST=auth
+      - AUTH_SERVICE_GRPC_PORT=8012
+      - CART_HOST=cart
+      - CART_SERVICE_GRPC_PORT=8010
+      - CHECKOUT_HOST=checkout
+      - CHECKOUT_SERVICE_PORT=3011
+      - CHECKOUT_SERVICE_GRPC_PORT=8011
+      - ORDER_HOST=orders
+      - ORDER_SERVICE_GRPC_PORT=8013
+      - SHIPPING_HOST=shipping
+      - SHIPPING_SERVICE_GRPC_PORT=8003
+
+  shipping:
+    image: chahat7/shipping
+    ports:
+      - "3003:3003"
+      - "8003:8003"
+    environment:
+      - SHIPPING_HOST=shippping
+      - SHIPPING_SERVICE_GRPC_PORT=8003
+      - SHIPPING_SERVICE_PORT=3003
+      - AUTH_HOST=auth
+      - AUTH_SERVICE_GRPC_PORT=8012
+
+  categories:
+    image: chahat7/category
+    ports:
+      - "3002:3002"
+    environment:
+      - CATEGORIES_HOST=categories
+      - CATEGORIES_SERVICE_PORT=3002
+      - AUTH_HOST=auth
+      - AUTH_SERVICE_GRPC_PORT=8012
+      - PRODUCTS_HOST=products
+      - PRODUCT_SERVICE_GRPC_PORT=8018 
+      
+  rewards:
+    image: immadiuttej/reward-service
+    ports:
+      - "3008:3008"
+    environment:
+      - AUTH_HOST=auth
+      - AUTH_SERVICE_GRPC_PORT=8012
+      - ADMIIN HOST=admin
+      - ADMIN_SERVICE_GRPC_PORT=8009
+      
   admin:
-    build: 
-      context: ./admin-service
-      dockerfile: ./Dockerfile
+    image: immadiuttej/admin-service
     ports:
       - "3009:3009"
       - "8009:8009"
       - "8019:8019"
-    depends_on:
-      - broker
     environment:
-      - ADMIN_HOST=admin
-      - ADMIN_SERVICE_PORT=3009
-      - GRPC_REWARD_SERVER_PORT=8009
-      - GRPC_TRANSACTION_SERVER_PORT=8019
+      - AUTH_HOST=auth
+      - AUTH_SERVICE_GRPC_PORT=8012
+      - SHIPPING_HOST=shippping
+      - SHIPPING_SERVICE_GRPC_PORT=8003
       - KAFKA_BROKER_ADDRESS=broker:9092
 
   zookeeper:

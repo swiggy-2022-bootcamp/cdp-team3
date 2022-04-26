@@ -68,7 +68,7 @@ func StartRestServer() *gin.Engine {
 	router.GET("/", controllers.HealthCheck())
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	customerRoutes.CustomerRoutes(router)
 	adminRoutes.AdminRoutes(router)
+	customerRoutes.CustomerRoutes(router)
 	return router
 }

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -12,10 +13,28 @@ import (
 	"github.com/swiggy-2022-bootcamp/cdp-team3/admin-service/domain/services"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/admin-service/dto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/admin-service/errors"
+	shipping "github.com/swiggy-2022-bootcamp/cdp-team3/admin-service/grpc/shipping/proto"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/admin-service/models"
+
+	"google.golang.org/grpc"
 
 	"go.uber.org/zap"
 )
+
+type ShippingAddressRequest struct {
+	Userid    string `json:"userid"`
+	Firstname string `json:"firstname"`
+	Lastname  string `json:"lastname"`
+	City      string `json:"city"`
+	Address1  string `json:"address1"`
+	Address2  string `json:"address2"`
+	Countryid uint32 `json:"countryid"`
+	Postcode  uint32 `json:"postcode"`
+	Default   string `json:"default"`
+}
+type GrpcFunction interface {
+	GetShippingAddressId(ShippingAddressRequest) string
+}
 
 type CustomerController struct {
 	customerService services.CustomerService
@@ -46,6 +65,20 @@ func dynamoModelConv(customer models.Customer) *models.Customer {
 	}
 }
 
+func ShippingProtoConv(customer *models.Customer) *ShippingAddressRequest {
+	return &ShippingAddressRequest{
+		Userid:    customer.CustomerId,
+		Firstname: customer.Firstname,
+		Lastname:  customer.Lastname,
+		City:      customer.Address.City,
+		Address1:  customer.Address.Address1,
+		Address2:  customer.Address.Address2,
+		Countryid: customer.Address.CountryID,
+		Postcode:  customer.Address.PostCode,
+		Default:   customer.Address.Default,
+	}
+}
+
 // CreateCustomer godoc
 // @Summary creates a customer account
 // @Description creates a customer account when the admin is verified
@@ -63,6 +96,7 @@ func (cc CustomerController) AddCustomer(c *gin.Context) {
 	zap.L().Info("Inside AddCustomer Controller")
 
 	var customer models.Customer
+	// var shippingAddress ShippingAddressRequest
 
 	if err := c.BindJSON(&customer); err != nil {
 		c.Error(err)
@@ -73,10 +107,17 @@ func (cc CustomerController) AddCustomer(c *gin.Context) {
 	}
 
 	customerRecord := dynamoModelConv(customer)
+	ShippingAddress := ShippingProtoConv(customerRecord)
+	customerRecord.Address.ShippingAddressId = GetShippingAddressId(*ShippingAddress)
+	if customerRecord.Address.ShippingAddressId == "" {
+		c.JSON(500, gin.H{"message": "GRPC Call To Shipping Service Failed"})
+		return
+	}
 	if customerRecord.Password != customer.ConfirmPassword {
 		c.JSON(409, gin.H{"message": "Password & Confirm Password Need To Be The Same"})
 		return
 	}
+
 	err := cc.customerService.AddCustomer(customerRecord)
 	if err != nil {
 		zap.L().Error(err.Message)
@@ -308,4 +349,39 @@ func HealthCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.JSON(http.StatusOK, dto.HealthCheckResponse{Server: "Server is up", Database: "Database is up"})
 	}
+}
+
+func GetShippingAddressId(request ShippingAddressRequest) string {
+	// Set up connection with the grpc server
+
+	conn, err := grpc.Dial(":"+configs.EnvShippingAddressPort(), grpc.WithInsecure())
+	if err != nil {
+		fmt.Printf("Error while making connection, %v\n", err)
+		return ""
+	}
+
+	// Create a client instance
+	c := shipping.NewShippingClient(conn)
+
+	// Lets invoke the remote function from client on the server
+	resp, err1 := c.AddShippingAddress(
+		context.Background(),
+		&shipping.ShippingAddressAddRequest{
+			Firstname: request.Firstname,
+			Lastname:  request.Lastname,
+			City:      request.City,
+			Address1:  request.Address1,
+			Address2:  request.Address2,
+			Countryid: request.Countryid,
+			Postcode:  request.Postcode,
+			Userid:    request.Userid,
+			Default:   request.Default,
+		},
+	)
+
+	if err1 != nil {
+		return ""
+	}
+
+	return resp.ShippingAddressID
 }
