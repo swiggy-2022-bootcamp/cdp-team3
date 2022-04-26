@@ -7,13 +7,15 @@ import (
 	auth "github.com/swiggy-2022-bootcamp/cdp-team3/transaction-service/grpc/auth/proto"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func VerifyToken(token string) (*auth.VerifyTokenResponse, error) {
 	port := configs.EnvGrpcAuthClientPORT()
-	conn, err := grpc.Dial(":"+port, grpc.WithInsecure())
+	serverHost := configs.EnvGrpcAuthClientHost()
+	conn, err := grpc.Dial(serverHost+":"+port, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		zap.L().Error("Failed to dial:"+port+" "+err.Error())
+		zap.L().Error("Failed to dial:" + port + " " + err.Error())
 		return nil, err
 	}
 	defer conn.Close()
@@ -22,7 +24,7 @@ func VerifyToken(token string) (*auth.VerifyTokenResponse, error) {
 		Token: token,
 	})
 	if err != nil {
-		zap.L().Error("Failed to verify token:" +err.Error())
+		zap.L().Error("Failed to verify token:" + err.Error())
 		return nil, err
 	}
 	return r, nil

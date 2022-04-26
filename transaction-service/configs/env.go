@@ -32,9 +32,19 @@ func EnvGrpcAuthClientPORT() string {
 	return os.Getenv("AUTH_CLIENT_GRPC_PORT")
 }
 
+func EnvGrpcAuthClientHost() string {
+	loadEnvFile()
+	return os.Getenv("AUTH_HOST")
+}
+
 func EnvGrpcAdminClientPORT() string {
 	loadEnvFile()
 	return os.Getenv("ADMIN_CLIENT_GRPC_PORT")
+}
+
+func EnvGrpcAdminClientHost() string {
+	loadEnvFile()
+	return os.Getenv("ADMIN_HOST")
 }
 
 func EnvAddTransactionAmountBrokerAddress() string {

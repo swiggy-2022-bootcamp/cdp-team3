@@ -24,37 +24,40 @@ func AddTransactionAmountConsumer() {
 
 		m, err := r.ReadMessage(context.Background())
 		if err != nil {
-			panic(err)
-		}
+			zap.L().Error("Could not read Kafka Message: " + err.Error())
+		} else if m.Value == nil || len(m.Value) == 0 {
+			zap.L().Error("Received empty Kafka Message")
+		} else {
 
-		strArr := strings.Split(string(m.Value), " ")
+			strArr := strings.Split(string(m.Value), " ")
 
-		if len(strArr) == 2 {
-			customerId := strArr[0]
-			transactionAmount := strArr[1]
+			if len(strArr) == 2 {
+				customerId := strArr[0]
+				transactionAmount := strArr[1]
 
-			if s, err := strconv.ParseFloat(transactionAmount, 64); err == nil {
-        newTransaction := &models.Transaction{
-					TransactionId: uuid.New().String(),
-					Amount:        s,
-					Description:   "Transaction Amount Added from Orders Service through KafKa topic(add_transaction_amount)",
-					CustomerID:    customerId,
-				}
-		
-				transactionRepository := repository.NewTransactionRepositoryImpl(configs.DB)
-				transactionService := services.NewTransactionServiceImpl(transactionRepository)
-				_, err := transactionService.AddTransactionAmtToCustomer(newTransaction)
+				if s, err := strconv.ParseFloat(transactionAmount, 64); err == nil {
+					newTransaction := &models.Transaction{
+						TransactionId: uuid.New().String(),
+						Amount:        s,
+						Description:   "Transaction Amount Added from Orders Service through KafKa topic(add_transaction_amount)",
+						CustomerID:    customerId,
+					}
 
-				if err == nil {
-					zap.L().Info("Successfully added transaction to customer from Orders Service"+customerId)
+					transactionRepository := repository.NewTransactionRepositoryImpl(configs.DB)
+					transactionService := services.NewTransactionServiceImpl(transactionRepository)
+					_, err := transactionService.AddTransactionAmtToCustomer(newTransaction)
+
+					if err == nil {
+						zap.L().Info("Successfully added transaction to customer from Orders Service" + customerId)
+					} else {
+						zap.L().Error("Error adding transaction points through kafka" + err.Message)
+					}
 				} else {
-					zap.L().Error("Error adding transaction points through kafka"+err.Message)
+					zap.L().Error("Error adding transaction amount through Kafka topic(add_transaction_amount) due to invalid transaction amount")
 				}
 			} else {
-				zap.L().Error("Error adding transaction amount through Kafka topic(add_transaction_amount) due to invalid transaction amount")
+				zap.L().Error("Error consuming msgs from Kafka topic(add_transaction_amount) due to invalid msg format - " + string(m.Value))
 			}
-		} else {
-			zap.L().Error("Error consuming msgs from Kafka topic(add_transaction_amount) due to invalid msg format - " + string(m.Value))
 		}
 	}
 }

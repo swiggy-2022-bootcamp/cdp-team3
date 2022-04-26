@@ -10,7 +10,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func CheckLoggedInUserWithOrderCustomerId(c *gin.Context , orderCudtomerId string) bool {
+func CheckLoggedInUserWithOrderCustomerId(c *gin.Context, orderCudtomerId string) bool {
 	var userDetails middlewares.SignedDetails = c.MustGet("user_details").(middlewares.SignedDetails)
 	return userDetails.UserId == orderCudtomerId
 }
@@ -20,18 +20,18 @@ func IsAdmin(c *gin.Context) bool {
 	return userDetails.IsAdmin
 }
 
-
 func ClearCart(customerId string) {
-	checkoutURL := configs.EnvCheckout ":"+configs.EnvCheckOutPORT()+"/checkout_service/success"
+	checkoutHost := configs.EnvCheckoutHost()
+	checkoutURL := "http://" + checkoutHost + ":" + configs.EnvCheckOutPORT() + "/checkout_service/success"
 	requestBody := strings.NewReader(`
 		{
-			"userId": "`+customerId+`" 
+			"userId": "` + customerId + `" 
 		}
 	`)
 	res, err := http.Post(checkoutURL, "application/json; charset=UTF-8", requestBody)
 
 	if err != nil {
-		zap.L().Error("Error Calling Kafka Service"+err.Error())
+		zap.L().Error("Error Calling Rest call to checkout Service" + err.Error())
 		return
 	}
 	res.Body.Close()

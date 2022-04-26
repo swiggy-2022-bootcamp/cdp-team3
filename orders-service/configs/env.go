@@ -37,6 +37,16 @@ func EnvPORT() string {
 	return os.Getenv("ORDER_SERVICE_PORT")
 }
 
+func EnvGrpcAuthClientHost() string {
+	loadEnvFile()
+	return os.Getenv("AUTH_HOST")
+}
+
+func EnvCheckoutHost() string {
+	loadEnvFile()
+	return os.Getenv("CHECKOUT_HOST")
+}
+
 func EnvUpdateStatusTopic() string {
 	loadEnvFile()
 	return os.Getenv("UPDATE_STATUS_TOPIC")
