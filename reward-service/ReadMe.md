@@ -37,6 +37,7 @@
 - Rewards Service(Client) -> Auth Service (Server) - To get the token verified and only allow the admin to perform the actions
 - Rewards Service(Client) -> Admin Service (Server) - To update the reward points in the Customers Table. Once the Sucess message comes in, Reward Service Appends the Reward Details to Reward Table on DynamoDB
 
+## Running The Application 
 
 Run locally 
 ```sh
@@ -48,5 +49,7 @@ Generate swagger docs
 swag init
 ```
 
-Swagger UI
+## Swagger UI
 > http://localhost:3008/swagger/index.html
+![image](https://user-images.githubusercontent.com/19664740/165358229-f8bead13-e55e-4e96-b477-6c6b9007039b.png)
+
