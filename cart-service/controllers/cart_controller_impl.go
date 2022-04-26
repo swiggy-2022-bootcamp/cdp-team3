@@ -45,7 +45,7 @@ func (cc *cartControllerImpl) CreateCartItem(c *gin.Context) {
 		c.JSON(http.StatusForbidden, errors.NewHTTPErrorDTO(http.StatusForbidden, nil, unauthorizedErrorMessage))
 	} else {
 		// Create Cart Item
-		err := cc.cartService.CreateCartItem(c.Request.Context(), &cartItemDTO, claims.GetUserId())
+		err := cc.cartService.CreateCartItem(c.Request.Context(), cartItemDTO, claims.GetUserId())
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, errors.NewHTTPErrorDTO(http.StatusInternalServerError, err))
 		} else {
@@ -121,7 +121,7 @@ func (cc *cartControllerImpl) UpdateCartItem(c *gin.Context) {
 		c.JSON(http.StatusForbidden, errors.NewHTTPErrorDTO(http.StatusForbidden, nil, unauthorizedErrorMessage))
 	} else {
 		// Create Cart Item
-		err := cc.cartService.UpdateCartItem(c.Request.Context(), &cartItemDTO, claims.GetUserId())
+		err := cc.cartService.UpdateCartItem(c.Request.Context(), cartItemDTO, claims.GetUserId())
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, errors.NewHTTPErrorDTO(http.StatusInternalServerError, err))
 		} else {
@@ -145,10 +145,7 @@ func (cc *cartControllerImpl) DeleteCartItem(c *gin.Context) {
 	// Get User Claims
 	claims := c.MustGet("user_details").(*proto.VerifyTokenResponse)
 	// Get Cart Item Request DTO Object
-	var cartItemDTO requests.CartItemRequest
-	if err := c.ShouldBindJSON(&cartItemDTO); err != nil {
-		c.JSON(http.StatusBadRequest, errors.NewHTTPErrorDTO(http.StatusBadRequest, err))
-	} else if claims.GetUserId() == "" {
+	 if claims.GetUserId() == "" {
 		c.JSON(http.StatusForbidden, errors.NewHTTPErrorDTO(http.StatusForbidden, nil, unauthorizedErrorMessage))
 	} else {
 		// Get Cart Item Product ID from URL
