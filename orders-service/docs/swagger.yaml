@@ -1,0 +1,312 @@
+definitions:
+  models.Order:
+    properties:
+      customerId:
+        type: string
+      dateTime:
+        type: string
+      invoiceId:
+        type: string
+      orderId:
+        type: string
+      orderedProducts:
+        items:
+          $ref: '#/definitions/models.OrderedProduct'
+        type: array
+      shippingAddressId:
+        type: string
+      status:
+        type: string
+      totalAmount:
+        type: number
+    required:
+    - customerId
+    - dateTime
+    - orderId
+    - orderedProducts
+    - shippingAddressId
+    - status
+    - totalAmount
+    type: object
+  models.OrderStatus:
+    properties:
+      status:
+        type: string
+    type: object
+  models.OrderedProduct:
+    properties:
+      productId:
+        type: string
+      quantity:
+        type: integer
+    required:
+    - productId
+    - quantity
+    type: object
+host: localhost:3004
+info:
+  contact:
+    email: swiggyb1035@datascience.manipal.edu
+    name: Jaithun Mahira
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Orders Service API
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: This request will return 200 OK if server is up..
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+      summary: To check if the service is running or not.
+      tags:
+      - Health
+  /orders:
+    get:
+      consumes:
+      - application/json
+      description: This request will fetch all the orders
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Order'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Fetch all the orders
+      tags:
+      - Orders Service
+  /orders/{orderId}:
+    delete:
+      description: This request will delete a particular order
+      parameters:
+      - description: Order Id
+        in: path
+        name: orderId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Delete Order by Order ID
+      tags:
+      - Orders Service
+    get:
+      description: Get order details based on Order ID.
+      parameters:
+      - description: Order Id
+        in: path
+        name: orderId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Get order based on order ID.
+      tags:
+      - Orders Service
+    put:
+      consumes:
+      - application/json
+      description: This request will update the order status
+      parameters:
+      - description: Order Id
+        in: path
+        name: orderId
+        required: true
+        type: string
+      - description: Order Status
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/models.OrderStatus'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Update Order Status by Order ID
+      tags:
+      - Orders Service
+  /orders/{orderId}/order_status:
+    get:
+      description: This request will fetch details of order status
+      parameters:
+      - description: Order Id
+        in: path
+        name: orderId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.OrderStatus'
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Get Order Status by Order ID
+      tags:
+      - Orders Service
+  /orders/invoice/{orderId}:
+    post:
+      description: This request will generate an invoice for order
+      parameters:
+      - description: Order Id
+        in: path
+        name: orderId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Order'
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Generate invoice for a particular Order by Order ID
+      tags:
+      - Orders Service
+  /orders/status/{status}:
+    get:
+      description: Get all the orders in the application based on the order status
+        for admin to view.
+      parameters:
+      - description: Order Status
+        in: path
+        name: status
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Order'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Get orders based on order status
+      tags:
+      - Orders Service
+  /orders/user/{userId}:
+    get:
+      description: Get order details of a customer based on Customer ID.
+      parameters:
+      - description: User Id
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Order'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: number
+      security:
+      - Bearer Token: []
+      summary: Get orders of a customer based on customer ID.
+      tags:
+      - Orders Service
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

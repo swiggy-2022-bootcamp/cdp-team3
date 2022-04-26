@@ -1,0 +1,33 @@
+basePath: /categories-service/api
+host: localhost:3002
+info:
+  contact:
+    email: chahatbhatia2014@gmail.com
+    name: Chahat Bhatia
+  description: This microservice is for categories service.
+  license:
+    name: Apache 2.0
+  title: CDP TEAM 3 - Categories module
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: This request will return 200 OK if server is up..
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+      summary: To check if the service is running or not.
+      tags:
+      - Health
+swagger: "2.0"

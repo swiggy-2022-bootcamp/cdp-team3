@@ -1,0 +1,98 @@
+basePath: /shipping-service/api
+host: localhost:3003
+info:
+  contact:
+    email: chahatbhatia2014@gmail.com
+    name: Chahat Bhatia
+  description: This microservice is for Shipping service.
+  license:
+    name: Apache 2.0
+  title: CDP TEAM 3 -Shipping Address module
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: This request will return 200 OK if server is up..
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: To check if the service is running or not.
+      tags:
+      - ""
+  /shippingaddress:
+    post:
+      description: This Handler allow user to create new Shipping Address
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+      summary: Create Shipping Address
+      tags:
+      - Shipping Address
+  /shippingaddress/:id:
+    delete:
+      description: This Handle deletes Delete Shipping Address given sid
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+      summary: Delete Shipping Address
+      tags:
+      - Shipping Address
+    get:
+      description: This Handle returns shippingAddress given id
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+      summary: Get Shipping Address by id
+      tags:
+      - Shipping Address
+    put:
+      description: This Handle Update shippingAddress given id
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: number
+      summary: Update Shipping Address
+      tags:
+      - Shipping Address
+swagger: "2.0"

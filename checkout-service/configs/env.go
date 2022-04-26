@@ -7,28 +7,94 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func EnvMonogoURI() string {
+const errorMessage string = "Error loading .env file."
+
+func EnvAuthHost() string {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file.")
+		log.Fatalf(errorMessage)
 	}
-	return os.Getenv("MONGO_URI")
+
+	return os.Getenv("AUTH_HOST")
 }
 
-func EnvJWTSecretKey() string {
+func EnvCartHost() string {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file.")
+		log.Fatalf(errorMessage)
 	}
 
-	return os.Getenv("SECRET_KEY")
+	return os.Getenv("CART_HOST")
 }
 
-func EnvPORT() string {
+func EnvCheckoutHost() string {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file.")
+		log.Fatalf(errorMessage)
 	}
 
-	return os.Getenv("PORT")
+	return os.Getenv("CHECKOUT_HOST")
+}
+
+func EnvOrderHost() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf(errorMessage)
+	}
+
+	return os.Getenv("ORDER_HOST")
+}
+
+func EnvShippingHost() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf(errorMessage)
+	}
+
+	return os.Getenv("SHIPPING_HOST")
+}
+
+func EnvServicePort() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf(errorMessage)
+	}
+
+	return os.Getenv("CHECKOUT_SERVICE_PORT")
+}
+
+func EnvAuthServiceGRPCPort() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf(errorMessage)
+	}
+
+	return os.Getenv("AUTH_SERVICE_GRPC_PORT")
+}
+
+func EnvCartServiceGRPCPort() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf(errorMessage)
+	}
+
+	return os.Getenv("CART_SERVICE_GRPC_PORT")
+}
+
+func EnvOrderServiceGRPCPort() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf(errorMessage)
+	}
+
+	return os.Getenv("ORDER_SERVICE_GRPC_PORT")
+}
+
+func EnvShippingServiceGRPCPort() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf(errorMessage)
+	}
+
+	return os.Getenv("SHIPPING_SERVICE_GRPC_PORT")
 }

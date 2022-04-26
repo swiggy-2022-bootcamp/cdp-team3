@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package order;
+
+option go_package = "/grpcs/order/proto";
+
+message CheckoutResponseOrder {
+	string orderId = 1;
+	string dateTime = 2;
+	string status = 3;
+	string customerId = 4;
+	float totalAmount = 5;
+	string shippingAddressId = 6;
+   repeated OrderedProduct orderedProducts = 7;
+}
+
+message PaymentResponseOrder {
+	string orderId = 1;
+	string dateTime = 2;
+	string status = 3;
+	string customerId = 4;
+	float totalAmount = 5;
+	string shippingAddressId = 6;
+}
+
+message RequestOrder {
+	string customerId = 1;
+	float totalAmount = 2;
+	string shippingAddressId = 3;
+    repeated OrderedProduct orderedProducts = 4;
+}
+
+message OrderedProduct {
+  string productId = 1;
+  int64 quantity = 2;
+}
+  
+message CreateOrderRequest {
+	RequestOrder order = 1;
+}
+  
+message CreateOrderResponse {
+  CheckoutResponseOrder order = 1;
+}
+
+message GetOrderRequest {
+	string orderId = 1;
+}
+  
+message GetOrderResponse {
+  PaymentResponseOrder order = 1;
+}
+    
+service OrderService {
+	rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
+	rpc GetOrder (GetOrderRequest) returns (GetOrderResponse);
+}

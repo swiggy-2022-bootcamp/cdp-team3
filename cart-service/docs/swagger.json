@@ -1,0 +1,407 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "description": "Health Check Endpoint",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Health Check"
+                ],
+                "summary": "Health Check Endpoint",
+                "responses": {
+                    "200": {
+                        "description": "Health Check Response.",
+                        "schema": {
+                            "$ref": "#/definitions/responses.HealthCheckResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/cart": {
+            "get": {
+                "description": "Get a list of all the items in the Cart currently. Only one of Cart ID or User ID must be provided",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart Items"
+                ],
+                "summary": "Get all Cart Items",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the Cart to get the items for.",
+                        "name": "cartID",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID of the User to get the items for.",
+                        "name": "userID",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of Cart Items",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CartItemsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "put": {
+                "description": "Update Quantity of a Item in the Cart using the Cart Item data sent.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart Items"
+                ],
+                "summary": "Update a Cart Item",
+                "parameters": [
+                    {
+                        "description": "Item to be updated in the Cart",
+                        "name": "cartItemDTO",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CartItemRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Message denoting whether successfully updated",
+                        "schema": {
+                            "$ref": "#/definitions/responses.MessageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a Item in the Cart using the Cart Item data sent.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart Items"
+                ],
+                "summary": "Create a Cart Item",
+                "parameters": [
+                    {
+                        "description": "Item to be added to the Cart",
+                        "name": "cartItemDTO",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CartItemRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Message denoting whether successfully created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.MessageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/cart/empty": {
+            "delete": {
+                "description": "Empty the Cart for an user.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart Overall"
+                ],
+                "summary": "Empty the Cart.",
+                "parameters": [
+                    {
+                        "description": "Cart ID Request DTO. Must Either provide User ID (user request)  or  Cart  ID  (Admin Request),  but  not  both.",
+                        "name": "emptyCartDTO",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CartIDRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/cart/{productID}": {
+            "delete": {
+                "description": "Delete an Item in the cart using its Product ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart Items"
+                ],
+                "summary": "Delete a Cart Item.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Cart Item Product ID",
+                        "name": "productID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "errors.HTTPErrorDTO": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Error code",
+                    "type": "integer",
+                    "example": 400
+                },
+                "details": {
+                    "description": "Detailed Error Messages",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "Invalid email."
+                    ]
+                },
+                "message": {
+                    "description": "Brief Error Message",
+                    "type": "string",
+                    "example": "Status bad request."
+                }
+            }
+        },
+        "models.CartItem": {
+            "type": "object",
+            "required": [
+                "price",
+                "product_id",
+                "quantity"
+            ],
+            "properties": {
+                "price": {
+                    "description": "Price of the product in the cart.",
+                    "type": "number"
+                },
+                "product_id": {
+                    "description": "ID of the product",
+                    "type": "string"
+                },
+                "quantity": {
+                    "description": "Quantity of the product in the cart.",
+                    "type": "integer"
+                }
+            }
+        },
+        "requests.CartIDRequest": {
+            "type": "object",
+            "properties": {
+                "cart_id": {
+                    "description": "ID of the cart",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "ID of the user",
+                    "type": "string"
+                }
+            }
+        },
+        "requests.CartItemRequest": {
+            "type": "object",
+            "required": [
+                "product_id",
+                "quantity"
+            ],
+            "properties": {
+                "product_id": {
+                    "description": "ID of the product",
+                    "type": "string"
+                },
+                "quantity": {
+                    "description": "Quantity of the product in the cart.",
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.CartItemsResponse": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "description": "List of items in the cart.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.CartItem"
+                    }
+                },
+                "total": {
+                    "description": "Total price of the cart.",
+                    "type": "number"
+                }
+            }
+        },
+        "responses.HealthCheckResponse": {
+            "type": "object",
+            "properties": {
+                "db_health": {
+                    "description": "DB Health",
+                    "type": "string"
+                },
+                "kafka_server_health": {
+                    "description": "Kafka Server Health",
+                    "type": "string"
+                },
+                "service_health": {
+                    "description": "Service Health",
+                    "type": "string"
+                }
+            }
+        },
+        "responses.MessageResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "description": "Message being sent through the DTO",
+                    "type": "string",
+                    "example": "Sample Message"
+                }
+            }
+        }
+    }
+}
