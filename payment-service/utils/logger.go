@@ -34,6 +34,7 @@ func (l *LoggerService) Log(values ...interface{}) {
 		defer file.Close()
 		file.WriteString(msg)
 	}
+	fmt.Println(msg)
 }
 
 func NewLoggerService(topic string) Logger {
