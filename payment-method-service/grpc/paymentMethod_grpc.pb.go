@@ -4,7 +4,7 @@
 // - protoc             v3.20.1
 // source: grpc/paymentMethod.proto
 
-package mode_of_payment_service
+package payment_method_service
 
 import (
 	context "context"
@@ -35,7 +35,7 @@ func NewAddPaymentMethodServiceClient(cc grpc.ClientConnInterface) AddPaymentMet
 
 func (c *addPaymentMethodServiceClient) AddPaymentMethod(ctx context.Context, in *PaymentMethod, opts ...grpc.CallOption) (*PaymentMethod, error) {
 	out := new(PaymentMethod)
-	err := c.cc.Invoke(ctx, "/mode_of_payment_service.AddPaymentMethodService/AddPaymentMethod", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/paymentMethod.AddPaymentMethodService/AddPaymentMethod", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func _AddPaymentMethodService_AddPaymentMethod_Handler(srv interface{}, ctx cont
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/mode_of_payment_service.AddPaymentMethodService/AddPaymentMethod",
+		FullMethod: "/paymentMethod.AddPaymentMethodService/AddPaymentMethod",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AddPaymentMethodServiceServer).AddPaymentMethod(ctx, req.(*PaymentMethod))
@@ -93,7 +93,7 @@ func _AddPaymentMethodService_AddPaymentMethod_Handler(srv interface{}, ctx cont
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AddPaymentMethodService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "mode_of_payment_service.AddPaymentMethodService",
+	ServiceName: "paymentMethod.AddPaymentMethodService",
 	HandlerType: (*AddPaymentMethodServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

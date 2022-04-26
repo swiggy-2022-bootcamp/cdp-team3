@@ -13,3 +13,8 @@
 {"level":"info","ts":"2022-04-26T11:20:15.677+0530","caller":"mode-of-payment-service/main.go:38","msg":"Payment Method Service Started"}
 {"level":"info","ts":"2022-04-26T11:22:25.836+0530","caller":"mode-of-payment-service/main.go:39","msg":"Payment Method Service Started"}
 {"level":"info","ts":"2022-04-26T12:37:20.792+0530","caller":"mode-of-payment-service/main.go:39","msg":"Payment Method Service Started"}
+{"level":"info","ts":"2022-04-26T13:00:16.930+0530","caller":"server/server.go:28","msg":"Received add payment method request client"}
+{"level":"info","ts":"2022-04-26T13:00:50.659+0530","caller":"server/server.go:28","msg":"Received add payment method request client"}
+{"level":"info","ts":"2022-04-26T13:01:00.608+0530","caller":"server/server.go:28","msg":"Received add payment method request client"}
+{"level":"info","ts":"2022-04-26T13:01:10.699+0530","caller":"server/server.go:28","msg":"Received add payment method request client"}
+{"level":"info","ts":"2022-04-26T13:03:01.952+0530","caller":"server/server.go:28","msg":"Received add payment method request client"}

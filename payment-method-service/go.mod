@@ -1,4 +1,4 @@
-module github.com/swiggy-2022-bootcamp/cdp-team3/mode-of-payment-service
+module github.com/swiggy-2022-bootcamp/cdp-team3/payment-method-service
 
 go 1.17
 
