@@ -16,7 +16,6 @@ func ConnectDB() *dynamodb.DynamoDB {
 	//initialize client
 	sess, _ := session.NewSession(&aws.Config{
 		Region:      aws.String(EnvRegion()),
-		Endpoint:    aws.String("http://localhost:8000"),
 		Credentials: credentials.NewStaticCredentials(EnvAccessKey(), EnvSecretKey(), ""),
 	})
 	DB = dynamodb.New(sess)
