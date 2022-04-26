@@ -8,6 +8,7 @@ import (
 	repository "github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/domain/repository"
 	service "github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/domain/services"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/errors"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/middlewares"
 	model "github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/models"
 )
 
@@ -56,15 +57,17 @@ func CreateUser(c *gin.Context) {
 // @Failure	500  {number} 	500
 // @Router /customers/{id} [GET]
 func GetUserById(c *gin.Context) {
-	fetchedUser, err := customerService.GetUserById(c.Param("id"))
+	// fetchedUser, err := customerService.GetUserById(c.Param("id"))
 
-	if err != nil {
-		userErr, _ := err.(*errors.UserError)
-		c.JSON(userErr.Status, userErr.ErrorMessage)
-		return
-	}
+	// if err != nil {
+	// 	userErr, _ := err.(*errors.UserError)
+	// 	c.JSON(userErr.Status, userErr.ErrorMessage)
+	// 	return
+	// }
 
-	c.JSON(200, *fetchedUser)
+	// c.JSON(200, *fetchedUser)
+	userClaim := middlewares.AuthenticateJWT()
+	c.JSON(200, c.Bind(userClaim))
 }
 
 // UpdateUser godoc

@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/dgrijalva/jwt-go"
+)
 
 type Address struct {
 	HouseNumber string `json:"house_number"`
@@ -28,4 +32,12 @@ type User struct {
 	DateAdded         time.Time `json:"dateAdded" dynamodbav:"dateAdded"`
 	Rewards           string    `json:"rewards" dynamodbav:"rewards"`
 	TransactionPoints int32     `json:"transactionpoints" dynamodbav:"transactionpoints"`
+}
+
+type SignedDetails struct {
+	UserId  string `json:"userId"`
+	Name    string `json:"name"`
+	EmailId string `json:"emailId"`
+	IsAdmin bool   `json:"isAdmin"`
+	jwt.StandardClaims
 }

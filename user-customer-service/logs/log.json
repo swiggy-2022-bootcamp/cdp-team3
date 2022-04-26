@@ -48,3 +48,10 @@
 {"level":"info","ts":"2022-04-25T15:46:26.918+0530","caller":"configs/db.go:35","msg":"Inside create table"}
 {"level":"error","ts":"2022-04-25T15:46:27.186+0530","caller":"configs/db.go:58","msg":"Error Creating Table:ResourceInUseException: Table already exists: Customers","stacktrace":"github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/configs.CreateTable\n\tD:/Maid/SwiggyIPP/Training/FinalProject/GitTeam/cdp-team3/user-customer-service/configs/db.go:58\ngithub.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/app.Start\n\tD:/Maid/SwiggyIPP/Training/FinalProject/GitTeam/cdp-team3/user-customer-service/app/app.go:31\nmain.main\n\tD:/Maid/SwiggyIPP/Training/FinalProject/GitTeam/cdp-team3/user-customer-service/main.go:26\nruntime.main\n\tD:/Go/src/runtime/proc.go:255"}
 {"level":"info","ts":"2022-04-25T15:57:05.156+0530","caller":"app/app.go:30","msg":"Users Service Started"}
+{"level":"info","ts":"2022-04-26T17:58:10.427+0530","caller":"app/app.go:30","msg":"Users Service Started"}
+{"level":"info","ts":"2022-04-26T18:00:05.050+0530","caller":"app/app.go:30","msg":"Users Service Started"}
+{"level":"info","ts":"2022-04-26T18:45:53.137+0530","caller":"app/app.go:30","msg":"Users Service Started"}
+{"level":"info","ts":"2022-04-26T18:47:34.908+0530","caller":"app/app.go:30","msg":"Users Service Started"}
+{"level":"info","ts":"2022-04-26T18:49:04.368+0530","caller":"app/app.go:30","msg":"Users Service Started"}
+{"level":"info","ts":"2022-04-26T18:54:39.828+0530","caller":"app/app.go:30","msg":"Users Service Started"}
+{"level":"info","ts":"2022-04-26T18:55:21.959+0530","caller":"app/app.go:30","msg":"Users Service Started"}
