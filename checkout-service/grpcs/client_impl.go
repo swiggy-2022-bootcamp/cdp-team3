@@ -30,7 +30,7 @@ const didNotConnectErrorMessage string = "Did not connect: %v"
 func BecomeGRPCClient() {
 	// For Cart Checkout
 	conn, err := grpc.Dial(
-		configs.EnvCartHost() + ":" + configs.EnvCartServiceGRPCPort(), 
+		configs.EnvCartHost()+":"+configs.EnvCartServiceGRPCPort(),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
@@ -41,7 +41,7 @@ func BecomeGRPCClient() {
 	}
 	// For Shipping Checkout
 	conn, err = grpc.Dial(
-		configs.EnvShippingHost() + ":" + configs.EnvShippingServiceGRPCPort(), 
+		configs.EnvShippingHost()+":"+configs.EnvShippingServiceGRPCPort(),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
@@ -52,7 +52,7 @@ func BecomeGRPCClient() {
 	}
 	// For Order Checkout
 	conn, err = grpc.Dial(
-		configs.EnvOrderHost() + ":" + configs.EnvOrderServiceGRPCPort(), 
+		configs.EnvOrderHost()+":"+configs.EnvOrderServiceGRPCPort(),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {

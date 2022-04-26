@@ -11,7 +11,7 @@ import (
 
 func VerifyToken(token string) (*auth.VerifyTokenResponse, error) {
 	conn, err := grpc.Dial(
-		configs.EnvAuthHost() + ":" + configs.EnvAuthServiceGRPCPort(), 
+		configs.EnvAuthHost()+":"+configs.EnvAuthServiceGRPCPort(),
 		grpc.WithInsecure(),
 	)
 	if err != nil {

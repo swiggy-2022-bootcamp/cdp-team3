@@ -35,6 +35,36 @@ func (s *server) EmptyCart(
 	return &cart_checkout.CartEmptyOutput{Result: true}, nil
 }
 
+// Procedure Implementation to Get the Cart Items using GRPC.
+func (s *server) GetCartItems(
+	ctx context.Context,
+	in *cart_checkout.CartIDSignal,
+) (*cart_checkout.CartItemsResponse, error) {
+	// Empty Cart in DB for the given user ID or cart ID
+	res, err := s.cartService.GetCartItems(
+		ctx,
+		in.CartID,
+		in.UserID,
+	)
+	if err != nil {
+		return nil, err
+	}
+	log.Info("GetCartItems done for cart ID: ", in.CartID)
+	// Convert to GRPC Response
+	cartItems := []*cart_checkout.CartItem{}
+	for _, item := range res.CartItems {
+		cartItems = append(cartItems, &cart_checkout.CartItem{
+			ProductID: item.ProductID,
+			Quantity:  item.Quantity,
+			Price:     float32(item.Price),
+		})
+	}
+	return &cart_checkout.CartItemsResponse{
+		Result:    true,
+		CartItems: cartItems,
+	}, nil
+}
+
 // Start GRPC Server using a net.Listener TCP Listener
 func NewCartCheckoutGRPCServer(lis net.Listener, cartService services.CartService) error {
 	// Create a gRPC server object

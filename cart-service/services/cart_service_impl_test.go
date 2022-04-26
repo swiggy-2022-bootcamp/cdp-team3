@@ -14,6 +14,7 @@ import (
 const mockUserID string = "mockUserID"
 const mockProductID string = "mockProductID"
 const mockProductID2 string = "mockProductID2"
+
 var mockCart models.Cart = models.Cart{
 	UserID: mockUserID,
 	Items: []models.CartItem{
@@ -55,7 +56,7 @@ func TestCreateCartExisting(t *testing.T) {
 	cs := NewCartService(repo)
 
 	// Assert
-	if err := cs.CreateCart(ctx, mockUserID); (err != nil) {
+	if err := cs.CreateCart(ctx, mockUserID); err != nil {
 		t.Errorf("CreateCart() error = %v", err)
 	}
 }
@@ -78,7 +79,7 @@ func TestCreateCartNotExisting(t *testing.T) {
 	cs := NewCartService(repo)
 
 	// Assert
-	if err := cs.CreateCart(ctx, mockUserID); (err != nil) {
+	if err := cs.CreateCart(ctx, mockUserID); err != nil {
 		t.Errorf("CreateCart() error = %v", err)
 	}
 }
@@ -101,7 +102,7 @@ func TestCreateCartItem(t *testing.T) {
 	cs := NewCartService(repo)
 
 	// Assert
-	if err := cs.CreateCartItem(ctx, &mockCartItemRequest, mockUserID); (err != nil) {
+	if err := cs.CreateCartItem(ctx, &mockCartItemRequest, mockUserID); err != nil {
 		t.Errorf("CreateCartItem() error = %v", err)
 	}
 }
@@ -153,7 +154,7 @@ func TestUpdateCartItem(t *testing.T) {
 	cs := NewCartService(repo)
 
 	// Assert
-	if err := cs.UpdateCartItem(ctx, &mockCartItemRequest, mockUserID); (err != nil) {
+	if err := cs.UpdateCartItem(ctx, &mockCartItemRequest, mockUserID); err != nil {
 		t.Errorf("UpdateCartItem() error = %v", err)
 	}
 }
@@ -177,7 +178,7 @@ func TestDeleteCartItem(t *testing.T) {
 	cs := NewCartService(repo)
 
 	// Assert
-	if err := cs.DeleteCartItem(ctx, mockProductID, mockUserID); (err != nil) {
+	if err := cs.DeleteCartItem(ctx, mockProductID, mockUserID); err != nil {
 		t.Errorf("DeleteCartItem() error = %v", err)
 	}
 }
@@ -201,7 +202,7 @@ func TestEmptyCart(t *testing.T) {
 	cs := NewCartService(repo)
 
 	// Assert
-	if err := cs.EmptyCart(ctx, requests.CartIDRequest{UserID: mockUserID}); (err != nil) {
+	if err := cs.EmptyCart(ctx, requests.CartIDRequest{UserID: mockUserID}); err != nil {
 		t.Errorf("EmptyCart() error = %v", err)
 	}
 }
@@ -226,7 +227,7 @@ func TestDeleteCart(t *testing.T) {
 	cs := NewCartService(repo)
 
 	// Assert
-	if err := cs.DeleteCart(ctx, requests.CartIDRequest{UserID: mockUserID}); (err != nil) {
+	if err := cs.DeleteCart(ctx, requests.CartIDRequest{UserID: mockUserID}); err != nil {
 		t.Errorf("DeleteCart() error = %v", err)
 	}
 }
