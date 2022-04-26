@@ -1,0 +1,11 @@
+syntax = "proto3";
+package mode_of_payment_service;
+option go_package = "./github.com/swiggy-2022-bootcamp/cdp-team3/mode-of-payment-service";
+
+message PaymentMethod {
+    string Body = 1;
+  }
+  
+service AddPaymentMethodService {
+    rpc AddPaymentMethod(PaymentMethod) returns (PaymentMethod) {}
+}
