@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.19.4
-// source: grpcs/shipping_checkout/shipping_checkout.proto
+// source: grpcs/shipping/shipping.proto
 
-package shipping_checkout
+package shipping
 
 import (
 	context "context"
@@ -39,7 +39,7 @@ func NewShippingClient(cc grpc.ClientConnInterface) ShippingClient {
 
 func (c *shippingClient) GetShippingAddressForCheckout(ctx context.Context, in *ShippingAddressRequestFromCheckout, opts ...grpc.CallOption) (*ShippingAddressResponseForCheckout, error) {
 	out := new(ShippingAddressResponseForCheckout)
-	err := c.cc.Invoke(ctx, "/shipping_checkout.Shipping/GetShippingAddressForCheckout", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/Shipping/GetShippingAddressForCheckout", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func (c *shippingClient) GetShippingAddressForCheckout(ctx context.Context, in *
 
 func (c *shippingClient) AddShippingAddress(ctx context.Context, in *ShippingAddressAddRequest, opts ...grpc.CallOption) (*ShippingAddressAddResponse, error) {
 	out := new(ShippingAddressAddResponse)
-	err := c.cc.Invoke(ctx, "/shipping_checkout.Shipping/AddShippingAddress", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/Shipping/AddShippingAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (c *shippingClient) AddShippingAddress(ctx context.Context, in *ShippingAdd
 
 func (c *shippingClient) GetShippingAddress(ctx context.Context, in *ShippingAddressGetRequest, opts ...grpc.CallOption) (*ShippingAddressGetResponse, error) {
 	out := new(ShippingAddressGetResponse)
-	err := c.cc.Invoke(ctx, "/shipping_checkout.Shipping/GetShippingAddress", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/Shipping/GetShippingAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +66,7 @@ func (c *shippingClient) GetShippingAddress(ctx context.Context, in *ShippingAdd
 
 func (c *shippingClient) DeleteShippingAddress(ctx context.Context, in *ShippingAddressDeleteRequest, opts ...grpc.CallOption) (*ShippingAddressDeleteResponse, error) {
 	out := new(ShippingAddressDeleteResponse)
-	err := c.cc.Invoke(ctx, "/shipping_checkout.Shipping/DeleteShippingAddress", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/Shipping/DeleteShippingAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (c *shippingClient) DeleteShippingAddress(ctx context.Context, in *Shipping
 
 func (c *shippingClient) UpdateShippingAddress(ctx context.Context, in *ShippingAddressUpdateRequest, opts ...grpc.CallOption) (*ShippingAddressUpdateResponse, error) {
 	out := new(ShippingAddressUpdateResponse)
-	err := c.cc.Invoke(ctx, "/shipping_checkout.Shipping/UpdateShippingAddress", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/Shipping/UpdateShippingAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +136,7 @@ func _Shipping_GetShippingAddressForCheckout_Handler(srv interface{}, ctx contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/shipping_checkout.Shipping/GetShippingAddressForCheckout",
+		FullMethod: "/Shipping/GetShippingAddressForCheckout",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ShippingServer).GetShippingAddressForCheckout(ctx, req.(*ShippingAddressRequestFromCheckout))
@@ -154,7 +154,7 @@ func _Shipping_AddShippingAddress_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/shipping_checkout.Shipping/AddShippingAddress",
+		FullMethod: "/Shipping/AddShippingAddress",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ShippingServer).AddShippingAddress(ctx, req.(*ShippingAddressAddRequest))
@@ -172,7 +172,7 @@ func _Shipping_GetShippingAddress_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/shipping_checkout.Shipping/GetShippingAddress",
+		FullMethod: "/Shipping/GetShippingAddress",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ShippingServer).GetShippingAddress(ctx, req.(*ShippingAddressGetRequest))
@@ -190,7 +190,7 @@ func _Shipping_DeleteShippingAddress_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/shipping_checkout.Shipping/DeleteShippingAddress",
+		FullMethod: "/Shipping/DeleteShippingAddress",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ShippingServer).DeleteShippingAddress(ctx, req.(*ShippingAddressDeleteRequest))
@@ -208,7 +208,7 @@ func _Shipping_UpdateShippingAddress_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/shipping_checkout.Shipping/UpdateShippingAddress",
+		FullMethod: "/Shipping/UpdateShippingAddress",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ShippingServer).UpdateShippingAddress(ctx, req.(*ShippingAddressUpdateRequest))
@@ -220,7 +220,7 @@ func _Shipping_UpdateShippingAddress_Handler(srv interface{}, ctx context.Contex
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Shipping_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "shipping_checkout.Shipping",
+	ServiceName: "Shipping",
 	HandlerType: (*ShippingServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -245,5 +245,5 @@ var Shipping_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "grpcs/shipping_checkout/shipping_checkout.proto",
+	Metadata: "grpcs/shipping/shipping.proto",
 }
