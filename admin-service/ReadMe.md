@@ -30,7 +30,8 @@
 - [x] Zap Logger - Logging in a separate file
 
 ## Microservice Architecture
-![Untitled Diagram drawio (5)](https://user-images.githubusercontent.com/19664740/165362609-c302befd-d37a-49b3-81bc-165520959011.png)
+![Untitled Diagram drawio (6)](https://user-images.githubusercontent.com/19664740/165362861-27ee7f90-f45c-40db-a7a3-13a4cf0b85c6.png)
+
 
 ## File Structure
 ![adminfileservice](https://user-images.githubusercontent.com/19664740/165359544-e1095e43-9f30-4f47-8bd7-fe8178b603b0.PNG)
