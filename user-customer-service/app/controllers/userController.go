@@ -18,8 +18,8 @@ func init() {
 }
 
 // CreateUser godoc
-// @Summary creates a user account
-// @Description creates a user account
+// @Summary creates a customer account
+// @Description creates a customer account
 // @Tags User
 // @Schemes
 // @Accept json
@@ -46,17 +46,17 @@ func CreateUser(c *gin.Context) {
 // GetUserByID godoc
 // @Summary fetches a customer account by ID
 // @Description fetches the details of a customer based on the given ID
-// @Tags Admin
+// @Tags User
 // @Schemes
 // @Accept json
 // @Produce json
-// @Param        UserID path string  true "customer id"
+// @Param        UserID path string  true "user id"
 // @Success	200  {String} 	success
 // @Failure	400  {number} 	400
 // @Failure	500  {number} 	500
 // @Router /customers/{id} [GET]
 func GetUserById(c *gin.Context) {
-	fetchedUser, err := customerService.GetUserById(c.Param("customerId"))
+	fetchedUser, err := customerService.GetUserById(c.Param("id"))
 
 	if err != nil {
 		userErr, _ := err.(*errors.UserError)
@@ -69,8 +69,8 @@ func GetUserById(c *gin.Context) {
 
 // UpdateUser godoc
 // @Summary Updates a customer account
-// @Description Updates The User Details
-// @Tags Admin
+// @Description Updates the customer details
+// @Tags User
 // @Schemes
 // @Accept json
 // @Produce json
@@ -82,7 +82,7 @@ func GetUserById(c *gin.Context) {
 func UpdateUser(c *gin.Context) {
 	customer := model.User{}
 	json.NewDecoder(c.Request.Body).Decode(&customer)
-	updatedUser, err := customerService.UpdateUser(c.Param("customerId"), customer)
+	updatedUser, err := customerService.UpdateUser(c.Param("id"), customer)
 
 	if err != nil {
 		userErr, _ := err.(*errors.UserError)
@@ -94,9 +94,9 @@ func UpdateUser(c *gin.Context) {
 }
 
 // DeleteUser godoc
-// @Summary deletes a customer account
-// @Description deletes The User Details based on the given ID
-// @Tags Admin
+// @Summary Deletes a customer account
+// @Description Deletes the User details based on the given ID
+// @Tags User
 // @Schemes
 // @Accept json
 // @Produce json
@@ -106,7 +106,7 @@ func UpdateUser(c *gin.Context) {
 // @Failure	500  {number} 	500
 // @Router /customers/{id} [DELETE]
 func DeleteUser(c *gin.Context) {
-	successMessage, err := customerService.DeleteUser(c.Param("customerId"))
+	successMessage, err := customerService.DeleteUser(c.Param("id"))
 
 	if err != nil {
 		userErr, _ := err.(*errors.UserError)

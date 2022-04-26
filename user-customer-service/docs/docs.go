@@ -61,7 +61,7 @@ const docTemplate = `{
         },
         "/customers": {
             "post": {
-                "description": "creates a customer account when the admin is verified",
+                "description": "creates a customer account",
                 "consumes": [
                     "application/json"
                 ],
@@ -69,13 +69,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Admin"
+                    "User"
                 ],
                 "summary": "creates a customer account",
                 "parameters": [
                     {
-                        "description": "customer details",
-                        "name": "Customer",
+                        "description": "user details",
+                        "name": "User",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -115,14 +115,14 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Admin"
+                    "User"
                 ],
                 "summary": "fetches a customer account by ID",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "customer id",
-                        "name": "CustomerID",
+                        "description": "user id",
+                        "name": "UserID",
                         "in": "path",
                         "required": true
                     }
@@ -149,7 +149,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Updates The Customer Details",
+                "description": "Updates the customer details",
                 "consumes": [
                     "application/json"
                 ],
@@ -157,14 +157,14 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Admin"
+                    "User"
                 ],
                 "summary": "Updates a customer account",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "customer id",
-                        "name": "CustomerID",
+                        "name": "UserID",
                         "in": "path",
                         "required": true
                     }
@@ -191,7 +191,7 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "deletes The Customer Details based on the given ID",
+                "description": "Deletes the User details based on the given ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -199,13 +199,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Admin"
+                    "User"
                 ],
-                "summary": "deletes a customer account",
+                "summary": "Deletes a customer account",
                 "parameters": [
                     {
                         "description": "customer details",
-                        "name": "Customer",
+                        "name": "User",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -237,9 +237,35 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.Address": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "default": {
+                    "type": "integer"
+                },
+                "house_number": {
+                    "type": "string"
+                },
+                "pincode": {
+                    "type": "string"
+                },
+                "street": {
+                    "type": "string"
+                }
+            }
+        },
         "models.User": {
             "type": "object",
             "properties": {
+                "address": {
+                    "$ref": "#/definitions/models.Address"
+                },
                 "addressId": {
                     "type": "array",
                     "items": {
@@ -306,7 +332,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:3=8071",
+	Host:             "localhost:3006",
 	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "BuyItNow User Service",

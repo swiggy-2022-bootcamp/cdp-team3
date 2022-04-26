@@ -16,7 +16,7 @@ import (
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host      localhost:3=8071
+// @host      localhost:3006
 
 // @securityDefinitions.apiKey ApiKeyAuth
 // @type apiKey

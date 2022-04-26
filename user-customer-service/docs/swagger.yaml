@@ -1,6 +1,23 @@
 definitions:
+  models.Address:
+    properties:
+      city:
+        type: string
+      country:
+        type: string
+      default:
+        type: integer
+      house_number:
+        type: string
+      pincode:
+        type: string
+      street:
+        type: string
+    type: object
   models.User:
     properties:
+      address:
+        $ref: '#/definitions/models.Address'
       addressId:
         items:
           type: string
@@ -36,7 +53,7 @@ definitions:
       username:
         type: string
     type: object
-host: localhost:3=8071
+host: localhost:3006
 info:
   contact:
     email: swiggyb1010@datascience.manipal.edu
@@ -76,11 +93,11 @@ paths:
     post:
       consumes:
       - application/json
-      description: creates a customer account when the admin is verified
+      description: creates a customer account
       parameters:
-      - description: customer details
+      - description: user details
         in: body
-        name: Customer
+        name: User
         required: true
         schema:
           $ref: '#/definitions/models.User'
@@ -101,16 +118,16 @@ paths:
             type: number
       summary: creates a customer account
       tags:
-      - Admin
+      - User
   /customers/{id}:
     delete:
       consumes:
       - application/json
-      description: deletes The Customer Details based on the given ID
+      description: Deletes the User details based on the given ID
       parameters:
       - description: customer details
         in: body
-        name: Customer
+        name: User
         required: true
         schema:
           $ref: '#/definitions/models.User'
@@ -129,17 +146,17 @@ paths:
           description: Internal Server Error
           schema:
             type: number
-      summary: deletes a customer account
+      summary: Deletes a customer account
       tags:
-      - Admin
+      - User
     get:
       consumes:
       - application/json
       description: fetches the details of a customer based on the given ID
       parameters:
-      - description: customer id
+      - description: user id
         in: path
-        name: CustomerID
+        name: UserID
         required: true
         type: string
       produces:
@@ -159,15 +176,15 @@ paths:
             type: number
       summary: fetches a customer account by ID
       tags:
-      - Admin
+      - User
     put:
       consumes:
       - application/json
-      description: Updates The Customer Details
+      description: Updates the customer details
       parameters:
       - description: customer id
         in: path
-        name: CustomerID
+        name: UserID
         required: true
         type: string
       produces:
@@ -187,7 +204,7 @@ paths:
             type: number
       summary: Updates a customer account
       tags:
-      - Admin
+      - User
 securityDefinitions:
   ApiKeyAuth:
     in: header

@@ -13,7 +13,7 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:3=8071",
+    "host": "localhost:3006",
     "paths": {
         "/": {
             "get": {
@@ -52,7 +52,7 @@
         },
         "/customers": {
             "post": {
-                "description": "creates a customer account when the admin is verified",
+                "description": "creates a customer account",
                 "consumes": [
                     "application/json"
                 ],
@@ -60,13 +60,13 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Admin"
+                    "User"
                 ],
                 "summary": "creates a customer account",
                 "parameters": [
                     {
-                        "description": "customer details",
-                        "name": "Customer",
+                        "description": "user details",
+                        "name": "User",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -106,14 +106,14 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Admin"
+                    "User"
                 ],
                 "summary": "fetches a customer account by ID",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "customer id",
-                        "name": "CustomerID",
+                        "description": "user id",
+                        "name": "UserID",
                         "in": "path",
                         "required": true
                     }
@@ -140,7 +140,7 @@
                 }
             },
             "put": {
-                "description": "Updates The Customer Details",
+                "description": "Updates the customer details",
                 "consumes": [
                     "application/json"
                 ],
@@ -148,14 +148,14 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Admin"
+                    "User"
                 ],
                 "summary": "Updates a customer account",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "customer id",
-                        "name": "CustomerID",
+                        "name": "UserID",
                         "in": "path",
                         "required": true
                     }
@@ -182,7 +182,7 @@
                 }
             },
             "delete": {
-                "description": "deletes The Customer Details based on the given ID",
+                "description": "Deletes the User details based on the given ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -190,13 +190,13 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Admin"
+                    "User"
                 ],
-                "summary": "deletes a customer account",
+                "summary": "Deletes a customer account",
                 "parameters": [
                     {
                         "description": "customer details",
-                        "name": "Customer",
+                        "name": "User",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -228,9 +228,35 @@
         }
     },
     "definitions": {
+        "models.Address": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "default": {
+                    "type": "integer"
+                },
+                "house_number": {
+                    "type": "string"
+                },
+                "pincode": {
+                    "type": "string"
+                },
+                "street": {
+                    "type": "string"
+                }
+            }
+        },
         "models.User": {
             "type": "object",
             "properties": {
+                "address": {
+                    "$ref": "#/definitions/models.Address"
+                },
                 "addressId": {
                     "type": "array",
                     "items": {

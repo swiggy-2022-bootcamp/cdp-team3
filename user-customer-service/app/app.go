@@ -1,6 +1,8 @@
 package app
 
 import (
+	"fmt"
+
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -8,6 +10,7 @@ import (
 	"github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/app/routes"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/configs"
 	_ "github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/docs"
+	"github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/domain/repository"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/user-customer-service/utils"
 	"go.uber.org/zap"
 )
@@ -27,8 +30,9 @@ func Start() {
 	log.Info("Users Service Started")
 
 	//Initialize DB
-	userDB := configs.ConnectDB()
-	configs.CreateTable(userDB)
+	userDB := repository.GetDynamoDBInstance()
+	// configs.CreateTable(userDB)
+	fmt.Println(userDB)
 
 	router := StartRestServer()
 	router.Run(":" + configs.EnvPORT())
