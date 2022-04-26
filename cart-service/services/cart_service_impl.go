@@ -47,7 +47,7 @@ func (cs *cartServiceImpl) CreateCart(ctx context.Context, userID string) error 
 // CreateCartItem creates a new Cart Item
 func (cs *cartServiceImpl) CreateCartItem(
 	ctx context.Context,
-	cartItemRequest *requests.CartItemRequest,
+	cartItemRequest requests.CartItemRequest,
 	userID string,
 ) error {
 	// Attempt to fetch the Cart from DB
@@ -69,6 +69,9 @@ func (cs *cartServiceImpl) CreateCartItem(
 	}
 
 	// Create Cart Item
+	if cartItemRequest.Quantity == 0 {
+		cartItemRequest.Quantity = 1
+	}
 	log.Infof("Creating Cart Item %v", cartItemRequest)
 	cartItem := models.CartItem{
 		ProductID: cartItemRequest.ProductID,
@@ -119,7 +122,7 @@ func (cs *cartServiceImpl) GetCartItems(
 // UpdateCartItem updates a Cart Item
 func (cs *cartServiceImpl) UpdateCartItem(
 	ctx context.Context,
-	cartItemRequest *requests.CartItemRequest,
+	cartItemRequest requests.CartItemRequest,
 	userID string,
 ) error {
 	// Attempt to fetch the Cart from DB
