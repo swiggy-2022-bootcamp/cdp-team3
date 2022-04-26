@@ -50,6 +50,10 @@ func (cs *cartServiceImpl) CreateCartItem(
 	cartItemRequest requests.CartItemRequest,
 	userID string,
 ) error {
+	if cartItemRequest.Quantity == 0 {
+		cartItemRequest.Quantity = 1
+	}
+
 	// Attempt to fetch the Cart from DB
 	cart, err := cs.cartRepository.ReadByUserID(ctx, userID)
 	if err != nil {
@@ -69,9 +73,6 @@ func (cs *cartServiceImpl) CreateCartItem(
 	}
 
 	// Create Cart Item
-	if cartItemRequest.Quantity == 0 {
-		cartItemRequest.Quantity = 1
-	}
 	log.Infof("Creating Cart Item %v", cartItemRequest)
 	cartItem := models.CartItem{
 		ProductID: cartItemRequest.ProductID,
@@ -125,6 +126,9 @@ func (cs *cartServiceImpl) UpdateCartItem(
 	cartItemRequest requests.CartItemRequest,
 	userID string,
 ) error {
+	if cartItemRequest.Quantity == 0 {
+		cartItemRequest.Quantity = 1
+	}
 	// Attempt to fetch the Cart from DB
 	cart, err := cs.cartRepository.ReadByUserID(ctx, userID)
 	if err != nil {
