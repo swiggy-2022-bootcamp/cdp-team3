@@ -32,9 +32,24 @@ func EnvRegion() string {
 	return os.Getenv("REGION")
 }
 
-func EnvPORT() string {
+func EnvRewardServicePORT() string {
 	loadEnvFile()
 	return os.Getenv("REWARD_SERVICE_PORT")
+}
+
+func EnvAdminHost() string {
+	loadEnvFile()
+	return os.Getenv("ADMIN_HOST")
+}
+
+func EnvAuthHost() string {
+	loadEnvFile()
+	return os.Getenv("AUTH_HOST")
+}
+
+func EnvRewardsHost() string {
+	loadEnvFile()
+	return os.Getenv("REWARDS_HOST")
 }
 
 func loadEnvFile() {

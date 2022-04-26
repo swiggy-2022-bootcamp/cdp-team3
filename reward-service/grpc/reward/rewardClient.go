@@ -10,8 +10,7 @@ import (
 )
 
 func SendRewardPoints(reward *rewards.RewardDetails) (*rewards.SuccessMessage, error) {
-	port := configs.EnvGrpcRewardClientPORT()
-	conn, err := grpc.Dial(":"+port, grpc.WithInsecure())
+	conn, err := grpc.Dial(configs.EnvAdminHost()+":"+configs.EnvGrpcRewardClientPORT(), grpc.WithInsecure())
 	if err != nil {
 		return nil, err
 	}

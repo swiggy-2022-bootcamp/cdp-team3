@@ -44,7 +44,7 @@ func Start() {
 	rewardRoutes = routes.NewRewardRoutes(rewardController)
 
 	router := StartRestServer()
-	router.Run(":" + configs.EnvPORT())
+	router.Run(configs.EnvRewardsHost() + ":" + configs.EnvRewardServicePORT())
 }
 
 func StartRestServer() *gin.Engine {
