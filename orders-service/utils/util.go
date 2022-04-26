@@ -6,17 +6,17 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/configs"
-	"github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/middlewares"
+	authproto "github.com/swiggy-2022-bootcamp/cdp-team3/orders-service/grpc/auth/proto"
 	"go.uber.org/zap"
 )
 
 func CheckLoggedInUserWithOrderCustomerId(c *gin.Context, orderCudtomerId string) bool {
-	var userDetails middlewares.SignedDetails = c.MustGet("user_details").(middlewares.SignedDetails)
+	var userDetails = c.MustGet("user_details").(*authproto.VerifyTokenResponse)
 	return userDetails.UserId == orderCudtomerId
 }
 
 func IsAdmin(c *gin.Context) bool {
-	var userDetails middlewares.SignedDetails = c.MustGet("user_details").(middlewares.SignedDetails)
+	var userDetails = c.MustGet("user_details").(*authproto.VerifyTokenResponse)
 	return userDetails.IsAdmin
 }
 
