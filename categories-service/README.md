@@ -19,6 +19,8 @@ Contains the Categories Microservice for the final Swiggy I++ E-Commerce Applica
 - [x] Data models properly showcased
 - [x] Kafka Implementation
 - [x] Mock Testing using mockgen and testify
+- [x] Reduced docker image size from 1GB to 50 MB using multi-stage build
+- [x] Setup CI/CD pipeline with Jenkins on EC2 instance
 - [x] Logger - Logging in a separate file
 ## Project Structure
 
@@ -62,9 +64,9 @@ Contains the Categories Microservice for the final Swiggy I++ E-Commerce Applica
     `docker-compose up --build -d`
 
 3) Run locally
-    1) `cd category`
+    1) `cd categories-service`
     2) `go build`
-    3) `./category`
+    3) `./categories-service`
 
 
 

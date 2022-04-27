@@ -14,6 +14,8 @@ Contains the Shipping Address Microservice for the final Swiggy I++ E-Commerce A
 - [x] Builds the application using CI/CD pipeline
 - [x] Data models properly showcased
 - [x] Kafka Implementation
+- [x] Reduced docker image size from 1GB to 40 MB using multi-stage build
+- [x] Setup CI/CD pipeline with Jenkins on EC2 instance
 - [x] Mock Testing using mockgen and testify
 - [x] Logger - Logging in a separate file
 ## Microservice Flow
