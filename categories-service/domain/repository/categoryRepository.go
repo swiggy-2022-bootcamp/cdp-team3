@@ -6,6 +6,7 @@ import (
 	
 )
 type CategoryRepository interface {
+	
 	DBHealthCheck() bool
 
 	 AddCategoryToDB(category *models.Category) *apperrors.AppError

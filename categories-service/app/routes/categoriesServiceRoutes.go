@@ -20,9 +20,10 @@ func (tr CategoriesRoutes) InitRoutes(newRouter *gin.RouterGroup) {
 	newRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	newRouter.GET("/", tr.healthCheckhandler.HealthCheck)
 	
-	
+	// middleware that check if the user is admin and logged in
 	newRouter.Use(middlewares.AuthenticateJWT())
 	newRouter.Use(middlewares.OnlyAdmin())
+
 	newRouter.POST("/categories", tr.categoriesHandler.AddCategory())
 	newRouter.GET("/categories", tr.categoriesHandler.GetAllCategory())
 	newRouter.GET("/categories/:category_id",  tr.categoriesHandler.GetCategory())

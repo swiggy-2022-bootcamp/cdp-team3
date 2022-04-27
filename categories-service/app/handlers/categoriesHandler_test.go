@@ -17,7 +17,7 @@ import (
 	"testing"
 )
 
-
+// Test Handler : Add Category 
 func TestCategoryHandler_AddCategory(t *testing.T) {
 
 
@@ -110,13 +110,15 @@ func TestCategoryHandler_AddCategory(t *testing.T) {
 			}   else {
 				request = httptest.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 			}
-		//	request.Header.Set("Authorization", token)
+		
 			server.ServeHTTP(recorder, request)
 
 			tc.checkResponse(t, recorder)
 		})
 	}
 }
+
+// Test Handler : Update Category
 func TestCategoryHandler_UpdateCategory(t *testing.T) {
 
 	category_id := "1232"
@@ -133,7 +135,7 @@ func TestCategoryHandler_UpdateCategory(t *testing.T) {
 
 	CategoryDescription: []models.CategoryDescription{categorydesc}	,
 	}
-	//categoryRecord := toPersistedDynamodbEntitySA(category)
+
 	testCases := []struct {
 		name          string
 		buildStubs    func(categoryService *mocks.MockCategoryService)
@@ -216,6 +218,8 @@ func TestCategoryHandler_UpdateCategory(t *testing.T) {
 		})
 	}
 }
+
+// Test Handler : Get Category
 func TestCategoryHandler_GetCategory(t *testing.T) {
 	category_id := "1234"
 	categorydesc:=models.CategoryDescription{
@@ -302,6 +306,7 @@ func TestCategoryHandler_GetCategory(t *testing.T) {
 	}
 }
 
+// Test Handler : Delete Category
 func TestCategoryHandler_DeleteCategory(t *testing.T) {
 	category_id := "1234"
 	
@@ -377,6 +382,7 @@ func TestCategoryHandler_DeleteCategory(t *testing.T) {
 	}
 }
 
+// Test Handler : Get All Category
 func TestCategoryHandler_GetAllCategory(t *testing.T) {
 	category_id1 := "1234"
 	category_id2 := "1232"

@@ -1,13 +1,12 @@
 package repository
 
 import (
-	"fmt"
+
 	"time"
 	"context"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/google/uuid"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
-	//"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	apperrors "github.com/cdp-team3/categories-service/app-errors"
 	"github.com/cdp-team3/categories-service/domain/models"
@@ -29,6 +28,7 @@ func NewCategoryRepositoryImpl(categoryDB *dynamodb.DynamoDB) CategoryRepository
 	}
 }
 
+// DB Health Check
 func (p CategoryRepositoryImpl) DBHealthCheck() bool {
 
 	_, err := p.categoryDB.ListTables(&dynamodb.ListTablesInput{})
@@ -38,19 +38,7 @@ func (p CategoryRepositoryImpl) DBHealthCheck() bool {
 	}
 	return true
 }
-// type CategoryDesciption struct {
-// 	Name            string `json:"name"               bson:"name,omitempty"`
-// 	Description     string `json:"description"        bson:"description,omitempty"`
-// 	MetaDescription string `json:"meta_description"   bson:"meta_description,omitempty"`
-// 	MetaKeyword     string `json:"meta_keyword"       bson:"meta_keyword,omitempty"`
-// 	MetaTitle       string `json:"meta_title"         bson:"meta_title,omitempty"`
-// }
-// type Category struct {
-// 	CategoryId             string                    `json:"category_id" dynamodbav:"category_id" validate:"required"`
-// 	CategoryDesciption     []CategoryDesciption                    `json:"category_description" dynamodbav:"category_description"`
-// }
-// cd := CategoryDesciption{Name: "testname", Description:"testdesc" ,MetaDescription:"testmetadesc",MetaKeyword:"testmetakey",MetaTitle:"testmetatitle"}
-// c:=Category{CategoryDesciption:cd}
+
 func toPersistedDynamodbEntitySA(o *models.Category) *models.Category {
 	return &models.Category{
 
@@ -59,11 +47,12 @@ func toPersistedDynamodbEntitySA(o *models.Category) *models.Category {
 		
 	}
 }
+
+// Adds Category to DB 
 func (p CategoryRepositoryImpl) AddCategoryToDB(category *models.Category) *apperrors.AppError {
-	fmt.Println("Inside category repo")
-	fmt.Println("category",category)
+	
 	categoryRecord := toPersistedDynamodbEntitySA(category)
-	fmt.Println(categoryRecord)
+	
 
 	data, err := dynamodbattribute.MarshalMap(categoryRecord)
 	if err != nil {
@@ -78,13 +67,15 @@ func (p CategoryRepositoryImpl) AddCategoryToDB(category *models.Category) *appe
 
 	result, err := p.categoryDB.PutItem(query)
 	if err != nil {
-		fmt.Println(err)
+	
 		logger.Error("Failed to insert category into database - " + err.Error())
 		return apperrors.NewUnexpectedError(err.Error())
 	}
-	fmt.Println(result)
+	
 	return nil
 }
+
+// Gets All Categories from DB
 func (p CategoryRepositoryImpl) FindAllCategoryFromDB() ([]models.Category, *apperrors.AppError) {
 
 	// create the api params
@@ -100,7 +91,7 @@ func (p CategoryRepositoryImpl) FindAllCategoryFromDB() ([]models.Category, *app
 		var categories []models.Category
 		err := dynamodbattribute.UnmarshalListOfMaps(page.Items, &categories)
 		if err != nil {
-			fmt.Printf("\nCould not unmarshal AWS data: err = %v\n", err)
+			
 			return true
 		}
 
@@ -110,7 +101,7 @@ func (p CategoryRepositoryImpl) FindAllCategoryFromDB() ([]models.Category, *app
 	})
 
 	if err != nil {
-		fmt.Printf("ERROR: %v\n", err.Error())
+	
 		logger.Error(err.Error())
 		return nil, apperrors.NewUnexpectedError(err.Error())
 	}
@@ -118,6 +109,7 @@ func (p CategoryRepositoryImpl) FindAllCategoryFromDB() ([]models.Category, *app
 	return categoryList, nil
 }
 
+// Gets Category by Id from DB
 func (p CategoryRepositoryImpl) GetCategoryFromDB(category_id string) (*models.Category, *apperrors.AppError) {
 	category := &models.Category{}
 
@@ -150,30 +142,12 @@ func (p CategoryRepositoryImpl) GetCategoryFromDB(category_id string) (*models.C
 	}
 	return category, nil
 }
+
+// Deletes Category by Id from Db 
 func (categoryRepo CategoryRepositoryImpl) DeleteCategoryByIDFromDB(categoryId string) (bool, *apperrors.AppError) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	//check if category is associated with products
-	// var queryInput = &dynamodb.QueryInput{
-	// 	TableName: aws.String("ProductCategoryRelation"),
-	// 	KeyConditions: map[string]*dynamodb.Condition{
-	// 		"category_id": {
-	// 			ComparisonOperator: aws.String("EQ"),
-	// 			AttributeValueList: []*dynamodb.AttributeValue{
-	// 				{
-	// 					S: aws.String(categoryId),
-	// 				},
-	// 			},
-	// 		},
-	// 	},
-	// }
-	// var resp, err = categoryRepo.categoryDB.Query(queryInput)
-	// if err != nil {
-	// 	return false,apperrors.NewUnexpectedError(err.Error())
-	// }
-	// if resp != nil {
-	// 	return false, apperrors.NewUnexpectedError(err.Error())
-	// }
+
 	//delete the category
 	input := &dynamodb.DeleteItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
@@ -190,30 +164,12 @@ func (categoryRepo CategoryRepositoryImpl) DeleteCategoryByIDFromDB(categoryId s
 	}
 	return true, nil
 }
+
+// Deletes Categories from DB 
 func (categoryRepo CategoryRepositoryImpl) DeleteCategoriesFromDB(categoryIds []string) (bool,*apperrors.AppError) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	// for _, categoryId := range categoryIds {
-	// 	var queryInput = &dynamodb.QueryInput{
-	// 		TableName: aws.String("ProductCategoryRelation"),
-	// 		KeyConditions: map[string]*dynamodb.Condition{
-	// 			"category_id": {
-	// 				ComparisonOperator: aws.String("EQ"),
-	// 				AttributeValueList: []*dynamodb.AttributeValue{
-	// 					{
-	// 						S: aws.String(categoryId),
-	// 					},
-	// 				},
-	// 			},
-	// 		},
-	// 	}
-	// 	var resp, err = categoryRepo.categoryDB.Query(queryInput)
-	// 	if err != nil {
-	// 		return false,apperrors.NewUnexpectedError(err.Error())
-	// 	}
-	// 	if resp != nil {
-	// 		return false, apperrors.NewUnexpectedError(err.Error())
-	// 	}
+	
 		//delete the category
 		for _,categoryId := range categoryIds{
 		input := &dynamodb.DeleteItemInput{
@@ -230,10 +186,11 @@ func (categoryRepo CategoryRepositoryImpl) DeleteCategoriesFromDB(categoryIds []
 			return false, apperrors.NewUnexpectedError(err.Error())
 		}
 	}
-	//}
+	
 	return true, nil
 }
 
+// Update Category in Db 
 func (categoryRepo CategoryRepositoryImpl) UpdateCategoryByIdFromDB(categoryId string,category *models.Category) (bool,*apperrors.AppError) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
