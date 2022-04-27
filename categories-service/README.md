@@ -34,14 +34,17 @@ Contains the Categories Microservice for the final Swiggy I++ E-Commerce Applica
 | GET        | /                                                      | Health Check                                       |
 | GET        | /swagger/\*                                            | Swagger UI                                         |
 | POST       | /categories/api/categories                             | Adds a new category to the DB                      |
-| GET        | /categories/api/categories/shipping_id                 | Gets Category by Category ID from DB.              |
-| PUT        | /categories/api/categories/shipping_id                 | Updates Category by Category ID                    |
-| DELETE     | /categories/api/categories/shipping_id                 | Delete Category by Category ID                     |
+| GET        | /categories/api/categories/category_id                 | Gets Category by Category ID from DB.              |
+| PUT        | /categories/api/categories/category_id                 | Updates Category by Category ID                    |
+| DELETE     | /categories/api/categories/category_id                 | Delete Category by Category ID                     |
 | GET        | /categories/api/categories/                            | Get All Categories                                 |
 | DELETE     | /categories/api/categories/                            | Delete categories                                  |
 
-<!-- | ![Categories Service REST Swagger]() |
-| ---------- | -->
+| ![Categories Service REST Swagger](categoryswagger.png) |
+| ---------- |
+
+| ![Categories Model](categorymodel.png) |
+| ---------- |
 
 ## GRPC Connections
 
