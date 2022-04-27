@@ -1,0 +1,15 @@
+{"_comments" : "shipping-address"}
+
+// Example
+{    
+    "firstname":"Neha",
+    "lastname":"Sharma",
+    "city":"Panipat",
+    "address_1":"D1-5570",
+    "address_2":"Ground Floor",
+    "country_id":81,
+    "postcode":1321,
+    "user_id":"dbe32ae8-c116-428a-af84-0ab30402e611",
+    "default_address":"0"
+
+}
