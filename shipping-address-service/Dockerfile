@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Base Image for Golang project. Alpine has smaller footprint than Ubuntu.
-FROM golang:1.18-alpine3.15
+FROM golang:alpine as build
 
 # Set necessary environment variables needed for our image
 ENV GO111MODULE=on \
@@ -23,6 +23,9 @@ RUN go test ./...
 
 # Build the Golang Application  
 RUN go build -o /main .
+
+FROM alpine
+COPY --from=build /app /.
 
 # Expose the application as a port and run it
 EXPOSE ${SHIPPING_SERVICE_PORT}
