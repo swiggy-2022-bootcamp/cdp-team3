@@ -1,0 +1,6 @@
+projectKey=awesome
+serverUrl=http://localhost:9000
+serverVersion=9.4.0.54424
+dashboardUrl=http://localhost:9000/dashboard?id=AuthService
+ceTaskId=AYBR0_yjzFaPFD0uE7y1
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYBR0_yjzFaPFD0uE7y1
