@@ -40,8 +40,16 @@ Contains the Shipping Address Microservice for the final Swiggy I++ E-Commerce A
 | POST       | /shipping-service/api//shippingaddress/existing/:id    | Set Shipping Address to default Shipping Address.  |
 | GET        | /shipping-service/api/shippingaddress/existing/:userId | Gets Default Shipping Address of User              |
 
-<!-- | ![Shipping Address Service REST Swagger]() |
-| ---------- | -->
+## Swagger 
+
+| ![Shipping Service REST Swagger](shippingswagger.png) |
+| ---------- |
+
+## Data Model
+
+| ![Shipping Address Model](shippingmodel.png) |
+| ---------- |
+
 
 ## GRPC Connections
 
@@ -58,4 +66,17 @@ Contains the Shipping Address Microservice for the final Swiggy I++ E-Commerce A
 | ![Sonarqube Quality Dashboard](sonar.png) |
 | ---------- |
 
+## Steps to run application
+1) Using docker
+    1)
+    `docker build --tag shipping-address-service -t shipping-address-service .`
+    2) `docker run -d -p 3003:3003 shipping-address-service `
+
+2) Using docker-compose
+    `docker-compose up --build -d`
+
+3) Run locally
+    1) `cd shipping-address-service`
+    2) `go build`
+    3) `./shipping-address-service`
 
