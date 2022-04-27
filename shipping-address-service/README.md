@@ -71,9 +71,11 @@ Contains the Shipping Address Microservice for the final Swiggy I++ E-Commerce A
     1)
     `docker build --tag shipping-address-service -t shipping-address-service .`
     2) `docker run -d -p 3003:3003 shipping-address-service `
+    
 
 2) Using docker-compose
     `docker-compose up --build -d`
+
 
 3) Run locally
     1) `cd shipping-address-service`
