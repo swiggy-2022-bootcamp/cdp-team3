@@ -40,8 +40,12 @@ Contains the Categories Microservice for the final Swiggy I++ E-Commerce Applica
 | GET        | /categories/api/categories/                            | Get All Categories                                 |
 | DELETE     | /categories/api/categories/                            | Delete categories                                  |
 
+## Swagger 
+
 | ![Categories Service REST Swagger](categoryswagger.png) |
 | ---------- |
+
+## Data Model
 
 | ![Categories Model](categorymodel.png) |
 | ---------- |
