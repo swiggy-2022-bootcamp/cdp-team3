@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/google/uuid"
-	//"strconv"
-	//app_errors "github.com/cdp-team3/shipping-address-service/app-errors"
 	"github.com/cdp-team3/shipping-address-service/domain/models"
 	"github.com/cdp-team3/shipping-address-service/domain/repository"
 	"github.com/cdp-team3/shipping-address-service/app/grpcs/shipping"
@@ -21,9 +19,11 @@ func NewShippingProtoService(sr repository.ShippingRepository) ShippingProtoServ
 	shippingRepository = sr
 	return ShippingProtoServer{}
 }
+
+// Returns shipping address to checkout service when grpc call is made
 func (s ShippingProtoServer) GetShippingAddressForCheckout(ctx context.Context, ShippingRequest *shipping.ShippingAddressRequestFromCheckout) (*shipping.ShippingAddressResponseForCheckout, error) {
 	id :=ShippingRequest.UserID;
-	fmt.Println("Id in grpc",id)
+
 	res, err := shippingRepository.GetDefaultShippingAddressOfUserByIdFromDB(id)
 	if err != nil {
 		return &shipping.ShippingAddressResponseForCheckout{},  err.Error()
@@ -41,9 +41,11 @@ func (s ShippingProtoServer) GetShippingAddressForCheckout(ctx context.Context, 
 	}, nil
 
 }
+
+// returns shipping address to user and admin service when grpc call is made with shipping address ID
 func (s ShippingProtoServer) GetShippingAddress(ctx context.Context, shippingRequest *shipping.ShippingAddressGetRequest) (*shipping.ShippingAddressGetResponse, error) {
 	id := shippingRequest.ShippingAddressID
-	fmt.Println("Id in grpc",id)
+	
 	res, err := shippingRepository.FindShippingAddressByIdFromDB(id)
 	if err != nil {
 		return &shipping.ShippingAddressGetResponse{},  err.Error()
@@ -63,8 +65,10 @@ func (s ShippingProtoServer) GetShippingAddress(ctx context.Context, shippingReq
 	}, nil
 
 }
+
+// stores new shipping address in shipping address DB when a grpc call is made frm admin or customer service while creating a new user and the returns shipping address Id after storing address in Shipping DB
 func (s ShippingProtoServer) AddShippingAddress(ctx context.Context,  shippingRequest *shipping.ShippingAddressAddRequest) (*shipping.ShippingAddressAddResponse,  error) {
-	fmt.Println("Add in grpc",shippingRequest)
+
 	
 	shippingAddress := &models.ShippingAddress{
 		Id:        uuid.New().String(),
@@ -88,16 +92,19 @@ func (s ShippingProtoServer) AddShippingAddress(ctx context.Context,  shippingRe
 	}, nil
 }
 
+// deletes shipping address when admin or customer deletes his profile
 func (s ShippingProtoServer) DeleteShippingAddress(ctx context.Context, shippingRequest *shipping.ShippingAddressDeleteRequest) (*shipping.ShippingAddressDeleteResponse,  error) {
-	fmt.Println("Delete in grpc",shippingRequest)
+
 	res, err := shippingRepository.DeleteShippingAddressByIdFromDB(shippingRequest.ShippingAddressID)
 	if err != nil {
 		return &shipping.ShippingAddressDeleteResponse{Confirm: false},err.Error()
 	}
 	return &shipping.ShippingAddressDeleteResponse{Confirm: res}, nil
 }
+
+// updates shipping address when admin or customer updates his profile
 func (s ShippingProtoServer) UpdateShippingAddress(ctx context.Context, shippingRequest *shipping.ShippingAddressUpdateRequest) (*shipping.ShippingAddressUpdateResponse,  error) {
-	fmt.Println("Update in grpc",shippingRequest)
+
 
 	newDaModel := &models.ShippingAddress{
 		FirstName: shippingRequest.Firstname,

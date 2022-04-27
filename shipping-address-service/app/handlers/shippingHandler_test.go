@@ -22,7 +22,6 @@ func TestShippingHandler_UpdateShippingAddress(t *testing.T) {
 
 	shipping_id := "1234"
 	shippingAddress := models.ShippingAddress{
-	//	Id:   shipping_id,
 		FirstName :"testFirstName",
 		LastName  :"testLastName",
 		City     :"testCity",
@@ -30,8 +29,7 @@ func TestShippingHandler_UpdateShippingAddress(t *testing.T) {
 		Address2  :"testAddress2",
 		CountryID :61,
 		PostCode  :1222,
-		// UserID     :"testUserId",
-		// DefaultAddress  :"testDefaultAddress",
+		
 	}
 	
 	testCases := []struct {
@@ -201,8 +199,6 @@ func TestShippingHandler_GetShippingAddress(t *testing.T) {
 		})
 	}
 }
-
-
 
 func TestNewShippingHandler(t *testing.T) {
 	ctrl := gomock.NewController(t)

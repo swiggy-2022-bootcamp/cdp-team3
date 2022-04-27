@@ -2,7 +2,7 @@ package services
 
 import (
 	"fmt"
-	//"net/http"
+
 	
 	"github.com/cdp-team3/shipping-address-service/domain/models"
 	apperros "github.com/cdp-team3/shipping-address-service/app-errors"
@@ -17,8 +17,10 @@ type ShippingServiceImpl struct {
 func NewShippingServiceImpl(shippingRepository repository.ShippingRepository) ShippingService {
 	return &ShippingServiceImpl{shippingRepository: shippingRepository}
 }
+
+// add shipping Address
 func (p ShippingServiceImpl) InsertShippingAddress(shipping *models.ShippingAddress) (string,*apperros.AppError) {
-fmt.Println("Inside service",shipping)
+
 	
 	 id,err := p.shippingRepository.InsertShippingAddressToDB(shipping)
 	if err != nil {
@@ -28,17 +30,21 @@ fmt.Println("Inside service",shipping)
 	}
 	return id,nil
 }
+
+// find shipping Address
 func (p ShippingServiceImpl) FindShippingAddressById(id string) (*models.ShippingAddress,*apperros.AppError) {
-fmt.Println("Inside service",id)
+
 	
 	 result,err := p.shippingRepository.FindShippingAddressByIdFromDB(id)
 	if err != nil {
-		fmt.Println(err)
+	
 		logger.Error(err)
 		return  nil,err
 	}
 	return result,nil
 }
+
+// update shipping Address
 func (p ShippingServiceImpl) UpdateShippingAddressById(shippingAddressId string, newShippingAddress *models.ShippingAddress) (bool, *apperros.AppError) {
 	_, err := p.shippingRepository.UpdateShippingAddressByIdFromDB(shippingAddressId, newShippingAddress)
 	if err != nil {
@@ -46,6 +52,8 @@ func (p ShippingServiceImpl) UpdateShippingAddressById(shippingAddressId string,
 	}
 	return true, nil
 }
+
+// delete shipping Address
 func (p ShippingServiceImpl) DeleteShippingAddressById(shippingAddressId string) (bool, *apperros.AppError) {
 	_, err := p.shippingRepository.DeleteShippingAddressByIdFromDB(shippingAddressId)
 	if err != nil {
@@ -53,6 +61,8 @@ func (p ShippingServiceImpl) DeleteShippingAddressById(shippingAddressId string)
 	}
 	return true, nil
 }
+
+// set existing shipping address to default
 func (p ShippingServiceImpl) HandleSetExistingShippingAddressToDefaultById(shippingAddressId string) (bool, *apperros.AppError) {
 	_, err := p.shippingRepository.HandleSetExistingShippingAddressToDefaultByIdToDB(shippingAddressId)
 	if err != nil {
@@ -61,7 +71,7 @@ func (p ShippingServiceImpl) HandleSetExistingShippingAddressToDefaultById(shipp
 	return true, nil
 }
 
-
+// get default shipping address of user
 func (p ShippingServiceImpl) GetDefaultShippingAddressOfUserById(userId string) (*models.ShippingAddress, *apperros.AppError) {
 	res, err := p.shippingRepository.GetDefaultShippingAddressOfUserByIdFromDB(userId)
 	if err != nil {

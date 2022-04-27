@@ -9,6 +9,8 @@ import (
 	"github.com/cdp-team3/shipping-address-service/mocks"
     "testing"
 )
+
+// Test : find shipping by id
 func TestShippingServiceImpl_FindShippingAddressById(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	ShippingAddressID := "bb912edc-50d9-42d7-b7a1-9ce66d459thj"
@@ -94,6 +96,7 @@ func TestShippingServiceImpl_FindShippingAddressById(t *testing.T) {
 	}
 }
 
+// Test : add new shipping address
 func TestShippingServiceImpl_AddShippingAddress(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	shippingAddress := &models.ShippingAddress{
@@ -174,6 +177,7 @@ func TestShippingServiceImpl_AddShippingAddress(t *testing.T) {
 	}
 }
 
+// Test : delete shipping address by id
 func TestShippingServiceImpl_DeleteShippingAddressById(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	ShippingAddressID := "bb912edc-50d9-42d7-b7a1-9ce66d459thj"
@@ -243,6 +247,8 @@ func TestShippingServiceImpl_DeleteShippingAddressById(t *testing.T) {
 		})
 	}
 }
+
+// Test : update shipping address by id
 func TestShippingServiceImpl_UpdateShippingAddressById(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	ShippingAddressID := "bb912edc-50d9-42d7-b7a1-9ce66d459thj"

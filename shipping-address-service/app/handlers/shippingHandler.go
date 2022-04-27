@@ -2,8 +2,7 @@ package handlers
 
 import (
 	"fmt"
-//	"time"
-	"github.com/gin-gonic/gin"
+    "github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"
 	"github.com/google/uuid"
@@ -41,12 +40,12 @@ func toPersistedDynamodbEntitySA(o *models.ShippingAddress) *models.ShippingAddr
 // @Description  This Handler allow user to create new Shipping Address
 // @Tags         Shipping Address
 // @Produce      json
-// @Success      200  {object}  map[string]interface{}
-// @Failure      400  {number} 	http.StatusBadRequest
-// @Router       /shippingaddress    [post]
+// @Param 		 shippingAddress body ShippingAddressRecordDTO true "Create Shipping Address"
+// @Success		 202  string    Shipping Address record added
+// @Failure      500  {number} 	http.StatusBadRequest
+// @Router       /shippingadress    [post]
 func (th ShippingHandler) AddNewShippingAddress() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-	//userId := c.Param("userId")
 	var shippingAddress *models.ShippingAddress
 
 	if err := ctx.BindJSON(&shippingAddress); err != nil {
@@ -57,12 +56,12 @@ func (th ShippingHandler) AddNewShippingAddress() gin.HandlerFunc {
 	}
     fmt.Println("in handler",shippingAddress)
 //use the validator library to validate required fields
-// if validationErr := validate.Struct(&shippingAddress); validationErr != nil {
-// 	ctx.JSON(http.StatusBadRequest, gin.H{"message": validationErr.Error()})
-// 	return
-// }
+if validationErr := validate.Struct(&shippingAddress); validationErr != nil {
+	ctx.JSON(http.StatusBadRequest, gin.H{"message": validationErr.Error()})
+	return
+}
 	shippingAddressRecord := toPersistedDynamodbEntitySA(shippingAddress)
-	fmt.Println("record",shippingAddressRecord)
+	
 	
 	id,err := th.shippingService.InsertShippingAddress(shippingAddressRecord)
 		if err != nil {
@@ -70,18 +69,20 @@ func (th ShippingHandler) AddNewShippingAddress() gin.HandlerFunc {
 		ctx.JSON(err.Code, gin.H{"message": err.Message})
 		return
 	}
-	fmt.Println("Id",id)
+	
 	ctx.JSON(http.StatusOK ,gin.H{"Shipping Id": id})
 }
 }
+
 
 // Get Shipping Address by Id
 // @Summary      Get Shipping Address by id
 // @Description  This Handle returns shippingAddress given id
 // @Tags         Shipping Address
 // @Produce      json
-// @Success      200  {object}  map[string]interface{}
-// @Failure      400  {number} 	http.StatusBadRequest
+// @Param        id   path      string  true  "shipping address id"
+// @Success      202  {object}  ShippingAddressRecordDTO
+// @Failure      500  {number} 	http.StatusBadRequest
 // @Router       /shippingaddress/:id    [get]
 func (th ShippingHandler) GetShippingAddress() gin.HandlerFunc  {
 	return func(ctx *gin.Context) {
@@ -103,8 +104,10 @@ func (th ShippingHandler) GetShippingAddress() gin.HandlerFunc  {
 // @Description  This Handle Update shippingAddress given id
 // @Tags         Shipping Address
 // @Produce      json
-// @Success      200  {object}  map[string]interface{}
-// @Failure      400  {number} 	http.StatusBadRequest
+// @Param        id   path      string  true  "shipping address id"
+// @Param 		 shippingAddress body ShippingAddressRecordDTO true "Update Shipping Address"
+// @Success      202  {number}  http.StatusAccepted
+// @Failure      500  {number} 	http.StatusBadRequest
 // @Router       /shippingaddress/:id     [put]
 func (sh ShippingHandler) HandleUpdateShippingAddressByID() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -115,8 +118,7 @@ func (sh ShippingHandler) HandleUpdateShippingAddressByID() gin.HandlerFunc {
 			return
 		}
 		newshipAddr := convertShippingAddressDTOtoShippingAddressModel(shippingAddress)
-		fmt.Println("new",newshipAddr)
-		fmt.Println("old",shippingAddress)
+	
 
 		ok, err := sh.shippingService.UpdateShippingAddressById(id,newshipAddr)
 		if !ok {
@@ -127,13 +129,15 @@ func (sh ShippingHandler) HandleUpdateShippingAddressByID() gin.HandlerFunc {
 	}
 }
 
+
 // Delete Shipping Address
 // @Summary      Delete Shipping Address
 // @Description  This Handle deletes Delete Shipping Address given sid
 // @Tags         Shipping Address
 // @Produce      json
-// @Success      200  {object}  map[string]interface{}
-// @Failure      400  {number} 	http.StatusBadRequest
+// @Param        id   path      string  true  "shipping address id"
+// @Success      202  {number}  http.StatusAccepted
+// @Failure      500  {number} 	http.StatusBadRequest
 // @Router       /shippingaddress/:id   [delete]
 func (sh ShippingHandler) HandleDeleteShippingAddressById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -150,7 +154,14 @@ func (sh ShippingHandler) HandleDeleteShippingAddressById() gin.HandlerFunc {
 	}
 }
 
-
+// Get default address of user
+// @Summary      Get Default address of user
+// @Description  This finds the default address od user
+// @Tags         Shipping Address
+// @Produce      json
+// @Success      200  {object}  map[string]interface{}
+// @Failure      400  {number} 	http.StatusBadRequest
+// @Router       /shippingaddress/existing/:userId   [get]
 func (sh ShippingHandler) GetDefaultShippingAddressOfUser() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		userId := ctx.Param("userId")
@@ -166,7 +177,14 @@ func (sh ShippingHandler) GetDefaultShippingAddressOfUser() gin.HandlerFunc {
 	}
 }
 
-
+// Handle Set Existing Shipping Address To Default
+// @Summary      Set Existing Shipping Address To Default
+// @Description  This sets existing shipping address to default
+// @Tags         Shipping Address
+// @Produce      json
+// @Success      200  {object}  map[string]interface{}
+// @Failure      400  {number} 	http.StatusBadRequest
+// @Router      /shippingaddress/existing/:id   [post]
 func (sh ShippingHandler) HandleSetExistingShippingAddressToDefault() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
