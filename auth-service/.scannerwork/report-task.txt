@@ -1,4 +1,4 @@
-projectKey=awesome
+projectKey=AuthService
 serverUrl=http://localhost:9000
 serverVersion=9.4.0.54424
 dashboardUrl=http://localhost:9000/dashboard?id=AuthService
