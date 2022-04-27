@@ -50,7 +50,7 @@ paths:
             type: number
       summary: HealthCheck
       tags:
-      - Auth Service
+      - Payment Service
   /deep:
     get:
       consumes:
@@ -70,7 +70,7 @@ paths:
             type: number
       summary: Deep HealthCheck
       tags:
-      - Auth Service
+      - Payment Service
   /pay:
     post:
       consumes:

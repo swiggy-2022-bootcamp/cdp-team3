@@ -26,7 +26,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Auth Service"
+                    "Payment Service"
                 ],
                 "summary": "HealthCheck",
                 "responses": {
@@ -55,7 +55,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Auth Service"
+                    "Payment Service"
                 ],
                 "summary": "Deep HealthCheck",
                 "responses": {

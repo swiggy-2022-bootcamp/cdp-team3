@@ -34,7 +34,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Auth Service"
+                    "Payment Service"
                 ],
                 "summary": "HealthCheck",
                 "responses": {
@@ -63,7 +63,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Auth Service"
+                    "Payment Service"
                 ],
                 "summary": "Deep HealthCheck",
                 "responses": {
