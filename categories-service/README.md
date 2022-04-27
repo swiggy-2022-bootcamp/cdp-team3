@@ -64,8 +64,8 @@ Contains the Categories Microservice for the final Swiggy I++ E-Commerce Applica
 ## Steps to run application
 1) Using docker
     1)
-    `docker build --tag category -t category .`
-    2) `docker run -d -p 3002:3002 category `
+    `docker build --tag categories-service -t categories-service .`
+    2) `docker run -d -p 3002:3002 categories-service `
 
 2) Using docker-compose
     `docker-compose up --build -d`
