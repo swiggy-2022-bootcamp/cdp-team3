@@ -20,7 +20,7 @@ type HealthCheckResponse struct {
 }
 
 // HealthCheck godoc
-// @Summary To check if the service is running or not.
+// @Summary (Health Check)To check if the service is running or not.
 // @Description This request will return 200 OK if server is up..
 // @Tags
 // @Schemes

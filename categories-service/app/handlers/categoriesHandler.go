@@ -23,6 +23,15 @@ func NewCategoryHandler(categoryService services.CategoryService) CategoryHandle
 	return CategoryHandler{categoryService: categoryService}
 }
 
+// Create Category
+// @Summary      Create Category
+// @Description  This Handler allow admin to create new Category
+// @Tags         Category
+// @Produce      json
+// @Param 		 category body models.Category true "Create Category"
+// @Success		 202  string    Category added successfully
+// @Failure      500  {number} 	http.StatusBadRequest
+// @Router       /categories    [post]
 func (th CategoryHandler) AddCategory() (gin.HandlerFunc){
 	return func(ctx *gin.Context) {
 	var category models.Category
@@ -49,6 +58,15 @@ func (th CategoryHandler) AddCategory() (gin.HandlerFunc){
 	ctx.JSON(http.StatusOK, gin.H{"message": "Category added successfully"})
 }
 }
+
+// Get All Categories
+// @Summary      Get All Categories
+// @Description  This Handle returns categories
+// @Tags         Category
+// @Produce      json
+// @Success      202  {object}  models.Category
+// @Failure      500  {number} 	http.StatusBadRequest
+// @Router       /categories    [get]
 func (th CategoryHandler) GetAllCategory() (gin.HandlerFunc){
 	return func(ctx *gin.Context) {
 
@@ -63,7 +81,15 @@ func (th CategoryHandler) GetAllCategory() (gin.HandlerFunc){
 }
 }
 
-
+// Get Category by Id
+// @Summary      Get category by id
+// @Description  This Handle returns category for given id
+// @Tags         Category
+// @Produce      json
+// @Param        id   path      string  true  "category id"
+// @Success      202  {object}  models.Category
+// @Failure      500  {number} 	http.StatusBadRequest
+// @Router       /categories/:id    [get]
 func (th CategoryHandler) GetCategory()  (gin.HandlerFunc){
 	return func(ctx *gin.Context) {
 	id := ctx.Param("category_id")
@@ -77,6 +103,15 @@ func (th CategoryHandler) GetCategory()  (gin.HandlerFunc){
 }
 }
 
+// Delete Categories 
+// @Summary      Delete categories
+// @Description  This Handle deletes category for given ids
+// @Tags         Category
+// @Produce      json
+// @Param        id   path      array  true  "category id"
+// @Success      202  {object}  models.Category
+// @Failure      500  {number} 	http.StatusBadRequest
+// @Router       /categories    [delete]
 func (th CategoryHandler) DeleteCategories() (gin.HandlerFunc){
 	return func(ctx *gin.Context) {
 	var categoryList []string
@@ -103,6 +138,16 @@ func (th CategoryHandler) DeleteCategories() (gin.HandlerFunc){
 		
 		ctx.JSON(http.StatusConflict,gin.H{"message": "Categories can't be deleted."})}
 }
+
+// Delete Category
+// @Summary      Delete Category By Id
+// @Description  This Handle deletes category given sid
+// @Tags         Category
+// @Produce      json
+// @Param        id   path      string  true  "category id"
+// @Success      202  {number}  http.StatusAccepted
+// @Failure      500  {number} 	http.StatusBadRequest
+// @Router       /categories/:id   [delete]
 func (th CategoryHandler) DeleteCategory() (gin.HandlerFunc) {
 	return func(ctx *gin.Context){
 		id := ctx.Param("category_id")
@@ -124,7 +169,16 @@ func (th CategoryHandler) DeleteCategory() (gin.HandlerFunc) {
 	}
 }
 
-// Handler function to update the category
+// Update Category
+// @Summary      Update Category By Id
+// @Description  This Handle Update Category
+// @Tags         Category
+// @Produce      json
+// @Param        id   path      string  true  "category id"
+// @Param 		 category body models.Category true "Update Category"
+// @Success      202  {number}  http.StatusAccepted
+// @Failure      500  {number} 	http.StatusBadRequest
+// @Router       /categories/:id     [put]
 func (th CategoryHandler) UpdateCategory() (gin.HandlerFunc) {
 	return func(ctx *gin.Context){
 	id := ctx.Param("category_id")

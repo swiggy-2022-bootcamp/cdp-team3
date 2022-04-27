@@ -1,20 +1,16 @@
 {"_comments" : "categories"}
-{
-    "title":"Categories",
-    "type":"object",
-    "properties":{
-        "category_id":{
-            "type":"",
-            "description":
-        },
-        "category_description":{
-            "type":"",
-            "elements":{
-                
-            }
-        }
-    }
-   
-}
+
 
 // Example
+{
+    "category_id": "d2e9e9cd-aece-488c-8952-eca1f0262d35",
+    "category_description": [
+        {
+            "category_name": "Trouser",
+            "description": "Apparel",
+            "meta_description": "Clothing",
+            "meta_keyword": "pants,trousers,clothing,apparel",
+            "meta_title": "clothing"
+        }
+    ]
+}
